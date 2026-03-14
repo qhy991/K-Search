@@ -1,0 +1,19 @@
+{
+  "version": "v2",
+  "description": "Multi-warp optimization with multiple kernel variants",
+  "optimizations": [
+    "Added dedicated kernels for different batch sizes",
+    "Optimized warp reduction with shuffle intrinsics",
+    "Better shared memory layout"
+  ],
+  "test_results": {
+    "batch_1": {"latency_us": 7.5, "gbps": 2.45, "baseline_gbps": 3.30, "ratio_percent": 74, "nmse": 0.00077, "passed": true},
+    "batch_8": {"latency_us": 6.0, "gbps": 17.35, "baseline_gbps": 26.71, "ratio_percent": 65, "nmse": 0.0, "passed": true},
+    "batch_512": {"latency_us": 6.0, "gbps": 1042.37, "baseline_gbps": 1064.63, "ratio_percent": 98, "nmse": 0.0, "passed": true}
+  },
+  "issues": [
+    "Performance degraded due to complex reduction logic",
+    "Excessive __syncthreads() calls",
+    "Oversized thread blocks for small batches"
+  ]
+}

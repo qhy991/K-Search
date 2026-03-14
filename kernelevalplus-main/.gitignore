@@ -1,0 +1,96 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.o
+*.cu.o
+*.ptx
+*.fatbin
+*.cubin
+
+# Compiled extensions
+*.so
+*.pyd
+
+# Test results
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Model files (large)
+*.pth
+*.pkl
+*.safetensors
+
+# Data files (keep baseline and experiments)
+data/experiments/*
+!data/experiments/results.csv
+
+# Claude Code
+.claude/
+
+# Background task outputs
+/tmp/claude-*/
+
+# GitLab CI/CD
+.cache/
+public/
+build/
+
+# Static site generated data (generated on-demand, not committed)
+bench_web/static_site/data/
+
+# Runtime generated results
+llm_kernel_test/results/batch_runs/
+llm_kernel_test/sandbox/generated/
+
+# Torch profiler logs
+torch_profiler_logs*/
+
+# Temporary result files
+*.results.json
+kernel_comparison_results.json
+baseline_vs_optimized_results.json

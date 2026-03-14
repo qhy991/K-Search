@@ -1,0 +1,33 @@
+{
+  "spec": {
+    "name": "fp32_rms_norm_qwen3_4b_hs1536",
+    "op_type": "rms_norm",
+    "op_category": "normalization",
+    "variant": "FP32",
+    "description": "RMS Norm for qwen3_4b with hidden_size=1536"
+  },
+  "hardware": "RTX4090",
+  "test_configs": [
+    {
+      "batch_size": 1,
+      "passed": true,
+      "performance": {"latency_ms": 0.0018, "gbps": 10.11},
+      "baseline": {"gbps": 3.30, "ratio_percent": 306},
+      "nmse": 0.00061915
+    },
+    {
+      "batch_size": 8,
+      "passed": true,
+      "performance": {"latency_ms": 0.0019, "gbps": 53.68},
+      "baseline": {"gbps": 26.71, "ratio_percent": 201},
+      "nmse": 0.0
+    },
+    {
+      "batch_size": 512,
+      "passed": true,
+      "performance": {"latency_ms": 0.0035, "gbps": 1803.52},
+      "baseline": {"gbps": 1064.63, "ratio_percent": 169},
+      "nmse": 0.0
+    }
+  ]
+}

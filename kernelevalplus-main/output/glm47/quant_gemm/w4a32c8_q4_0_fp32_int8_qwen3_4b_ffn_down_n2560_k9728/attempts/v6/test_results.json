@@ -1,0 +1,36 @@
+{
+  "attempt_id": "test",
+  "variant": "default",
+  "op_type": "quant_gemm",
+  "tested_at": "2026-03-14T14:37:00.000000",
+  "status": "failed",
+  "error": "Correctness test failed - NMSE exceeded threshold",
+  "compilation": {
+    "success": true,
+    "errors": [],
+    "warnings": []
+  },
+  "correctness": {
+    "passed": false,
+    "test_cases": [
+      {
+        "config": "single_token",
+        "passed": false,
+        "nmse": "FAILED"
+      },
+      {
+        "config": "small_batch",
+        "passed": false,
+        "nmse": "FAILED"
+      },
+      {
+        "config": "large_batch",
+        "passed": false,
+        "nmse": "FAILED"
+      }
+    ],
+    "nmse": "FAILED"
+  },
+  "performance": null,
+  "note": "This version failed correctness testing during development"
+}

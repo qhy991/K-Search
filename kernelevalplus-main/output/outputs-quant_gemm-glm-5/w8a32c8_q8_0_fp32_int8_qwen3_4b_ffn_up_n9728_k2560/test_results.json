@@ -1,0 +1,46 @@
+{
+  "attempt_id": "v4_best",
+  "variant": "W8A32C8",
+  "op_type": "quant_gemm",
+  "tested_at": "2026-03-11T06:02:40.801088",
+  "spec": {
+    "name": "w8a32c8_q8_0_fp32_int8_qwen3_4b_ffn_up_n9728_k2560.json",
+    "op_type": "quant_gemm",
+    "variant": "W8A32C8",
+    "description": "Qwen3-4B FFN Up/Gate projection with W8A32C8. Generated from GGML baseline.",
+    "model_architectures": ["qwen3-4b"],
+    "axes": {
+      "M": {"type": "var", "description": "Batch dimension"},
+      "N": {"type": "const", "value": 9728, "description": "Output features"},
+      "K": {"type": "const", "value": 2560, "description": "Input features"},
+      "block_size": {"type": "const", "value": 32, "description": "Quantization block size"}
+    },
+    "formula": {
+      "computation": "C = A @ W^T where A(M,K) is FP32, W(N,K/32) is Q8_0 quantized",
+      "llama_cpp_formula": "result = d8_0 * d8_1 * sumi"
+    }
+  },
+  "compilation": {
+    "success": true,
+    "errors": [],
+    "warnings": [],
+    "diagnostics": []
+  },
+  "correctness": {
+    "passed": true,
+    "test_cases": [
+      {"config": "single_token", "passed": true, "nmse": 2.8e-05},
+      {"config": "small_batch", "passed": true, "nmse": 2.8e-05},
+      {"config": "large_batch", "passed": true, "nmse": 2.8e-05}
+    ],
+    "nmse": 2.8e-05
+  },
+  "performance": {
+    "benchmarks": [
+      {"config": "single_token", "M": 1, "latency_ms": 0.023, "tflops": 2.122, "gflops": 2122.3},
+      {"config": "small_batch", "M": 8, "latency_ms": 0.225, "tflops": 1.768, "gflops": 1767.5},
+      {"config": "large_batch", "M": 512, "latency_ms": 5.191, "tflops": 4.912, "gflops": 4912.3}
+    ],
+    "baseline_comparison": null
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "name": "w4a32c8_q4_0_fp32_int8_qwen3_4b_ffn_down_n2560_k9728.json",
+  "op_type": "quant_gemm",
+  "variant": "W4A32C8",
+  "description": "Qwen3-4B FFN Down projection with W4A32C8. Generated from GGML baseline.",
+  "tags": [
+    "status:generated",
+    "framework:ggml",
+    "source:ggml-python",
+    "layer:ffn-down",
+    "quantization:q4_0",
+    "quantization:q8_1",
+    "weight_bits:4",
+    "activation_storage:fp32"
+  ],
+  "model_architectures": [
+    "qwen3-4b"
+  ],
+  "op_category": "quant_gemm",
+  "axes": {
+    "M": {
+      "type": "var",
+      "description": "Batch dimension"
+    },
+    "N": {
+      "type": "const",
+      "value": 2560,
+      "description": "Output features"
+    },
+    "K": {
+      "type": "const",
+      "value": 9728,
+      "description": "Input features"
+    },
+    "block_size": {
+      "type": "const",
+      "value": 32,
+      "description": "Quantization block size"
+    }
+  },
+  "inputs": {
+    "activation": {
+      "shape": [
+        "M",
+        "K"
+      ],
+      "dtype": "float32",
+      "description": "FP32 activation tensor, dynamically quantized to Q8_1 per-block during compute"
+    },
+    "weight": {
+      "shape": [
+        "N",
+        "K/32"
+      ],
+      "dtype": "block_q4_0",
+      "description": "Q4_0 quantized weight tensor"
+    }
+  },
+  "outputs": {
+    "output": {
+      "shape": [
+        "M",
+        "N"
+      ],
+      "dtype": "float32",
+      "description": "FP32 output tensor"
+    }
+  },
+  "constraints": [
+    "K % 32 == 0"
+  ],
+  "formula": {
+    "computation": "C = A @ W^T where A(M,K) is FP32, W(N,K/32) is Q4_0 quantized",
+    "llama_cpp_formula": "result = d4_0 * (d8_1 * sumi - 8 * s8_1)",
+    "explanation": "Q4_0 uses offset-8 encoding. The -8*s8_1 term compensates for this offset."
+  },
+  "test_configs": [
+    {
+      "name": "batch_1",
+      "M": 1,
+      "N": 2560,
+      "K": 9728
+    },
+    {
+      "name": "batch_2",
+      "M": 2,
+      "N": 2560,
+      "K": 9728
+    },
+    {
+      "name": "batch_3",
+      "M": 3,
+      "N": 2560,
+      "K": 9728
+    },
+    {
+      "name": "batch_4",
+      "M": 4,
+      "N": 2560,
+      "K": 9728
+    },
+    {
+      "name": "batch_5",
+      "M": 5,
+      "N": 2560,
+      "K": 9728
+    },
+    {
+      "name": "batch_8",
+      "M": 8,
+      "N": 2560,
+      "K": 9728
+    },
+    {
+      "name": "batch_512",
+      "M": 512,
+      "N": 2560,
+      "K": 9728
+    }
+  ],
+  "baseline_ref": {
+    "case_id": "w4a32c8_q4_0_f32_m2560_n512_k9728",
+    "source": "ggml-python",
+    "note": "GGML baseline: M=2560 (output), N=512 (batch), K=9728 (input). Maps to our framework: M=512 (batch), N=2560 (output), K=9728 (input)"
+  }
+}

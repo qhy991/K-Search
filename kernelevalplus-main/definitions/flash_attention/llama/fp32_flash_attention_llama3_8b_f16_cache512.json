@@ -1,0 +1,89 @@
+{
+  "name": "fp32_flash_attention_llama3_8b_f16_cache512",
+  "op_type": "flash_attention",
+  "op_category": "attention",
+  "variant": "FP32",
+  "description": "Flash Attention for LLaMA-3-8B with KV cache size 512 and F16 KV storage. Optimized attention computation that reduces memory accesses by tiling the attention matrix.",
+  "tags": [
+    "status:generated",
+    "framework:ggml",
+    "source:ggml-python",
+    "layer:attention",
+    "attention:flash",
+    "kv_cache:f16",
+    "activation:fp32",
+    "model:llama3-8b"
+  ],
+  "model_architectures": [
+    "llama3-8b"
+  ],
+  "axes": {
+    "batch_size": {
+      "type": "var",
+      "description": "Number of attention blocks (nb)"
+    },
+    "seq_len": {
+      "type": "const",
+      "value": 512,
+      "description": "KV cache sequence length"
+    },
+    "num_heads": {
+      "type": "const",
+      "value": 32,
+      "description": "Number of attention heads"
+    },
+    "head_dim": {
+      "type": "const",
+      "value": 128,
+      "description": "Dimension per attention head"
+    }
+  },
+  "inputs": {
+    "query": {
+      "shape": ["batch_size", "num_heads", "head_dim"],
+      "dtype": "float32",
+      "description": "Query projection (current tokens)"
+    },
+    "key_cache": {
+      "shape": ["seq_len", "num_heads", "head_dim"],
+      "dtype": "float16",
+      "description": "Cached key projections (past tokens)"
+    },
+    "value_cache": {
+      "shape": ["seq_len", "num_heads", "head_dim"],
+      "dtype": "float16",
+      "description": "Cached value projections (past tokens)"
+    }
+  },
+  "outputs": {
+    "output": {
+      "shape": ["batch_size", "num_heads", "head_dim"],
+      "dtype": "float32",
+      "description": "Attention output (context vectors)"
+    }
+  },
+  "formula": {
+    "computation": "attn = softmax(Q @ K^T / sqrt(head_dim)) @ V",
+    "explanation": "Flash Attention computes attention by tiling the attention matrix to reduce HBM accesses, enabling efficient processing of long sequences."
+  },
+  "test_configs": [
+    {
+      "name": "batch_1",
+      "batch_size": 1
+    },
+    {
+      "name": "batch_8",
+      "batch_size": 8
+    },
+    {
+      "name": "batch_512",
+      "batch_size": 512
+    }
+  ],
+  "baseline_ref": {
+    "case_id": "flash_attn_Llama3-8B_F16_cache512_nb512",
+    "source": "ggml-python",
+    "metric": "tflops",
+    "note": "GGML baseline: model=Llama3-8B, kv_type=F16, cache_size=512, nb=batch_size"
+  }
+}

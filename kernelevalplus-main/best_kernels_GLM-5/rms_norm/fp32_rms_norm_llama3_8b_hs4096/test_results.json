@@ -1,0 +1,174 @@
+{
+  "attempt_id": "test",
+  "variant": "default",
+  "op_type": "rms_norm",
+  "tested_at": "2026-03-11T14:32:19.694464",
+  "spec": {
+    "name": "fp32_rms_norm_llama3_8b_hs4096",
+    "op_type": "rms_norm",
+    "op_category": "normalization",
+    "variant": "FP32",
+    "description": "Root Mean Square Normalization for LLaMA-3-8B with hidden_size=4096. Epsilon is fixed at 1e-6. Captured from ggml-python baseline.",
+    "tags": [
+      "status:generated",
+      "framework:ggml",
+      "source:ggml-python",
+      "layer:norm",
+      "normalization:rms",
+      "activation:fp32",
+      "model:llama3-8b"
+    ],
+    "model_architectures": [
+      "llama3-8b"
+    ],
+    "axes": {
+      "batch_size": {
+        "type": "var",
+        "description": "Batch/sequence dimension"
+      },
+      "hidden_size": {
+        "type": "const",
+        "value": 4096,
+        "description": "Feature dimension"
+      },
+      "epsilon": {
+        "type": "const",
+        "value": 1e-06,
+        "description": "Small constant for numerical stability"
+      }
+    },
+    "inputs": {
+      "hidden_states": {
+        "shape": [
+          "batch_size",
+          "hidden_size"
+        ],
+        "dtype": "float32",
+        "description": "Input tensor to normalize"
+      },
+      "weight": {
+        "shape": [
+          "hidden_size"
+        ],
+        "dtype": "float32",
+        "description": "Learned scale/gamma parameter"
+      }
+    },
+    "outputs": {
+      "output": {
+        "shape": [
+          "batch_size",
+          "hidden_size"
+        ],
+        "dtype": "float32",
+        "description": "Normalized output tensor"
+      }
+    },
+    "formula": {
+      "computation": "output = input / sqrt(mean(input^2, axis=-1) + epsilon) * weight",
+      "explanation": "RMS Norm computes the root mean square of input along the feature dimension, then normalizes and scales by learned weights."
+    },
+    "test_configs": [
+      {
+        "name": "batch_1",
+        "batch_size": 1
+      },
+      {
+        "name": "batch_8",
+        "batch_size": 8
+      },
+      {
+        "name": "batch_32",
+        "batch_size": 32
+      },
+      {
+        "name": "batch_512",
+        "batch_size": 512
+      }
+    ],
+    "baseline_ref": {
+      "case_id": "rms_norm_hs4096_4096x512x1x1",
+      "source": "ggml-python",
+      "metric": "gbps",
+      "note": "GGML baseline format: ne=[hidden_size, 1, batch_size, 1]"
+    },
+    "reference": {
+      "flashinfer": "https://bench.flashinfer.ai/kernels/rmsnorm_h2048"
+    },
+    "params": {
+      "batch_size": {
+        "default": 1
+      },
+      "hidden_size": {
+        "value": 4096
+      },
+      "epsilon": {
+        "value": 1e-06
+      }
+    }
+  },
+  "compilation": {
+    "success": true,
+    "errors": [],
+    "warnings": [],
+    "diagnostics": []
+  },
+  "correctness": {
+    "passed": true,
+    "test_cases": [
+      {
+        "config": "batch_1",
+        "passed": true,
+        "nmse": 0.0
+      },
+      {
+        "config": "batch_8",
+        "passed": true,
+        "nmse": 0.0
+      },
+      {
+        "config": "batch_32",
+        "passed": true,
+        "nmse": 0.0
+      },
+      {
+        "config": "batch_512",
+        "passed": true,
+        "nmse": 0.0
+      }
+    ],
+    "nmse": 0.0
+  },
+  "performance": {
+    "benchmarks": [
+      {
+        "config": "batch_1",
+        "latency_ms": 0.007,
+        "gbps": 9.26
+      },
+      {
+        "config": "batch_8",
+        "latency_ms": 0.008,
+        "gbps": 48.66
+      },
+      {
+        "config": "batch_32",
+        "latency_ms": 0.009,
+        "gbps": 173.6
+      },
+      {
+        "config": "batch_512",
+        "latency_ms": 0.01,
+        "gbps": 2602.33
+      }
+    ],
+    "baseline_comparison": {
+      "current_hardware": "NVIDIA GeForce RTX 4090",
+      "baseline_hardware": "RTX4090",
+      "current_gbps": 9.26,
+      "baseline_gbps": 8.79,
+      "performance_ratio": 105.3,
+      "better": true
+    }
+  }
+}

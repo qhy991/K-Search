@@ -1,0 +1,56 @@
+{
+  "sandbox_dir": "llm_kernel_test/sandbox",
+  "templates_dir": "llm_kernel_test/templates",
+  "baseline_dir": "llm_kernel_test/baseline",
+  "results_dir": "llm_kernel_test/results",
+
+  "test_shapes": [
+    {"M": 1, "N": 4096, "K": 4096},
+    {"M": 8, "N": 4096, "K": 4096},
+    {"M": 32, "N": 8192, "K": 8192}
+  ],
+
+  "benchmark_config": {
+    "warmup": 10,
+    "iterations": 100
+  },
+
+  "correctness_threshold": {
+    "nmse": 0.1
+  },
+
+  "variants": {
+    "w8a32c8_q8_0_q8_1": {
+      "description": "W8A32C8 Q8_0×Q8_1 GEMM",
+      "block_size": 32
+    }
+  },
+
+  "llm": {
+    "active_provider": "deepseek",
+    "prompt_style": "focused",
+    "providers": {
+      "openai": {
+        "base_url": "https://api.openai.com/v1",
+        "default_model": "gpt-4o",
+        "timeout": 300,
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "anthropic": {
+        "base_url": "https://api.anthropic.com",
+        "default_model": "claude-sonnet-4-20250514",
+        "timeout": 300,
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "deepseek": {
+        "base_url": "https://cloud.infini-ai.com/maas/v1",
+        "default_model": "deepseek-v3",
+        "timeout": 300,
+        "temperature": 0.0,
+        "max_tokens": 8192
+      }
+    }
+  }
+}

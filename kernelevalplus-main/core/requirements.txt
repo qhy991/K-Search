@@ -1,0 +1,18 @@
+# KernelEvalPlus Requirements
+# Python >= 3.8
+
+# Core dependencies
+torch>=2.0.0
+numpy>=1.20.0
+
+# Testing dependencies
+pytest>=7.0.0
+pytest-xdist>=2.5.0  # For parallel test execution
+
+# Optional: for better test output
+pytest-cov>=3.0.0
+pytest-benchmark>=3.4.0
+
+# LLM API clients (for kernel generation)
+openai>=1.0.0        # OpenAI API support
+anthropic>=0.18.0    # Anthropic API support

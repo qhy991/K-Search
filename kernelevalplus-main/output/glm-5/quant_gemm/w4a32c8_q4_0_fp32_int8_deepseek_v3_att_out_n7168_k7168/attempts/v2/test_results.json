@@ -1,0 +1,196 @@
+{
+  "attempt_id": "test",
+  "variant": "default",
+  "op_type": "quant_gemm",
+  "tested_at": "2026-03-14T11:21:36.431957",
+  "spec": {
+    "name": "w4a32c8_q4_0_fp32_int8_deepseek_v3_att_out_n7168_k7168.json",
+    "op_type": "quant_gemm",
+    "variant": "W4A32C8",
+    "description": "DeepSeek-V3 Attention Output projection with W4A32C8. Generated from GGML baseline.",
+    "tags": [
+      "status:generated",
+      "framework:ggml",
+      "source:ggml-python",
+      "layer:att-out",
+      "quantization:q4_0",
+      "quantization:q8_1",
+      "weight_bits:4",
+      "activation_storage:fp32"
+    ],
+    "model_architectures": [
+      "deepseek-v3"
+    ],
+    "op_category": "quant_gemm",
+    "axes": {
+      "M": {
+        "type": "var",
+        "description": "Batch dimension"
+      },
+      "N": {
+        "type": "const",
+        "value": 7168,
+        "description": "Output features"
+      },
+      "K": {
+        "type": "const",
+        "value": 7168,
+        "description": "Input features"
+      },
+      "block_size": {
+        "type": "const",
+        "value": 32,
+        "description": "Quantization block size"
+      }
+    },
+    "inputs": {
+      "activation": {
+        "shape": [
+          "M",
+          "K"
+        ],
+        "dtype": "float32",
+        "description": "FP32 activation tensor, dynamically quantized to Q8_1 per-block during compute"
+      },
+      "weight": {
+        "shape": [
+          "N",
+          "K/32"
+        ],
+        "dtype": "q4_0",
+        "description": "Q4_0 quantized weight tensor"
+      }
+    },
+    "outputs": {
+      "output": {
+        "shape": [
+          "M",
+          "N"
+        ],
+        "dtype": "float32",
+        "description": "FP32 output tensor"
+      }
+    },
+    "constraints": [
+      "K % 32 == 0"
+    ],
+    "formula": {
+      "computation": "C = A @ W^T where A(M,K) is FP32, W(N,K/32) is Q4_0 quantized",
+      "llama_cpp_formula": "result = d4_0 * (d8_1 * sumi - 8 * s8_1)",
+      "explanation": "Q4_0 uses offset-8 encoding. The -8*s8_1 term compensates for this offset."
+    },
+    "test_configs": [
+      {
+        "name": "batch_1",
+        "M": 1,
+        "N": 7168,
+        "K": 7168
+      },
+      {
+        "name": "batch_2",
+        "M": 2,
+        "N": 7168,
+        "K": 7168
+      },
+      {
+        "name": "batch_3",
+        "M": 3,
+        "N": 7168,
+        "K": 7168
+      },
+      {
+        "name": "batch_4",
+        "M": 4,
+        "N": 7168,
+        "K": 7168
+      },
+      {
+        "name": "batch_5",
+        "M": 5,
+        "N": 7168,
+        "K": 7168
+      },
+      {
+        "name": "batch_8",
+        "M": 8,
+        "N": 7168,
+        "K": 7168
+      },
+      {
+        "name": "batch_512",
+        "M": 512,
+        "N": 7168,
+        "K": 7168
+      }
+    ],
+    "baseline_ref": {
+      "case_id": "w4a32c8_q4_0_f32_m7168_n512_k7168",
+      "source": "ggml-python",
+      "note": "GGML baseline: M=7168 (output), N=512 (batch), K=7168 (input). Maps to our framework: M=512 (batch), N=7168 (output), K=7168 (input)"
+    },
+    "params": {
+      "M": {
+        "default": 1
+      },
+      "N": {
+        "value": 7168
+      },
+      "K": {
+        "value": 7168
+      },
+      "block_size": {
+        "value": 32
+      }
+    }
+  },
+  "compilation": {
+    "success": true,
+    "errors": [],
+    "warnings": [],
+    "diagnostics": []
+  },
+  "correctness": {
+    "passed": true,
+    "test_cases": [
+      {
+        "config": "single_token",
+        "passed": true,
+        "nmse": 2.9e-05
+      },
+      {
+        "config": "small_batch",
+        "passed": true,
+        "nmse": 2.9e-05
+      },
+      {
+        "config": "large_batch",
+        "passed": true,
+        "nmse": 2.9e-05
+      }
+    ],
+    "nmse": 2.9e-05
+  },
+  "performance": {
+    "benchmarks": [
+      {
+        "config": "single_token",
+        "latency_ms": 0.127,
+        "tflops": 0.812,
+        "gflops": 811.8
+      },
+      {
+        "config": "small_batch",
+        "latency_ms": 0.299,
+        "tflops": 2.745,
+        "gflops": 2745.0
+      },
+      {
+        "config": "large_batch",
+        "latency_ms": 34.006,
+        "tflops": 1.547,
+        "gflops": 1547.2
+      }
+    ],
+    "baseline_comparison": null
+  }
+}

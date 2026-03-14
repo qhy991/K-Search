@@ -1,0 +1,128 @@
+{
+  "name": "w8a8c8_q8_0_q8_1",
+  "variant": "W8A8C8",
+  "family": "quant_gemm",
+  "version": "1.0.0",
+  "description": "DeepSeek-V3 W8A8C8 Quantized GEMM: 8-bit weights (Q8_0), 8-bit activations (Q8_1 style), 8-bit compute (INT8). Matches llama.cpp Q8_0\u00d7Q8_1 pattern.",
+  "model_architectures": [
+    "deepseek-v3"
+  ],
+  "tags": [
+    "status:verified",
+    "framework:deepseek",
+    "source:llama.cpp",
+    "quantization:q8_0",
+    "quantization:q8_1"
+  ],
+  "kernel": {
+    "file": "kernel.cu",
+    "entry_point": "forward"
+  },
+  "inputs": {
+    "weight": {
+      "dtype": "block_q8_0",
+      "shape": [
+        "N",
+        "K/32",
+        34
+      ],
+      "description": "Q8_0 quantized weight tensor [output_features, num_blocks, 34 bytes/block]",
+      "quantizer": "quantize_q8_0"
+    },
+    "activation": {
+      "dtype": "float32",
+      "shape": [
+        "M",
+        "K"
+      ],
+      "description": "FP32 activation tensor [batch, input_features], dynamically quantized to Q8_1 style in kernel"
+    }
+  },
+  "outputs": {
+    "output": {
+      "dtype": "float32",
+      "shape": [
+        "M",
+        "N"
+      ],
+      "description": "FP32 output tensor [batch, output_features]"
+    }
+  },
+  "params": {
+    "M": {
+      "type": "int",
+      "description": "Batch dimension (batch_size * seq_len)",
+      "constraint": "M >= 1"
+    },
+    "N": {
+      "type": "int",
+      "default": 7168,
+      "description": "Output features (model hidden_size for DeepSeek-V3)"
+    },
+    "K": {
+      "type": "int",
+      "default": 7168,
+      "description": "Input features (must be multiple of 32)",
+      "constraint": "K % 32 == 0"
+    }
+  },
+  "reference": "reference.py:run",
+  "test_configs": [
+    {
+      "name": "batch_1",
+      "M": 1,
+      "description": "Single token inference"
+    },
+    {
+      "name": "batch_2",
+      "M": 2,
+      "description": "Small batch (2)"
+    },
+    {
+      "name": "batch_3",
+      "M": 3,
+      "description": "Small batch (3)"
+    },
+    {
+      "name": "batch_4",
+      "M": 4,
+      "description": "Small batch (4)"
+    },
+    {
+      "name": "batch_5",
+      "M": 5,
+      "description": "Small batch (5)"
+    },
+    {
+      "name": "batch_8",
+      "M": 8,
+      "description": "Small batch (8)"
+    },
+    {
+      "name": "batch_512",
+      "M": 512,
+      "description": "Large batch inference"
+    }
+  ],
+  "accuracy": {
+    "metric": "nmse",
+    "threshold": 0.05
+  },
+  "formula": {
+    "computation": "1. Quantize A to Q8_1 style (per-block scale), 2. INT8 GEMM with Q8_0 weights, 3. Accumulate to FP32",
+    "dequantize": "w = qs * scale_w, a = qs * scale_a",
+    "gemm": "C[m,n] = sum_k(w_qs[n,k] * a_qs[m,k]) * d_w * d_a"
+  },
+  "llama_cpp_pattern": {
+    "weight_format": "Q8_0",
+    "activation_format": "Q8_1 style (dynamic quantization)",
+    "compute": "vec_dot_q8_0_q8_1_dp4a",
+    "formula": "d8_0 * d8_1 * sumi"
+  },
+  "notes": [
+    "Matches llama.cpp Q8_0 \u00d7 Q8_1 pattern (d8_0 * d8_1 * sumi)",
+    "Q8_1 sum field not used for Q8_0 weights (only needed for Q4_0)",
+    "Per-block activation quantization (32 values per block)",
+    "INT8 compute provides 2-4x speedup over FP32"
+  ]
+}

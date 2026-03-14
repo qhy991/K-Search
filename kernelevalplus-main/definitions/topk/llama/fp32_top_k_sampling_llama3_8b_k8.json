@@ -1,0 +1,88 @@
+{
+  "name": "fp32_top_k_sampling_llama3_8b_k8",
+  "op_type": "topk",
+  "op_category": "sampling",
+  "variant": "FP32",
+  "description": "Top-k sampling from probabilities for LLaMA-3-8B. Keeps only the 8 highest probability tokens, renormalizes, then samples from the filtered distribution. Used in decoding.",
+  "tags": [
+    "status:generated",
+    "framework:ggml",
+    "source:ggml-python",
+    "layer:sampling",
+    "sampling:top_k",
+    "activation:fp32",
+    "model:llama3-8b"
+  ],
+  "model_architectures": [
+    "llama3-8b"
+  ],
+  "axes": {
+    "batch_size": {
+      "type": "var",
+      "description": "Batch dimension (number of parallel sequences)"
+    },
+    "vocab_size": {
+      "type": "const",
+      "value": 128256,
+      "description": "Full vocabulary size of LLaMA-3-8B"
+    },
+    "k": {
+      "type": "const",
+      "value": 8,
+      "description": "Number of top tokens to select"
+    }
+  },
+  "inputs": {
+    "probs": {
+      "shape": ["batch_size", "vocab_size"],
+      "dtype": "float32",
+      "description": "Probability distribution over vocabulary (after softmax)"
+    }
+  },
+  "outputs": {
+    "samples": {
+      "shape": ["batch_size"],
+      "dtype": "int64",
+      "description": "Sampled token indices"
+    },
+    "top_indices": {
+      "shape": ["batch_size", "k"],
+      "dtype": "int32",
+      "description": "Indices of top-k tokens",
+      "optional": true
+    },
+    "top_values": {
+      "shape": ["batch_size", "k"],
+      "dtype": "float32",
+      "description": "Values of top-k tokens",
+      "optional": true
+    }
+  },
+  "formula": {
+    "computation": "top_indices = argsort(probs, descending=True)[:k]; top_values = probs[top_indices]; samples = categorical(top_values)",
+    "explanation": "Select top-k highest probability tokens, renormalize, and sample from the filtered distribution."
+  },
+  "test_configs": [
+    {
+      "name": "batch_1",
+      "batch_size": 1
+    },
+    {
+      "name": "batch_8",
+      "batch_size": 8
+    },
+    {
+      "name": "batch_512",
+      "batch_size": 512
+    }
+  ],
+  "baseline_ref": {
+    "case_id": "topk_k8_ne0256_256x512x1x1",
+    "source": "ggml-python",
+    "metric": "gbps",
+    "note": "GGML baseline format: k=8, ne=[vocab_subset=256, batch_size, 1, 1]"
+  },
+  "reference": {
+    "flashinfer": "https://bench.flashinfer.ai/kernels/top_k_sampling_from_probs_v128256"
+  }
+}

@@ -1,0 +1,145 @@
+┌─────────────────────────────────────────────────────────────────┐
+│                KernelEvalPlus Benchmark 快速参考                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  📋 系统状态                                                     │
+│  ├─ 问题定义: 51 个 (38 非模板)                                 │
+│  ├─ 算子实现: 28 个变体                                          │
+│  ├─ 映射覆盖: 97.4% (37/38)                                     │
+│  └─ 支持模型: LLaMA, DeepSeek-V2/V3, Qwen2.5                   │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  🚀 常用命令                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  # 1️⃣ 环境激活                                                  │
+│  source ~/miniconda3/etc/profile.d/conda.sh                    │
+│  conda activate KM-12.8                                        │
+│  cd /home/haiyan/Agent4Kernel/KernelEvalPlus                  │
+│                                                                 │
+│  # 2️⃣ 验证系统                                                  │
+│  ./validate_benchmark.sh                                       │
+│                                                                 │
+│  # 3️⃣ 生成映射                                                  │
+│  python python/generate_mapping.py                            │
+│                                                                 │
+│  # 4️⃣ 测试单个算子                                              │
+│  cd python                                                     │
+│  python test_operator.py w8a8c8_q8_0_q8_1 \                   │
+│      operators/quant_gemm/variants/deepseek_v3/w8a8c8_q8_0_q8_1│
+│                                                                 │
+│  # 5️⃣ 带性能测试                                                │
+│  python test_operator.py ... --benchmark --iterations 100     │
+│                                                                 │
+│  # 6️⃣ 批量测试所有                                              │
+│  python test_all.py --output results.json                     │
+│                                                                 │
+│  # 7️⃣ 测试特定模型                                              │
+│  python test_all.py --filter "deepseek_v3/*" \                │
+│      --benchmark --output results_ds3.json                    │
+│                                                                 │
+│  # 8️⃣ 生成 HTML 报告                                            │
+│  python generate_report.py results.json --format html         │
+│                                                                 │
+│  # 9️⃣ 生成 Markdown 报告                                        │
+│  python generate_report.py results.json --format markdown     │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  🔧 核心工具                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  generate_mapping.py      生成 definition-operator 映射        │
+│  test_operator.py         测试单个算子                         │
+│  test_operator_enhanced.py 增强版 (JSON 输出)                  │
+│  test_all.py              批量测试工具                         │
+│  generate_report.py       报告生成器                           │
+│  validate_benchmark.sh    系统验证脚本                         │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  📊 测试选项                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  test_operator.py:                                             │
+│    --benchmark              运行性能测试                        │
+│    --config "M=1,N=512,K=512"  自定义配置                      │
+│    --iterations 100         Benchmark 迭代次数                 │
+│                                                                 │
+│  test_all.py:                                                  │
+│    --filter "pattern"       过滤测试                           │
+│    --limit N                限制数量                           │
+│    --benchmark              包含性能测试                        │
+│    --output file.json       保存结果                           │
+│    --dry-run                预览计划                           │
+│                                                                 │
+│  generate_report.py:                                           │
+│    --format html|markdown   输出格式                           │
+│    --output file            自定义输出                         │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  📁 重要文件                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  definition_operator_mapping.json  映射数据                    │
+│  BENCHMARK_GUIDE.md               完整文档                     │
+│  IMPROVEMENTS_SUMMARY.md          改进总结                     │
+│  README_BENCHMARK.md              系统概览                     │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  🎯 典型工作流                                                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  场景 1: 验证新 kernel                                          │
+│  ├─ python test_operator.py <name> <path> --benchmark         │
+│  ├─ python test_all.py --filter "*<variant>*"                 │
+│  └─ python generate_report.py results.json --format html      │
+│                                                                 │
+│  场景 2: 回归测试                                               │
+│  ├─ python test_all.py --benchmark --output baseline.json     │
+│  ├─ [修改代码]                                                  │
+│  ├─ python test_all.py --benchmark --output current.json      │
+│  └─ diff baseline.json current.json                           │
+│                                                                 │
+│  场景 3: 性能分析                                               │
+│  ├─ python test_operator.py ... --benchmark --iterations 1000 │
+│  └─ [分析不同配置的 GFLOPS]                                     │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  ✅ 验证结果                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ✅ Mapping: 37/38 definitions mapped                          │
+│  ✅ Single test: NMSE = 4.82e-15 (PASS)                        │
+│  ✅ Batch test: Dry-run successful                             │
+│  ✅ All tools: 5/5 verified                                    │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  🏆 性能数据 (W8A8C8 Q8_0×Q8_1)                                 │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  M=1,  N=512,  K=512   →  0.027 ms,  19.32 GFLOPS            │
+│  M=8,  N=1024, K=1024  →  0.066 ms, 254.83 GFLOPS            │
+│  精度: NMSE ≈ 10^-14 (接近浮点精度极限)                        │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  🐛 故障排查                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  测试失败:                                                      │
+│    export CUDA_LAUNCH_BLOCKING=1                              │
+│    python test_operator_enhanced.py ... --verbose            │
+│                                                                 │
+│  性能慢:                                                        │
+│    python test_operator.py ... --config "M=1,N=32,K=32"      │
+│    python test_all.py --limit 5                               │
+│                                                                 │
+├─────────────────────────────────────────────────────────────────┤
+│  📚 文档链接                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  详细文档: BENCHMARK_GUIDE.md                                  │
+│  改进总结: IMPROVEMENTS_SUMMARY.md                             │
+│  系统概览: README_BENCHMARK.md                                 │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+版本: 1.0 | 状态: ✅ 生产就绪 | 更新: 2026-02-03

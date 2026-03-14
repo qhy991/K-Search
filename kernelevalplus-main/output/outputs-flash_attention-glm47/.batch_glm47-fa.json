@@ -1,0 +1,9 @@
+{
+  "completed": [],
+  "failed": [],
+  "running": [
+    "/home/qinhaiyan/kernelevalplus/definitions/flash_attention/llama/fp32_flash_attention_llama3_8b_f16_cache512.json"
+  ],
+  "current_task": "/home/qinhaiyan/kernelevalplus/definitions/flash_attention/llama/fp32_flash_attention_llama3_8b_f16_cache512.json",
+  "started_at": "2026-03-13T11:15:13.454979"
+}

@@ -1,0 +1,188 @@
+{
+  "attempt_id": "test",
+  "variant": "default",
+  "op_type": "quant_gemm",
+  "tested_at": "2026-03-14T12:55:57.665693",
+  "spec": {
+    "name": "w4a32c8_q4_0_fp32_int8_ds3_moe_routing_up_n7168_k2048.json",
+    "op_type": "quant_gemm",
+    "variant": "W4A32C8",
+    "description": "DeepSeek-V3 MoE Routing Expert Up projection with W4A32C8. Projects from routing expert dimension (2048) back to hidden size (7168).",
+    "tags": [
+      "status:verified",
+      "framework:deepseek",
+      "layer:moe-routing-up",
+      "quantization:q4_0",
+      "quantization:q8_1",
+      "weight_bits:4",
+      "activation_storage:fp32",
+      "moe:routing"
+    ],
+    "model_architectures": [
+      "deepseek-v3"
+    ],
+    "op_category": "quant_gemm",
+    "axes": {
+      "M": {
+        "type": "var",
+        "description": "Batch dimension"
+      },
+      "N": {
+        "type": "const",
+        "value": 7168,
+        "description": "Hidden size"
+      },
+      "K": {
+        "type": "const",
+        "value": 2048,
+        "description": "Routing expert dimension"
+      },
+      "block_size": {
+        "type": "const",
+        "value": 32
+      }
+    },
+    "inputs": {
+      "activation": {
+        "shape": [
+          "M",
+          "K"
+        ],
+        "dtype": "float32",
+        "description": "FP32 activation, dynamically quantized to Q8_1"
+      },
+      "weight": {
+        "shape": [
+          "N",
+          "K/32"
+        ],
+        "dtype": "block_q4_0",
+        "description": "Q4_0 quantized routing weight"
+      }
+    },
+    "outputs": {
+      "output": {
+        "shape": [
+          "M",
+          "N"
+        ],
+        "dtype": "float32"
+      }
+    },
+    "constraints": [
+      "K % 32 == 0"
+    ],
+    "formula": {
+      "computation": "C = A @ W^T",
+      "llama_cpp_formula": "result = d4_0 * (d8_1 * sumi - 8 * s8_1)"
+    },
+    "test_configs": [
+      {
+        "name": "batch_1",
+        "M": 1,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_2",
+        "M": 2,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_3",
+        "M": 3,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_4",
+        "M": 4,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_5",
+        "M": 5,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_8",
+        "M": 8,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_512",
+        "M": 512,
+        "N": 7168,
+        "K": 2048
+      }
+    ],
+    "params": {
+      "M": {
+        "default": 1
+      },
+      "N": {
+        "value": 7168
+      },
+      "K": {
+        "value": 2048
+      },
+      "block_size": {
+        "value": 32
+      }
+    }
+  },
+  "compilation": {
+    "success": true,
+    "errors": [],
+    "warnings": [],
+    "diagnostics": []
+  },
+  "correctness": {
+    "passed": true,
+    "test_cases": [
+      {
+        "config": "single_token",
+        "passed": true,
+        "nmse": 0.000112
+      },
+      {
+        "config": "small_batch",
+        "passed": true,
+        "nmse": 0.000274
+      },
+      {
+        "config": "large_batch",
+        "passed": true,
+        "nmse": 0.000257
+      }
+    ],
+    "nmse": 0.000214
+  },
+  "performance": {
+    "benchmarks": [
+      {
+        "config": "single_token",
+        "latency_ms": 0.023,
+        "tflops": 1.259,
+        "gflops": 1259.2
+      },
+      {
+        "config": "small_batch",
+        "latency_ms": 0.28,
+        "tflops": 0.838,
+        "gflops": 837.9
+      },
+      {
+        "config": "large_batch",
+        "latency_ms": 27.688,
+        "tflops": 0.543,
+        "gflops": 542.9
+      }
+    ],
+    "baseline_comparison": null
+  }
+}

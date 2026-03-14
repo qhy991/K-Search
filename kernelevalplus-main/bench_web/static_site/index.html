@@ -1,0 +1,3564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KernelEvalPlus Benchmark</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .header h1 { color: #1f77b4; font-size: 2rem; margin-bottom: 10px; }
+        .header p { color: #666; }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .metric-card h3 { font-size: 0.85rem; color: #666; margin-bottom: 8px; }
+        .metric-card .value { font-size: 1.8rem; font-weight: bold; color: #1f77b4; }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .card h2 { color: #333; margin-bottom: 20px; }
+        .filter-bar { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px; }
+        .filter-group { flex: 1; min-width: 200px; }
+        .filter-group label { display: block; margin-bottom: 5px; color: #666; font-size: 0.9rem; }
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: 600; color: #333; position: sticky; top: 0; }
+        tr:hover { background: #f8f9fa; }
+        .table-container { max-height: 500px; overflow-y: auto; }
+        .pct-high { color: #28a745; font-weight: 600; }
+        .pct-medium { color: #fd7e14; font-weight: 600; }
+        .pct-low { color: #dc3545; font-weight: 600; }
+        .hardware-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
+        .hw-tag { background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .tab.active { background: #1f77b4; color: white; }
+        .tab:hover { background: #667eea; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* GLM-5-0212 specific styles */
+        .glm-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .glm-stat { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); padding: 15px; border-radius: 10px; text-align: center; }
+        .glm-stat-value { font-size: 1.5em; font-weight: bold; color: #667eea; }
+        .glm-stat-label { font-size: 0.85em; color: #666; margin-top: 5px; }
+
+        .baseline-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .baseline-card { background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center; }
+        .baseline-card h4 { color: #333; margin-bottom: 10px; font-size: 0.9em; }
+        .baseline-card .value { font-size: 1.3em; font-weight: bold; color: #1f77b4; }
+        .baseline-card .dims { color: #666; font-size: 0.8em; margin-top: 5px; }
+
+        .top-list { display: grid; gap: 10px; }
+        .top-item {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-item.rank-1 { border-left-color: #ffd700; background: linear-gradient(90deg, #fff9e6 0%, white 100%); }
+        .top-item.rank-2 { border-left-color: #c0c0c0; }
+        .top-item.rank-3 { border-left-color: #cd7f32; }
+        .top-item-name { flex: 1; }
+        .top-item-value { font-weight: bold; color: #667eea; font-size: 1.1em; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+        .badge-q4_0 { background: #e3f2fd; color: #1976d2; }
+        .badge-q4_1 { background: #fff3e0; color: #f57c00; }
+        .badge-q8_0 { background: #e8f5e9; color: #388e3c; }
+
+        .glm-table { font-size: 0.9em; }
+        .glm-table th { font-size: 0.85em; }
+        .glm-table td { font-size: 0.85em; }
+        .perf-bar-mini { height: 6px; background: #e9ecef; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+        .perf-fill { height: 100%; border-radius: 3px; }
+        .perf-high { background: linear-gradient(90deg, #4caf50, #8bc34a); }
+        .perf-medium { background: linear-gradient(90deg, #ff9800, #ffc107); }
+
+        /* Expand/Collapse styles */
+        .main-row:hover { background: #f0f4ff !important; }
+        .expand-icon { 
+            display: inline-block; 
+            width: 20px; 
+            text-align: center; 
+            color: #667eea; 
+            font-size: 0.8em;
+            transition: transform 0.2s;
+        }
+        .detail-row { background: #f8f9fa; }
+        .batch-details { 
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .perf-low { background: linear-gradient(90deg, #f44336, #ff5722); }
+
+        .section-title { font-size: 1.3em; color: #333; margin: 20px 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #667eea; }
+
+        .info-box { background: #e3f2fd; border-left: 4px solid #1976d2; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .info-box h4 { color: #1976d2; margin-bottom: 8px; }
+        .info-box p { color: #555; font-size: 0.9em; line-height: 1.5; }
+
+        /* View Switcher Styles */
+        .view-switcher { display: flex; gap: 10px; margin-bottom: 20px; background: #f8f9fa; padding: 5px; border-radius: 10px; width: fit-content; }
+        .view-btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s;
+        }
+        .view-btn:hover { background: #e9ecef; }
+        .view-btn.active { background: #667eea; color: white; }
+
+        /* Model Card Styles */
+        .model-card {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .model-card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .model-card-header:hover { background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%); }
+        .model-card-title { font-size: 1.1em; font-weight: 600; }
+        .model-card-subtitle { font-size: 0.85em; opacity: 0.9; margin-top: 4px; }
+        .model-card-toggle { transition: transform 0.3s; }
+        .model-card-toggle.collapsed { transform: rotate(-90deg); }
+        .model-card-content { display: none; padding: 15px; }
+        .model-card-content.visible { display: block; }
+
+        /* Model Operator Card Styles */
+        .model-operator-card { transition: box-shadow 0.2s; }
+        .model-operator-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .model-operator-header:hover { filter: brightness(0.98); }
+        .model-operator-content { animation: slideDown 0.3s ease-out; }
+
+        /* Baseline Table Styles */
+        .baseline-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .baseline-table th { background: #f8f9fa; padding: 12px 10px; text-align: center; font-weight: 600; border-bottom: 2px solid #e0e0e0; position: sticky; top: 0; }
+        .baseline-table td { padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
+        .baseline-table tr:hover { background: #f5f7fa; }
+        .baseline-best { background: #c8e6c9 !important; font-weight: 600; }
+        .baseline-worst { background: #ffebee !important; }
+
+        /* Model Overview Stats */
+        .model-overview-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .model-overview-stat {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .model-overview-stat-value { font-size: 1.8em; font-weight: bold; color: #667eea; }
+        .model-overview-stat-label { font-size: 0.8em; color: #666; margin-top: 5px; }
+
+        /* Task Comparison Table */
+        .task-comparison-container { margin-top: 20px; }
+        .task-selector { margin-bottom: 20px; }
+        .task-selector select {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            min-width: 200px;
+        }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .comparison-table th, .comparison-table td {
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        .comparison-table th { background: #f8f9fa; font-weight: 600; color: #333; }
+        .comparison-table td:first-child { text-align: left; font-weight: 500; }
+        .comparison-table tr:hover { background: #f8f9fa; }
+
+        /* Quantization Comparison Chart */
+        .quant-comparison-chart {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .quant-bar-group { margin-bottom: 15px; }
+        .quant-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        .quant-bar-bg {
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        .quant-bar-fill {
+            height: 100%;
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .quant-bar-q4_0 { background: linear-gradient(90deg, #1976d2, #42a5f5); }
+        .quant-bar-q4_1 { background: linear-gradient(90deg, #f57c00, #ffb74d); }
+        .quant-bar-q8_0 { background: linear-gradient(90deg, #388e3c, #81c784); }
+
+        /* Mini comparison table */
+        .mini-comparison-table { width: 100%; margin-top: 15px; }
+        .mini-comparison-table th, .mini-comparison-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        .mini-comparison-table th { background: #f5f5f5; font-size: 0.85em; }
+        .mini-comparison-table td { font-size: 0.85em; }
+        .mini-comparison-table td:first-child { text-align: left; font-weight: 500; }
+        .best-badge {
+            background: #4caf50;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        /* Baseline table */
+        .baseline-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9em; }
+        .baseline-table th, .baseline-table td {
+            padding: 12px 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        .baseline-table th { background: #f5f5f5; font-weight: 600; font-size: 0.85em; }
+        .baseline-table td { font-size: 0.85em; }
+        .baseline-table td:first-child { text-align: left; font-weight: 500; }
+        .baseline-table .config-cell { text-align: left; max-width: 200px; }
+        .baseline-table .hardware-header { background: #e3f2fd; }
+        .baseline-best { background: #c8e6c9; font-weight: 600; }
+        .baseline-worst { background: #ffebee; }
+
+        /* Kernels Tab Styles */
+        .kernel-type-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: box-shadow 0.2s;
+        }
+        .kernel-type-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .kernel-type-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .kernel-type-title {
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        .kernel-count {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        .kernel-model-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .kernel-model-tag {
+            background: #f5f5f5;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+        .kernel-list {
+            margin-top: 12px;
+        }
+        .kernel-item {
+            background: #fafafa;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .kernel-item:hover {
+            background: #f8f9fa;
+            border-left-color: #1976d2;
+            transform: translateX(2px);
+        }
+        .kernel-item-name {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 0.9em;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .kernel-item-variant {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        /* Kernel Detail Page - FlashInfer Style */
+        .kernel-detail-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+        .kernel-detail-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            word-break: break-all;
+        }
+        .kernel-detail-subtitle {
+            opacity: 0.95;
+            font-size: 0.95em;
+        }
+        .kernel-detail-section {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .kernel-detail-section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        .kernel-detail-section-title::before {
+            content: '';
+            width: 4px;
+            height: 18px;
+            background: #667eea;
+            border-radius: 2px;
+            margin-right: 10px;
+        }
+        .kernel-axes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .kernel-axis-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            border-left: 3px solid #667eea;
+        }
+        .kernel-axis-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+            font-family: 'SF Mono', 'Monaco', monospace;
+        }
+        .kernel-axis-type {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .kernel-axis-type .const {
+            color: #2e7d32;
+            font-weight: 500;
+        }
+        .kernel-axis-type .var {
+            color: #f57c00;
+            font-weight: 500;
+        }
+        .kernel-axis-value {
+            font-size: 1.1em;
+            color: #667eea;
+            font-weight: 600;
+        }
+        .kernel-axis-desc {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 4px;
+        }
+        .test-configs-list {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .test-config-item {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        .baseline-info {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 16px;
+            border-left: 4px solid #4caf50;
+        }
+        .baseline-info-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        .baseline-info-label {
+            font-weight: 600;
+            min-width: 100px;
+            color: #555;
+        }
+        .baseline-info-value {
+            color: #333;
+            font-family: 'SF Mono', 'Monaco', monospace;
+        }
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            color: #333;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+        }
+        .back-button:hover {
+            background: #e0e0e0;
+            transform: translateX(-2px);
+        }
+
+        /* Hidden view content */
+        .view-content { display: none; }
+        .view-content.active { display: block; }
+
+        /* Performance Chart Styles */
+        .perf-chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .perf-chart-title {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .perf-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            height: 300px;
+            padding: 20px 0 20px 60px;
+            border-left: 2px solid #ccc;
+            border-bottom: 2px solid #ccc;
+            position: relative;
+            background: white;
+            margin-left: 50px;
+        }
+        .perf-chart-y-axis {
+            position: absolute;
+            left: -50px;
+            top: 20px;
+            bottom: 20px;
+            width: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .perf-chart-y-label {
+            font-size: 0.75em;
+            color: #666;
+            text-align: right;
+            width: 35px;
+            position: absolute;
+            right: 0;
+        }
+        .perf-chart-y-label.top { top: 0; }
+        .perf-chart-y-label.upper-third { top: 33%; }
+        .perf-chart-y-label.middle { top: 50%; transform: translateY(-50%); }
+        .perf-chart-y-label.lower-third { top: 66%; }
+        .perf-chart-y-label.bottom { bottom: 0; top: auto; }
+        .perf-bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            min-height: 0;
+            height: 100%;
+        }
+        .perf-bar-container {
+            display: flex;
+            gap: 4px;
+            align-items: flex-end;
+            justify-content: center;
+            flex: 1;
+            width: 100%;
+            min-height: 200px;
+        }
+        .perf-bar {
+            width: 25px;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.3s;
+            position: relative;
+            min-height: 4px;
+            flex-shrink: 0;
+        }
+        .perf-bar:hover {
+            opacity: 0.8;
+        }
+        .perf-bar-tooltip {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            white-space: nowrap;
+            display: none;
+            z-index: 10;
+        }
+        .perf-bar:hover .perf-bar-tooltip {
+            display: block;
+        }
+        .perf-bar-q4_0 { background: linear-gradient(180deg, #1976d2, #42a5f5); }
+        .perf-bar-q4_1 { background: linear-gradient(180deg, #f57c00, #ffb74d); }
+        .perf-bar-q8_0 { background: linear-gradient(180deg, #388e3c, #81c784); }
+        .perf-label {
+            font-size: 0.85em;
+            color: #666;
+            text-align: center;
+        }
+        .perf-legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .perf-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9em;
+        }
+        .perf-legend-color {
+            width: 20px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        .scaling-chart {
+            margin-top: 30px;
+        }
+        .scaling-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .scaling-info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .scaling-info-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .scaling-info-label {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>KernelEvalPlus Benchmark</h1>
+            <p>LLM-generated CUDA kernel performance evaluation</p>
+            <div class="hardware-tags" id="hwTags"></div>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card"><h3>Experiments</h3><div class="value" id="expCount">-</div></div>
+            <div class="metric-card"><h3>Test Cases</h3><div class="value" id="caseCount">-</div></div>
+            <div class="metric-card"><h3>Models</h3><div class="value" id="modelCount">3</div></div>
+            <div class="metric-card"><h3>Hardware</h3><div class="value" id="hwCount">-</div></div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="results">Results</button>
+            <button class="tab" data-tab="leaderboard">Leaderboard</button>
+            <button class="tab" data-tab="baseline">Baseline</button>
+            <button class="tab" data-tab="kernels">Kernels</button>
+            <button class="tab" data-tab="glm50212" style="background: #ffd700; color: #333; font-weight: 600;">GLM-5-0212 🚀</button>
+        </div>
+
+        <!-- Results Tab -->
+        <div class="tab-content active" id="results">
+            <div class="card">
+                <h2>Experiment Results</h2>
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>Experiment</label>
+                        <select id="expSelect"></select>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="resultsTable"><thead></thead><tbody></tbody></table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Tab -->
+        <div class="tab-content" id="leaderboard">
+            <div class="card">
+                <h2>Performance Leaderboard (Top 50)</h2>
+                <div class="table-container">
+                    <table id="leaderTable">
+                        <thead><tr><th>#</th><th>Experiment</th><th>Batch</th><th>Model</th><th>GFLOPS</th><th>vs Baseline</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Baseline Tab -->
+        <div class="tab-content" id="baseline">
+            <div class="card">
+                <h2>Baseline Performance Data</h2>
+                <div class="info-box">
+                    <h4>不同硬件在各个模型配置下的基础性能数据</h4>
+                    <p>支持 Quant GEMM、Flash Attention、RMS Norm 和 TopK 算子的基准性能数据。</p>
+                </div>
+
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>算子类型</label>
+                        <select id="baselineOperatorSelect" onchange="onBaselineOperatorChange()">
+                            <option value="quant_gemm">Quant GEMM</option>
+                            <option value="flash_attention">Flash Attention</option>
+                            <option value="rms_norm">RMS Norm</option>
+                            <option value="topk">TopK</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Quant GEMM Filters -->
+                <div id="quantGemmFilters" class="filter-bar" style="display: flex;">
+                    <div class="filter-group">
+                        <label>量化类型</label>
+                        <select id="baselineQuantSelect" onchange="populateOutputDimSelect(); renderBaselineTable()">
+                            <option value="q4_0">Q4_0</option>
+                            <option value="q4_1">Q4_1</option>
+                            <option value="q8_0">Q8_0</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>输入维度 (K)</label>
+                        <select id="baselineKSelect" onchange="populateOutputDimSelect(); renderBaselineTable()">
+                            <option value="7168" selected>K=7168 (DeepSeek-V3)</option>
+                            <option value="5120">K=5120 (DeepSeek-V2)</option>
+                            <option value="4096">K=4096 (LLaMA-3-8B)</option>
+                            <option value="3584">K=3584 (Qwen2.5-7B)</option>
+                            <option value="2560">K=2560 (Qwen3-4B)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>输出维度 (llama.cpp M)</label>
+                        <select id="baselineOutputDimSelect" onchange="renderBaselineTable()">
+                            <option value="">加载中...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Flash Attention Filters -->
+                <div id="flashAttnFilters" class="filter-bar" style="display: none;">
+                    <div class="filter-group">
+                        <label>模型</label>
+                        <select id="flashAttnModelSelect" onchange="renderFlashAttnBaseline()">
+                            <option value="">全部模型</option>
+                            <option value="Llama3-8B">Llama3-8B</option>
+                            <option value="Qwen2.5-7B">Qwen2.5-7B</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>KV 类型</label>
+                        <select id="flashAttnKVTypeSelect" onchange="renderFlashAttnBaseline()">
+                            <option value="">全部</option>
+                            <option value="F16">F16</option>
+                            <option value="Q8_0">Q8_0</option>
+                            <option value="Q4_0">Q4_0</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Cache 大小</label>
+                        <select id="flashAttnCacheSizeSelect" onchange="renderFlashAttnBaseline()">
+                            <option value="">全部</option>
+                            <option value="512">512</option>
+                            <option value="4096">4096</option>
+                            <option value="8192">8192</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- RMS Norm Filters -->
+                <div id="rmsNormFilters" class="filter-bar" style="display: none;">
+                    <div class="filter-group">
+                        <label>Hidden Size</label>
+                        <select id="rmsNormHiddenSizeSelect" onchange="renderRmsNormBaseline()">
+                            <option value="">全部</option>
+                            <option value="128">128</option>
+                            <option value="512">512</option>
+                            <option value="1536">1536</option>
+                            <option value="2560">2560</option>
+                            <option value="3584">3584</option>
+                            <option value="4096">4096</option>
+                            <option value="5120">5120</option>
+                            <option value="7168">7168</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- TopK Filters -->
+                <div id="topKFilters" class="filter-bar" style="display: none;">
+                    <div class="filter-group">
+                        <label>K 值</label>
+                        <select id="topKValueSelect" onchange="renderTopKBaseline()">
+                            <option value="">全部</option>
+                            <option value="6">K=6</option>
+                            <option value="8">K=8</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>NE0</label>
+                        <select id="topKNE0Select" onchange="renderTopKBaseline()">
+                            <option value="">全部</option>
+                            <option value="160">160</option>
+                            <option value="256">256</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="baselineTableContainer">
+                    <div class="info-box">
+                        <p>选择筛选条件后查看数据。</p>
+                        <p style="font-size: 0.85em; color: #666; margin-top: 8px;">
+                            <strong>注意：</strong>llama.cpp 的 (M,N,K) 与我们的定义互换。<br>
+                            llama.cpp M → 我们的 N（输出维度），llama.cpp N → 我们的 M（batch size）
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kernels Tab -->
+        <div class="tab-content" id="kernels">
+            <div class="card">
+                <h2>🔧 Kernels</h2>
+                <div class="info-box">
+                    <h4>Kernel Definitions</h4>
+                    <p>浏览所有算子 kernel 定义，包括 Quant GEMM、Flash Attention、RMS Norm 和 TopK。</p>
+                </div>
+
+                <div class="view-switcher">
+                    <button class="view-btn active" data-view="operators" onclick="switchKernelsView('operators')">按算子类型</button>
+                    <button class="view-btn" data-view="models" onclick="switchKernelsView('models')">按模型</button>
+                </div>
+
+                <!-- By Operator View -->
+                <div id="operatorsView" class="view-content active">
+                    <div class="filter-bar">
+                        <div class="filter-group">
+                            <label>算子类型</label>
+                            <select id="operatorSelect" onchange="renderOperatorKernels()">
+                                <option value="">全部</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="operatorKernelsContainer"></div>
+                </div>
+
+                <!-- By Model View -->
+                <div id="modelsView" class="view-content">
+                    <div class="filter-bar">
+                        <div class="filter-group">
+                            <label>模型</label>
+                            <select id="kernelModelSelect" onchange="renderModelKernels()">
+                                <option value="">全部</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="modelKernelsContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GLM-5-0212 Tab -->
+        <div class="tab-content" id="glm50212">
+            <div class="card">
+                <h2>🚀 GLM-5-0212: Quantized GEMM Kernel Evaluation</h2>
+                <div class="info-box">
+                    <h4>Experiment Overview</h4>
+                    <p>Comprehensive evaluation of 36 quantized GEMM kernel experiments across multiple model architectures (DeepSeek-V2/V3, LLaMA-3-8B, Qwen2.5-7B, Qwen3-4B, Mixtral-8x7B) with Q4_0, Q4_1, and Q8_0 quantization formats.</p>
+                </div>
+
+                <div class="glm-stats">
+                    <div class="glm-stat"><div class="glm-stat-value" id="glmExpCount">36</div><div class="glm-stat-label">Experiments</div></div>
+                    <div class="glm-stat"><div class="glm-stat-value" id="glmAvgBaseline">--</div><div class="glm-stat-label">Avg Baseline %</div></div>
+                    <div class="glm-stat"><div class="glm-stat-value" id="glmBestBaseline">--</div><div class="glm-stat-label">Best Baseline %</div></div>
+                    <div class="glm-stat"><div class="glm-stat-value" id="glmBestM512">--</div><div class="glm-stat-label">Best M=512 GFLOPS</div></div>
+                </div>
+
+                <h3 class="section-title">GGML Baseline Reference</h3>
+                <div class="baseline-cards">
+                    <div class="baseline-card">
+                        <h4>DeepSeek-V3</h4>
+                        <div class="dims">7168×7168</div>
+                        <div class="value">8,500</div>
+                        <div class="dims">GFLOPS</div>
+                    </div>
+                    <div class="baseline-card">
+                        <h4>Mixtral-8x7B</h4>
+                        <div class="dims">14336×4096</div>
+                        <div class="value">8,230</div>
+                        <div class="dims">GFLOPS</div>
+                    </div>
+                    <div class="baseline-card">
+                        <h4>DeepSeek-V2</h4>
+                        <div class="dims">5120×5120</div>
+                        <div class="value">6,390</div>
+                        <div class="dims">GFLOPS</div>
+                    </div>
+                    <div class="baseline-card">
+                        <h4>LLaMA-3-8B</h4>
+                        <div class="dims">4096×4096</div>
+                        <div class="value">4,950</div>
+                        <div class="dims">GFLOPS</div>
+                    </div>
+                    <div class="baseline-card">
+                        <h4>Qwen2.5-7B</h4>
+                        <div class="dims">3584×3584</div>
+                        <div class="value">4,030</div>
+                        <div class="dims">GFLOPS</div>
+                    </div>
+                    <div class="baseline-card">
+                        <h4>Qwen3-4B</h4>
+                        <div class="dims">2560×2560</div>
+                        <div class="value">2,070</div>
+                        <div class="dims">GFLOPS</div>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Top 3: Best M=1 Performance (vs Baseline)</h3>
+                <div class="top-list" id="topM1List">
+                    <div class="loading">Loading...</div>
+                </div>
+
+                <h3 class="section-title">Top 3: Best M=512 GFLOPS</h3>
+                <div class="top-list" id="topM512List">
+                    <div class="loading">Loading...</div>
+                </div>
+
+                <h3 class="section-title">Top 3: Best Scaling Ratio</h3>
+                <div class="top-list" id="topScalingList">
+                    <div class="loading">Loading...</div>
+                </div>
+
+                <h3 class="section-title">Experiment Results</h3>
+
+                <!-- View Switcher -->
+                <div class="view-switcher">
+                    <button class="view-btn active" data-view="model" onclick="switchView('model')">按模型</button>
+                    <button class="view-btn" data-view="task" onclick="switchView('task')">按Task</button>
+                    <button class="view-btn" data-view="chart" onclick="switchView('chart')">性能曲线</button>
+                </div>
+
+                <!-- By Model View -->
+                <div id="modelView" class="view-content active">
+                    <div class="filter-bar" style="margin-bottom: 15px;">
+                        <div class="filter-group">
+                            <label>Batch Size (M)</label>
+                            <select id="modelMSelect" onchange="renderModelView()">
+                                <option value="1">M=1</option>
+                                <option value="2">M=2</option>
+                                <option value="3">M=3</option>
+                                <option value="4">M=4</option>
+                                <option value="5">M=5</option>
+                                <option value="8">M=8</option>
+                                <option value="512">M=512</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="model-overview-stats">
+                        <div class="model-overview-stat">
+                            <div class="model-overview-stat-value" id="modelCountStat">-</div>
+                            <div class="model-overview-stat-label">模型数</div>
+                        </div>
+                        <div class="model-overview-stat">
+                            <div class="model-overview-stat-value" id="taskCountStat">-</div>
+                            <div class="model-overview-stat-label">Tasks</div>
+                        </div>
+                        <div class="model-overview-stat">
+                            <div class="model-overview-stat-value" id="expCountStat">-</div>
+                            <div class="model-overview-stat-label">实验数</div>
+                        </div>
+                        <div class="model-overview-stat">
+                            <div class="model-overview-stat-value" id="bestPctStat">-</div>
+                            <div class="model-overview-stat-label">最佳 %</div>
+                        </div>
+                    </div>
+                    <div id="modelCardsContainer"></div>
+                </div>
+
+                <!-- By Task View -->
+                <div id="taskView" class="view-content">
+                    <div class="filter-bar" style="margin-bottom: 15px;">
+                        <div class="filter-group">
+                            <label>选择Task</label>
+                            <select id="taskSelect" onchange="renderTaskComparison()">
+                                <option value="">-- 选择 Task --</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Batch Size (M)</label>
+                            <select id="taskMSelect" onchange="renderTaskComparison()">
+                                <option value="1">M=1</option>
+                                <option value="2">M=2</option>
+                                <option value="3">M=3</option>
+                                <option value="4">M=4</option>
+                                <option value="5">M=5</option>
+                                <option value="8">M=8</option>
+                                <option value="512">M=512</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="taskComparisonContainer">
+                        <div class="info-box">
+                            <h4>Task对比</h4>
+                            <p>请选择一个Task查看各模型在该Task下的量化类型性能对比。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Chart View -->
+                <div id="chartView" class="view-content">
+                    <div class="task-selector">
+                        <label>选择Task: </label>
+                        <select id="chartTaskSelect" onchange="renderPerformanceChart()">
+                            <option value="">-- 选择 Task --</option>
+                        </select>
+                        <label style="margin-left: 20px;">选择模型: </label>
+                        <select id="chartModelSelect" onchange="renderPerformanceChart()">
+                            <option value="all">所有模型</option>
+                        </select>
+                    </div>
+                    <div id="performanceChartContainer">
+                        <div class="info-box">
+                            <h4>性能曲线</h4>
+                            <p>请选择一个Task查看不同M（batch size）下的GFLOPS性能变化。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed List View -->
+                <div id="detailView" class="view-content">
+                    <h4 class="section-title" style="font-size: 1.1em; margin-top: 10px;">详细实验结果</h4>
+                    <div class="filter-bar">
+                        <div class="filter-group">
+                            <label>Search</label>
+                            <input type="text" id="glmSearch" placeholder="Search experiments..." onkeyup="filterGlmTable()">
+                        </div>
+                        <div class="filter-group">
+                            <label>Quantization</label>
+                            <select id="glmVariantFilter" onchange="filterGlmTable()">
+                                <option value="">All</option>
+                                <option value="Q4_0">Q4_0</option>
+                                <option value="Q4_1">Q4_1</option>
+                                <option value="Q8_0">Q8_0</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>N (Rows)</label>
+                            <select id="glmNFilter" onchange="filterGlmTable()">
+                                <option value="">All</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>K (Cols)</label>
+                            <select id="glmKFilter" onchange="filterGlmTable()">
+                                <option value="">All</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Sort By</label>
+                            <select id="glmSortBy" onchange="sortGlmTable()">
+                                <option value="baseline">Baseline %</option>
+                                <option value="m1">M=1 GFLOPS</option>
+                                <option value="m512">M=512 GFLOPS</option>
+                                <option value="scaling">Scaling Ratio</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="glm-table" id="glmTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 30px;"></th>
+                                    <th>Experiment</th>
+                                    <th>Variant</th>
+                                    <th>Dimensions</th>
+                                    <th>M=1 GFLOPS</th>
+                                    <th>M=1 Baseline %</th>
+                                    <th>M=512 GFLOPS</th>
+                                    <th>Scaling Ratio</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const MODELS = {
+            'glm-4.7-0211': { name: 'GLM-4.7', tflops: 'glm-4.7-0211_tflops', vs: 'glm-4.7-0211_vs_baseline_pct' },
+            'glm-5-0212': { name: 'GLM-5', tflops: 'glm-5-0212_tflops', vs: 'glm-5-0212_vs_baseline_pct' },
+            'sonnet-4.5': { name: 'Sonnet-4.5', tflops: 'sonnet-4.5_tflops', vs: 'sonnet-4.5_vs_baseline_pct' }
+        };
+
+        // GLM-5-0212 Baseline reference
+        const GLM_BASELINES = {
+            'DeepSeek-V3': { baseline: 8500, dims: '7168×7168' },
+            'Mixtral-8x7B': { baseline: 8230, dims: '14336×4096' },
+            'DeepSeek-V2': { baseline: 6390, dims: '5120×5120' },
+            'LLaMA-3-8B': { baseline: 4950, dims: '4096×4096' },
+            'Qwen2.5-7B': { baseline: 4030, dims: '3584×3584' },
+            'Qwen3-4B': { baseline: 2070, dims: '2560×2560' },
+            'MoE Routing': { baseline: 4570, dims: '2048×7168' }
+        };
+
+        let csvData = [], baselineData = {}, glmData = [];
+
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            if (lines.length === 0) return [];
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+            return lines.slice(1).filter(line => line.trim()).map(line => {
+                // Simple CSV parsing - handle quoted values
+                const vals = [];
+                let current = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        vals.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                vals.push(current.trim()); // Last value
+                const row = {};
+                headers.forEach((h, i) => {
+                    const val = vals[i] ? vals[i].trim().replace(/^"|"$/g, '') : '';
+                    row[h] = val;
+                });
+                return row;
+            });
+        }
+
+        function getBasePath() {
+            let path = window.location.pathname;
+            if (path.endsWith('.html')) path = path.substring(0, path.lastIndexOf('/'));
+            if (!path.endsWith('/')) path = path + '/';
+            if (path === '/') return './';
+            return path;
+        }
+
+        async function loadData() {
+            const BASE = getBasePath();
+            console.log('BASE_PATH:', BASE);
+
+            try {
+                // Load main experiments CSV
+                const csvRes = await fetch(BASE + 'data/experiments.csv');
+                if (!csvRes.ok) throw new Error(`Failed to load experiments.csv: ${csvRes.status}`);
+                csvData = parseCSV(await csvRes.text());
+                console.log('Loaded', csvData.length, 'experiment rows');
+
+                // Load baseline JSON
+                const jsonRes = await fetch(BASE + 'data/baseline.json');
+                if (!jsonRes.ok) throw new Error(`Failed to load baseline.json: ${jsonRes.status}`);
+                baselineData = await jsonRes.json();
+                console.log('Loaded baseline data');
+
+                // Load unified performance summary data
+                try {
+                    const unifiedRes = await fetch(BASE + 'data/unified_performance_summary.csv');
+                    if (unifiedRes.ok) {
+                        glmData = parseCSV(await unifiedRes.text());
+                        console.log('Loaded unified performance data:', glmData.length, 'rows');
+                    }
+                } catch (e) {
+                    console.log('Unified performance data not available:', e);
+                }
+
+                initUI();
+            } catch (e) {
+                console.error('Error loading data:', e);
+                showError(e.message, BASE);
+            }
+        }
+
+        function showError(msg, base) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = 'padding:20px;color:red;background:white;margin:20px;border-radius:8px;font-family:monospace;';
+            errorDiv.innerHTML = `
+                <h3>Error loading data</h3>
+                <p><strong>Message:</strong> ${msg}</p>
+                <p><strong>BASE_PATH:</strong> ${base}</p>
+                <p><strong>Current URL:</strong> ${window.location.href}</p>
+            `;
+            document.querySelector('.container').innerHTML = '';
+            document.querySelector('.container').appendChild(errorDiv);
+        }
+
+        function initUI() {
+            const exps = [...new Set(csvData.map(d => d.experiment))];
+            const hwList = Object.values(baselineData)[0]?.hardware ? Object.keys(Object.values(baselineData)[0].hardware) : [];
+
+            document.getElementById('expCount').textContent = exps.length;
+            document.getElementById('caseCount').textContent = csvData.length;
+            document.getElementById('hwCount').textContent = hwList.length;
+
+            hwList.forEach(hw => {
+                document.getElementById('hwTags').innerHTML += `<span class="hw-tag">${hw}</span>`;
+            });
+
+            exps.forEach(e => {
+                document.getElementById('expSelect').innerHTML += `<option value="${e}">${e}</option>`;
+            });
+
+            document.getElementById('expSelect').onchange = updateResults;
+
+            document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+                document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+                t.classList.add('active');
+                document.getElementById(t.dataset.tab).classList.add('active');
+
+                // Initialize GLM views when switching to GLM tab
+                if (t.dataset.tab === 'glm50212' && glmData.length > 0) {
+                    renderModelView();
+                }
+
+                // Initialize baseline table when switching to baseline tab
+                if (t.dataset.tab === 'baseline') {
+                    renderBaselineTable();
+                }
+
+                // Initialize kernels when switching to kernels tab
+                if (t.dataset.tab === 'kernels') {
+                    loadKernelsData();
+                }
+            });
+
+            updateResults();
+            updateLeaderboard();
+            // Note: baseline table is now loaded on-demand when switching to baseline tab
+            if (glmData.length > 0) {
+                populateGlmDimensionFilters();
+                updateGlmStats();
+                updateGlmLists();
+                renderGlmTable();
+                renderModelView(); // Initialize model view
+            }
+        }
+
+        function updateResults() {
+            const exp = document.getElementById('expSelect').value;
+            const rows = csvData.filter(d => d.experiment === exp);
+
+            let th = '<tr><th>Batch</th><th>M</th><th>N</th><th>K</th>';
+            Object.values(MODELS).forEach(m => th += `<th>${m.name} TFLOPS</th><th>${m.name} vs Baseline</th>`);
+            th += '<th>Baseline TFLOPS</th></tr>';
+
+            let tb = '';
+            rows.forEach(r => {
+                tb += `<tr><td>${r.batch}</td><td>${r.M}</td><td>${r.N}</td><td>${r.K}</td>`;
+                Object.values(MODELS).forEach(m => {
+                    const tf = parseFloat(r[m.tflops] || 0).toFixed(2);
+                    const vs = r[m.vs] || '-';
+                    const cls = parseFloat(vs) >= 20 ? 'pct-high' : parseFloat(vs) >= 10 ? 'pct-medium' : 'pct-low';
+                    tb += `<td>${tf}</td><td class="${cls}">${vs}</td>`;
+                });
+                tb += `<td>${r.baseline_tflops || '-'}</td></tr>`;
+            });
+
+            document.querySelector('#resultsTable thead').innerHTML = th;
+            document.querySelector('#resultsTable tbody').innerHTML = tb;
+        }
+
+        function updateLeaderboard() {
+            const all = [];
+            csvData.forEach(r => {
+                Object.entries(MODELS).forEach(([k, m]) => {
+                    all.push({
+                        exp: r.experiment, batch: r.batch, model: m.name,
+                        gflops: (parseFloat(r[m.tflops] || 0) * 1000).toFixed(1),
+                        vs: r[m.vs] || '-'
+                    });
+                });
+            });
+            all.sort((a, b) => parseFloat(b.gflops) - parseFloat(a.gflops));
+
+            let tb = '';
+            all.slice(0, 50).forEach((r, i) => {
+                const cls = parseFloat(r.vs) >= 20 ? 'pct-high' : parseFloat(r.vs) >= 10 ? 'pct-medium' : 'pct-low';
+                tb += `<tr><td>${i + 1}</td><td>${r.exp}</td><td>${r.batch}</td><td>${r.model}</td><td>${r.gflops}</td><td class="${cls}">${r.vs}</td></tr>`;
+            });
+            document.querySelector('#leaderTable tbody').innerHTML = tb;
+        }
+
+        function updateBaseline() {
+            const hw = document.getElementById('hwSelect').value;
+            const rows = [];
+
+            Object.entries(baselineData).forEach(([k, v]) => {
+                const h = v.hardware?.[hw];
+                if (!h) return;
+                const parts = k.split('_');
+                let m, n, kk;
+                parts.forEach(p => {
+                    if (p.startsWith('m')) m = p.slice(1);
+                    if (p.startsWith('n')) n = p.slice(1);
+                    if (p.startsWith('k')) kk = p.slice(1);
+                });
+                rows.push({ key: k, m, n, k: kk, gflops: h.gflops || 0, tflops: h.tflops || 0 });
+            });
+
+            rows.sort((a, b) => b.gflops - a.gflops);
+
+            let tb = '';
+            rows.forEach(r => {
+                tb += `<tr><td style="font-family:monospace;font-size:0.85rem;">${r.key}</td><td>${r.m}</td><td>${r.n}</td><td>${r.k}</td><td>${r.gflops}</td><td>${r.tflops}</td></tr>`;
+            });
+            document.querySelector('#baselineTable tbody').innerHTML = tb;
+        }
+
+        function updateGlmStats() {
+            const avgBaseline = glmData.reduce((sum, row) => sum + parseFloat(row['M=1_baseline_pct'] || 0), 0) / glmData.length;
+            const bestBaseline = Math.max(...glmData.map(row => parseFloat(row['M=1_baseline_pct'] || 0)));
+            const bestM512 = Math.max(...glmData.map(row => parseFloat(row['M=512_gflops'] || 0)));
+
+            document.getElementById('glmAvgBaseline').textContent = avgBaseline.toFixed(1) + '%';
+            document.getElementById('glmBestBaseline').textContent = bestBaseline.toFixed(1) + '%';
+            document.getElementById('glmBestM512').textContent = bestM512.toLocaleString();
+        }
+
+        function updateGlmLists() {
+            // Top M=1
+            const topM1 = [...glmData].sort((a, b) => parseFloat(b['M=1_baseline_pct']) - parseFloat(a['M=1_baseline_pct'])).slice(0, 3);
+            document.getElementById('topM1List').innerHTML = topM1.map((row, i) => {
+                const name = row.experiment_name.replace(/w4a32c8_q4_0_fp32_int8_|w4a32c8_q4_1_fp32_int8_|w8a32c8_q8_0_fp32_int8_/g, '');
+                return `
+                    <div class="top-item rank-${i+1}">
+                        <span class="top-item-name">#${i+1} ${name}</span>
+                        <span class="top-item-value">${row['M=1_baseline_pct']}% <small>(${parseFloat(row['M=1_gflops']).toFixed(0)} GFLOPS)</small></span>
+                    </div>
+                `;
+            }).join('');
+
+            // Top M=512
+            const topM512 = [...glmData].sort((a, b) => parseFloat(b['M=512_gflops']) - parseFloat(a['M=512_gflops'])).slice(0, 3);
+            document.getElementById('topM512List').innerHTML = topM512.map((row, i) => {
+                const name = row.experiment_name.replace(/w4a32c8_q4_0_fp32_int8_|w4a32c8_q4_1_fp32_int8_|w8a32c8_q8_0_fp32_int8_/g, '');
+                return `
+                    <div class="top-item rank-${i+1}">
+                        <span class="top-item-name">#${i+1} ${name}</span>
+                        <span class="top-item-value">${parseFloat(row['M=512_gflops']).toLocaleString()} GFLOPS <small>(${row.scaling_ratio}x)</small></span>
+                    </div>
+                `;
+            }).join('');
+
+            // Top Scaling
+            const topScaling = [...glmData].sort((a, b) => parseFloat(b.scaling_ratio) - parseFloat(a.scaling_ratio)).slice(0, 3);
+            document.getElementById('topScalingList').innerHTML = topScaling.map((row, i) => {
+                const name = row.experiment_name.replace(/w4a32c8_q4_0_fp32_int8_|w4a32c8_q4_1_fp32_int8_|w8a32c8_q8_0_fp32_int8_/g, '');
+                return `
+                    <div class="top-item rank-${i+1}">
+                        <span class="top-item-name">#${i+1} ${name}</span>
+                        <span class="top-item-value">${row.scaling_ratio}x <small>(${parseFloat(row['M=1_gflops']).toFixed(0)} → ${parseFloat(row['M=512_gflops']).toFixed(0)})</small></span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderGlmTable() {
+            const filtered = [...glmData];
+            sortGlmData(filtered);
+            filterGlmData(filtered);
+        }
+
+        function populateGlmDimensionFilters() {
+            // Extract unique N and K values from dimensions
+            const nValues = new Set();
+            const kValues = new Set();
+
+            glmData.forEach(row => {
+                if (row.dimensions) {
+                    const dims = row.dimensions.toLowerCase().split('x');
+                    if (dims.length === 2) {
+                        nValues.add(dims[0]);
+                        kValues.add(dims[1]);
+                    }
+                }
+            });
+
+            // Sort values numerically
+            const sortedN = Array.from(nValues).sort((a, b) => parseInt(a) - parseInt(b));
+            const sortedK = Array.from(kValues).sort((a, b) => parseInt(a) - parseInt(b));
+
+            // Populate N filter dropdown
+            const nSelect = document.getElementById('glmNFilter');
+            nSelect.innerHTML = '<option value="">All</option>';
+            sortedN.forEach(n => {
+                nSelect.innerHTML += `<option value="${n}">${n}</option>`;
+            });
+
+            // Populate K filter dropdown
+            const kSelect = document.getElementById('glmKFilter');
+            kSelect.innerHTML = '<option value="">All</option>';
+            sortedK.forEach(k => {
+                kSelect.innerHTML += `<option value="${k}">${k}</option>`;
+            });
+        }
+
+        function sortGlmTable() {
+            const sortBy = document.getElementById('glmSortBy').value;
+            let sorted = [...glmData];
+
+            switch(sortBy) {
+                case 'baseline': sorted.sort((a, b) => parseFloat(b['M=1_baseline_pct']) - parseFloat(a['M=1_baseline_pct'])); break;
+                case 'm1': sorted.sort((a, b) => parseFloat(b['M=1_gflops']) - parseFloat(a['M=1_gflops'])); break;
+                case 'm512': sorted.sort((a, b) => parseFloat(b['M=512_gflops']) - parseFloat(a['M=512_gflops'])); break;
+                case 'scaling': sorted.sort((a, b) => parseFloat(b.scaling_ratio) - parseFloat(a.scaling_ratio)); break;
+            }
+
+            filterGlmData(sorted);
+        }
+
+        function filterGlmTable() {
+            const sortBy = document.getElementById('glmSortBy').value;
+            const search = document.getElementById('glmSearch').value.toLowerCase();
+            const variant = document.getElementById('glmVariantFilter').value;
+            const nFilter = document.getElementById('glmNFilter').value;
+            const kFilter = document.getElementById('glmKFilter').value;
+
+            let filtered = [...glmData];
+
+            // Sort
+            switch(sortBy) {
+                case 'baseline': filtered.sort((a, b) => parseFloat(b['M=1_baseline_pct']) - parseFloat(a['M=1_baseline_pct'])); break;
+                case 'm1': filtered.sort((a, b) => parseFloat(b['M=1_gflops']) - parseFloat(a['M=1_gflops'])); break;
+                case 'm512': filtered.sort((a, b) => parseFloat(b['M=512_gflops']) - parseFloat(a['M=512_gflops'])); break;
+                case 'scaling': filtered.sort((a, b) => parseFloat(b.scaling_ratio) - parseFloat(a.scaling_ratio)); break;
+            }
+
+            // Filter
+            filtered = filtered.filter(row => {
+                const matchSearch = row.experiment_name.toLowerCase().includes(search);
+                const matchVariant = !variant || row.variant === variant;
+
+                // Parse dimensions (format: "NxK" like "7168x7168")
+                let matchN = !nFilter;
+                let matchK = !kFilter;
+                if (row.dimensions) {
+                    const dims = row.dimensions.toLowerCase().split('x');
+                    if (dims.length === 2) {
+                        const n = dims[0];
+                        const k = dims[1];
+                        matchN = !nFilter || n === nFilter;
+                        matchK = !kFilter || k === kFilter;
+                    }
+                }
+
+                return matchSearch && matchVariant && matchN && matchK;
+            });
+
+            // Render
+            let tb = '';
+            filtered.forEach((row, index) => {
+                const baselinePct = parseFloat(row['M=1_baseline_pct']);
+                const perfClass = baselinePct >= 40 ? 'perf-high' : baselinePct >= 20 ? 'perf-medium' : 'perf-low';
+                const shortName = row.experiment_name.replace(/w4a32c8_q4_0_fp32_int8_|w4a32c8_q4_1_fp32_int8_|w8a32c8_q8_0_fp32_int8_/g, '');
+                const rowId = `row-${index}`;
+                const detailId = `detail-${index}`;
+                const batches = ['1', '2', '3', '4', '5', '8', '512'];
+                // Check if this row has extended batch data (has M=2_gflops means it has all batches)
+                const hasAllBatches = row['M=2_gflops'] !== undefined && row['M=2_gflops'] !== '';
+
+                tb += `
+                    <tr id="${rowId}" class="main-row" onclick="toggleDetail('${detailId}')" style="cursor: pointer;">
+                        <td><span class="expand-icon" id="icon-${detailId}">▶</span></td>
+                        <td title="${row.experiment_name}">${shortName}</td>
+                        <td><span class="badge badge-${row.variant.toLowerCase()}">${row.variant}</span></td>
+                        <td>${row.dimensions || '-'}</td>
+                        <td>${parseFloat(row['M=1_gflops']).toFixed(1)}</td>
+                        <td>
+                            ${baselinePct.toFixed(1)}%
+                            <div class="perf-bar-mini"><div class="perf-fill ${perfClass}" style="width: ${Math.min(baselinePct, 100)}%"></div></div>
+                        </td>
+                        <td>${parseFloat(row['M=512_gflops']).toLocaleString()}</td>
+                        <td>${row.scaling_ratio}x</td>
+                    </tr>
+                    ${hasAllBatches ? `
+                    <tr id="${detailId}" class="detail-row" style="display: none;">
+                        <td colspan="8">
+                            <div class="batch-details" style="padding: 15px; background: #f8f9fa; border-left: 4px solid #667eea;">
+                                <h4 style="margin: 0 0 10px 0; color: #333;">所有Batch Size性能数据</h4>
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="background: #e3f2fd;">
+                                            <th style="padding: 8px; text-align: left;">Batch Size</th>
+                                            <th style="padding: 8px; text-align: right;">时间 (ms)</th>
+                                            <th style="padding: 8px; text-align: right;">GFLOPS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${batches.map(b => {
+                                            const gflops = row[`M=${b}_gflops`];
+                                            const time = row[`M=${b}_time_ms`];
+                                            if (gflops === undefined) return '';
+                                            return `
+                                                <tr>
+                                                    <td style="padding: 6px; font-weight: 600;">M=${b}</td>
+                                                    <td style="padding: 6px; text-align: right;">${time ? parseFloat(time).toFixed(3) : '-'}</td>
+                                                    <td style="padding: 6px; text-align: right; font-weight: 600;">${parseFloat(gflops).toLocaleString()}</td>
+                                                </tr>
+                                            `;
+                                        }).filter(x => x).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    ` : ''}
+                `;
+            });
+            document.querySelector('#glmTable tbody').innerHTML = tb;
+        }
+
+        function filterGlmData(data) {
+            const search = document.getElementById('glmSearch').value.toLowerCase();
+            const variant = document.getElementById('glmVariantFilter').value;
+            const nFilter = document.getElementById('glmNFilter').value;
+            const kFilter = document.getElementById('glmKFilter').value;
+
+            const filtered = data.filter(row => {
+                const matchSearch = row.experiment_name.toLowerCase().includes(search);
+                const matchVariant = !variant || row.variant === variant;
+
+                // Parse dimensions (format: "NxK" like "7168x7168")
+                let matchN = !nFilter;
+                let matchK = !kFilter;
+                if (row.dimensions) {
+                    const dims = row.dimensions.toLowerCase().split('x');
+                    if (dims.length === 2) {
+                        const n = dims[0];
+                        const k = dims[1];
+                        matchN = !nFilter || n === nFilter;
+                        matchK = !kFilter || k === kFilter;
+                    }
+                }
+
+                return matchSearch && matchVariant && matchN && matchK;
+            });
+
+            // Render
+            let tb = '';
+            filtered.forEach((row, index) => {
+                const baselinePct = parseFloat(row['M=1_baseline_pct']);
+                const perfClass = baselinePct >= 40 ? 'perf-high' : baselinePct >= 20 ? 'perf-medium' : 'perf-low';
+                const shortName = row.experiment_name.replace(/w4a32c8_q4_0_fp32_int8_|w4a32c8_q4_1_fp32_int8_|w8a32c8_q8_0_fp32_int8_/g, '');
+                const rowId = `row2-${index}`;
+                const detailId = `detail2-${index}`;
+                const batches = ['1', '2', '3', '4', '5', '8', '512'];
+                // Check if this row has extended batch data (has M=2_gflops means it has all batches)
+                const hasAllBatches = row['M=2_gflops'] !== undefined && row['M=2_gflops'] !== '';
+
+                tb += `
+                    <tr id="${rowId}" class="main-row" onclick="toggleDetail('${detailId}')" style="cursor: pointer;">
+                        <td><span class="expand-icon" id="icon-${detailId}">▶</span></td>
+                        <td title="${row.experiment_name}">${shortName}</td>
+                        <td><span class="badge badge-${row.variant.toLowerCase()}">${row.variant}</span></td>
+                        <td>${row.dimensions || '-'}</td>
+                        <td>${parseFloat(row['M=1_gflops']).toFixed(1)}</td>
+                        <td>
+                            ${baselinePct.toFixed(1)}%
+                            <div class="perf-bar-mini"><div class="perf-fill ${perfClass}" style="width: ${Math.min(baselinePct, 100)}%"></div></div>
+                        </td>
+                        <td>${parseFloat(row['M=512_gflops']).toLocaleString()}</td>
+                        <td>${row.scaling_ratio}x</td>
+                    </tr>
+                    ${hasAllBatches ? `
+                    <tr id="${detailId}" class="detail-row" style="display: none;">
+                        <td colspan="8">
+                            <div class="batch-details" style="padding: 15px; background: #f8f9fa; border-left: 4px solid #667eea;">
+                                <h4 style="margin: 0 0 10px 0; color: #333;">所有Batch Size性能数据</h4>
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="background: #e3f2fd;">
+                                            <th style="padding: 8px; text-align: left;">Batch Size</th>
+                                            <th style="padding: 8px; text-align: right;">时间 (ms)</th>
+                                            <th style="padding: 8px; text-align: right;">GFLOPS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${batches.map(b => {
+                                            const gflops = row[`M=${b}_gflops`];
+                                            const time = row[`M=${b}_time_ms`];
+                                            if (gflops === undefined) return '';
+                                            return `
+                                                <tr>
+                                                    <td style="padding: 6px; font-weight: 600;">M=${b}</td>
+                                                    <td style="padding: 6px; text-align: right;">${time ? parseFloat(time).toFixed(3) : '-'}</td>
+                                                    <td style="padding: 6px; text-align: right; font-weight: 600;">${parseFloat(gflops).toLocaleString()}</td>
+                                                </tr>
+                                            `;
+                                        }).filter(x => x).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    ` : ''}
+                `;
+            });
+            document.querySelector('#glmTable tbody').innerHTML = tb;
+        }
+
+        function sortGlmData(data) {
+            const sortBy = document.getElementById('glmSortBy').value;
+            switch(sortBy) {
+                case 'baseline': data.sort((a, b) => parseFloat(b['M=1_baseline_pct']) - parseFloat(a['M=1_baseline_pct'])); break;
+                case 'm1': data.sort((a, b) => parseFloat(b['M=1_gflops']) - parseFloat(a['M=1_gflops'])); break;
+                case 'm512': data.sort((a, b) => parseFloat(b['M=512_gflops']) - parseFloat(a['M=512_gflops'])); break;
+                case 'scaling': data.sort((a, b) => parseFloat(b.scaling_ratio) - parseFloat(a.scaling_ratio)); break;
+            }
+        }
+
+        function toggleDetail(detailId) {
+            const detailRow = document.getElementById(detailId);
+            const icon = document.getElementById('icon-' + detailId);
+            if (!detailRow) {
+                console.warn('Detail row not found:', detailId);
+                return;
+            }
+            if (detailRow.style.display === 'none' || detailRow.style.display === '') {
+                detailRow.style.display = '';
+                if (icon) icon.textContent = '▼';
+            } else {
+                detailRow.style.display = 'none';
+                if (icon) icon.textContent = '▶';
+            }
+        }
+
+        // ==================== GLM-5-0212 View Functions ====================
+
+        // Model and task display names
+        const MODEL_NAMES = {
+            'deepseek_v2': 'DeepSeek-V2',
+            'deepseek_v3': 'DeepSeek-V3',
+            'ds3': 'DeepSeek-V3',
+            'ds2': 'DeepSeek-V2',
+            'llama3_8b': 'LLaMA-3-8B',
+            'qwen2_5_7b': 'Qwen2.5-7B',
+            'qwen3_4b': 'Qwen3-4B',
+            'mixtral8x7b': 'Mixtral-8x7B'
+        };
+
+        const TASK_NAMES = {
+            'att_out': 'Attention Output',
+            'lm_head': 'Language Model Head',
+            'moe_up': 'MoE Up Projection',
+            'moe_down': 'MoE Down Projection',
+            'moe_routing_up': 'MoE Routing Up',
+            'moe_routing_down': 'MoE Routing Down'
+        };
+
+        const TASK_COLORS = {
+            'att_out': '#1976d2',
+            'lm_head': '#7b1fa2',
+            'moe_up': '#388e3c',
+            'moe_down': '#f57c00',
+            'moe_routing_up': '#d32f2f',
+            'moe_routing_down': '#7b1fa2'
+        };
+
+        // Parse experiment name to extract model, task, quant, dimensions
+        // Supports both old format (parsing from experiment_name) and new format (explicit model/task fields)
+        function parseExperimentName(nameOrRow, isRow = false) {
+            // Handle both string name and row object
+            let name, row;
+            if (isRow) {
+                row = nameOrRow;
+                name = row.experiment_name || '';
+            } else {
+                name = nameOrRow;
+            }
+
+            // New format: check if row has explicit model and task fields
+            if (isRow && row.model && row.task) {
+                return {
+                    model: row.model,
+                    modelOriginal: row.model,
+                    task: row.task,
+                    quant: row.variant || '',
+                    n: '',
+                    k: '',
+                    dimensions: row.dimensions || ''
+                };
+            }
+
+            // Old format: parse from experiment_name
+            const lowerName = name.toLowerCase();
+
+            // Extract quantization type
+            let quant = '';
+            if (lowerName.includes('_q4_0_')) quant = 'Q4_0';
+            else if (lowerName.includes('_q4_1_')) quant = 'Q4_1';
+            else if (lowerName.includes('_q8_0_')) quant = 'Q8_0';
+
+            // Remove prefix and suffix
+            let afterPrefix = lowerName.replace(/w\d+a32c8_q\d_\d_fp32_int8_|w8a32c8_q8_0_fp32_int8_/g, '');
+            afterPrefix = afterPrefix.replace('_best', '');
+
+            let model = '';
+            let task = '';
+            let n = '';
+            let k = '';
+
+            // Known tasks
+            const tasks = ['att_out', 'lm_head', 'moe_up', 'moe_down', 'moe_routing_up', 'moe_routing_down'];
+
+            // Known models with their prefixes
+            const modelPatterns = [
+                { pattern: 'ds2_', model: 'deepseek_v2' },
+                { pattern: 'ds3_', model: 'deepseek_v3' },
+                { pattern: 'deepseek_v2_', model: 'deepseek_v2' },
+                { pattern: 'deepseek_v3_', model: 'deepseek_v3' },
+                { pattern: 'llama3_8b_', model: 'llama3_8b' },
+                { pattern: 'qwen2_5_7b_', model: 'qwen2_5_7b' },
+                { pattern: 'qwen3_4b_', model: 'qwen3_4b' },
+                { pattern: 'mixtral8x7b_', model: 'mixtral8x7b' }
+            ];
+
+            // Try to match model prefix first
+            for (const { pattern, model: m } of modelPatterns) {
+                if (afterPrefix.startsWith(pattern)) {
+                    model = m;
+                    afterPrefix = afterPrefix.substring(pattern.length);
+                    break;
+                }
+            }
+
+            // Extract task from remaining string
+            for (const t of tasks) {
+                const taskPattern = t + '_';
+                if (afterPrefix.startsWith(taskPattern)) {
+                    task = t;
+                    afterPrefix = afterPrefix.substring(taskPattern.length);
+                    break;
+                }
+            }
+
+            // Extract dimensions (nXXXX_kYYYY format)
+            const nMatch = afterPrefix.match(/n(\d+)/);
+            const kMatch = afterPrefix.match(/k(\d+)/);
+            if (nMatch) n = nMatch[1];
+            if (kMatch) k = kMatch[1];
+
+            return {
+                model: model || 'unknown',
+                modelOriginal: model,
+                task: task,
+                quant: quant,
+                n: n,
+                k: k,
+                dimensions: n && k ? `${n}x${k}` : ''
+            };
+        }
+
+        // Group data by model
+        function groupDataByModel(data) {
+            const groups = {};
+            data.forEach(row => {
+                const parsed = parseExperimentName(row, true);
+                if (!groups[parsed.model]) {
+                    groups[parsed.model] = {
+                        name: MODEL_NAMES[parsed.model] || parsed.model,
+                        tasks: new Set(),
+                        experiments: [],
+                        bestBaseline: 0,
+                        bestTask: ''
+                    };
+                }
+                groups[parsed.model].tasks.add(parsed.task);
+                groups[parsed.model].experiments.push({ ...row, parsed });
+
+                const baselinePct = parseFloat(row['M=1_baseline_pct'] || 0);
+                if (baselinePct > groups[parsed.model].bestBaseline) {
+                    groups[parsed.model].bestBaseline = baselinePct;
+                    groups[parsed.model].bestTask = parsed.task;
+                }
+            });
+
+            // Convert Sets to Arrays
+            Object.values(groups).forEach(g => {
+                g.taskList = Array.from(g.tasks);
+            });
+
+            return groups;
+        }
+
+        // Group data by task
+        function groupDataByTask(data) {
+            const groups = {};
+            data.forEach(row => {
+                const parsed = parseExperimentName(row, true);
+                const taskKey = parsed.task || 'unknown';
+
+                if (!groups[taskKey]) {
+                    groups[taskKey] = {
+                        name: TASK_NAMES[taskKey] || taskKey,
+                        models: {}
+                    };
+                }
+
+                if (!groups[taskKey].models[parsed.model]) {
+                    groups[taskKey].models[parsed.model] = {
+                        name: MODEL_NAMES[parsed.model] || parsed.model,
+                        quants: {}
+                    };
+                }
+
+                groups[taskKey].models[parsed.model].quants[parsed.quant] = row;
+            });
+            return groups;
+        }
+
+        // Get all unique tasks
+        function getAllTasks(data) {
+            const tasks = new Set();
+            data.forEach(row => {
+                const parsed = parseExperimentName(row, true);
+                if (parsed.task) tasks.add(parsed.task);
+            });
+            return Array.from(tasks).sort();
+        }
+
+        // Switch between views
+        function switchView(view) {
+            // Update button states
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === view);
+            });
+
+            // Show/hide views
+            document.querySelectorAll('.view-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            if (view === 'model') {
+                document.getElementById('modelView').classList.add('active');
+                renderModelView();
+            } else if (view === 'task') {
+                document.getElementById('taskView').classList.add('active');
+                renderTaskView();
+            } else if (view === 'chart') {
+                document.getElementById('chartView').classList.add('active');
+                renderPerformanceChartView();
+            } else if (view === 'detail') {
+                document.getElementById('detailView').classList.add('active');
+            }
+        }
+
+        // Render model view
+        function renderModelView() {
+            const modelGroups = groupDataByModel(glmData);
+            const selectedM = document.getElementById('modelMSelect').value;
+            const mKey = `M=${selectedM}`;
+
+            // Update stats - calculate based on selected M
+            const modelCount = Object.keys(modelGroups).length;
+            let bestOverall = 0;
+            let bestOverallTask = '';
+            let tasksWithMData = new Set();
+            let experimentsWithMData = 0;
+
+            Object.values(modelGroups).forEach(g => {
+                g.experiments.forEach(exp => {
+                    const pct = parseFloat(exp[`${mKey}_baseline_pct`]) || 0;
+                    if (pct > 0) {
+                        experimentsWithMData++;
+                        tasksWithMData.add(exp.parsed.task);
+                        if (pct > bestOverall) {
+                            bestOverall = pct;
+                            bestOverallTask = exp.parsed.task;
+                        }
+                    }
+                });
+            });
+
+            document.getElementById('modelCountStat').textContent = modelCount;
+            document.getElementById('taskCountStat').textContent = tasksWithMData.size;
+            document.getElementById('expCountStat').textContent = experimentsWithMData;
+            document.getElementById('bestPctStat').textContent = bestOverall > 0 ? bestOverall.toFixed(1) + '%' : '--';
+
+            // Render model cards
+            const container = document.getElementById('modelCardsContainer');
+            container.innerHTML = '';
+
+            Object.entries(modelGroups).forEach(([modelKey, modelData], idx) => {
+                const cardId = `model-card-${idx}`;
+                const toggleId = `model-toggle-${idx}`;
+
+                // Build task summary table
+                let taskTableHtml = '';
+                const taskRows = {};
+                let bestForModel = 0;
+                let bestTaskForModel = '';
+
+                // Group experiments by task and quant
+                modelData.experiments.forEach(exp => {
+                    const task = exp.parsed.task;
+                    const quant = exp.parsed.quant;
+
+                    if (!taskRows[task]) {
+                        taskRows[task] = {
+                            task: task,
+                            q4_0: null,
+                            q4_1: null,
+                            q8_0: null
+                        };
+                    }
+                    taskRows[task][quant.toLowerCase().replace('_', '_')] = exp;
+                });
+
+                // Build table rows with selected M value
+                Object.values(taskRows).forEach(tr => {
+                    const q4_0_pct = tr.q4_0 ? parseFloat(tr.q4_0[`${mKey}_baseline_pct`]) : null;
+                    const q4_1_pct = tr.q4_1 ? parseFloat(tr.q4_1[`${mKey}_baseline_pct`]) : null;
+                    const q8_0_pct = tr.q8_0 ? parseFloat(tr.q8_0[`${mKey}_baseline_pct`]) : null;
+
+                    // Skip if no data for this M value
+                    if (!q4_0_pct && !q4_1_pct && !q8_0_pct) return;
+
+                    // Track best for this model
+                    const maxPct = Math.max(q4_0_pct || 0, q4_1_pct || 0, q8_0_pct || 0);
+                    if (maxPct > bestForModel) {
+                        bestForModel = maxPct;
+                        bestTaskForModel = tr.task;
+                    }
+
+                    // Find best
+                    let best = '-';
+                    if (q4_0_pct && q4_0_pct >= (q4_1_pct || 0) && q4_0_pct >= (q8_0_pct || 0)) best = 'Q4_0';
+                    else if (q4_1_pct && q4_1_pct >= (q8_0_pct || 0)) best = 'Q4_1';
+                    else if (q8_0_pct) best = 'Q8_0';
+
+                    taskTableHtml += `
+                        <tr>
+                            <td style="text-align: left; padding: 8px;">${TASK_NAMES[tr.task] || tr.task}</td>
+                            <td style="padding: 8px;">${q4_0_pct ? q4_0_pct.toFixed(1) + '%' : '-'}</td>
+                            <td style="padding: 8px;">${q4_1_pct ? q4_1_pct.toFixed(1) + '%' : '-'}</td>
+                            <td style="padding: 8px;">${q8_0_pct ? q8_0_pct.toFixed(1) + '%' : '-'}</td>
+                            <td style="padding: 8px;"><span class="best-badge">${best}</span></td>
+                        </tr>
+                    `;
+                });
+
+                // Skip model if no data for this M value
+                if (!taskTableHtml) return;
+
+                const bestTaskDisplay = bestTaskForModel ? `${TASK_NAMES[bestTaskForModel] || bestTaskForModel} @ ${bestForModel.toFixed(1)}%` : '无数据';
+                const tasksWithMDataList = Object.keys(taskRows).filter(t => {
+                    const tr = taskRows[t];
+                    return (tr.q4_0 && parseFloat(tr.q4_0[`${mKey}_baseline_pct`])) ||
+                           (tr.q4_1 && parseFloat(tr.q4_1[`${mKey}_baseline_pct`])) ||
+                           (tr.q8_0 && parseFloat(tr.q8_0[`${mKey}_baseline_pct`]));
+                });
+
+                const cardHtml = `
+                    <div class="model-card">
+                        <div class="model-card-header" onclick="toggleModelCard('${cardId}', '${toggleId}')">
+                            <div>
+                                <div class="model-card-title">🤖 ${modelData.name}</div>
+                                <div class="model-card-subtitle">
+                                    Tasks: ${tasksWithMDataList.map(t => TASK_NAMES[t] || t).join(', ')} |
+                                    Best: ${bestTaskDisplay}
+                                </div>
+                            </div>
+                            <span class="model-card-toggle" id="${toggleId}">▼</span>
+                        </div>
+                        <div class="model-card-content" id="${cardId}">
+                            <div style="margin-bottom: 10px; font-size: 0.85em; color: #666;">
+                                <strong>M=${selectedM} (Batch Size=${selectedM})</strong> Baseline 性能对比 (%)
+                            </div>
+                            <table class="mini-comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Q4_0</th>
+                                        <th>Q4_1</th>
+                                        <th>Q8_0</th>
+                                        <th>Best</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${taskTableHtml}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        // Toggle model card
+        function toggleModelCard(cardId, toggleId) {
+            const card = document.getElementById(cardId);
+            const toggle = document.getElementById(toggleId);
+            if (card.classList.contains('visible')) {
+                card.classList.remove('visible');
+                toggle.classList.add('collapsed');
+            } else {
+                card.classList.add('visible');
+                toggle.classList.remove('collapsed');
+            }
+        }
+
+        // Render task view
+        function renderTaskView() {
+            const taskSelect = document.getElementById('taskSelect');
+            const tasks = getAllTasks(glmData);
+
+            // Populate task selector
+            taskSelect.innerHTML = '<option value="">-- 选择 Task --</option>';
+            tasks.forEach(task => {
+                const displayName = TASK_NAMES[task] || task;
+                taskSelect.innerHTML += `<option value="${task}">${displayName}</option>`;
+            });
+
+            // Clear comparison container
+            document.getElementById('taskComparisonContainer').innerHTML = `
+                <div class="info-box">
+                    <h4>Task对比</h4>
+                    <p>请选择一个Task查看各模型在该Task下的量化类型性能对比。</p>
+                </div>
+            `;
+        }
+
+        // Render task comparison
+        function renderTaskComparison() {
+            const selectedTask = document.getElementById('taskSelect').value;
+            const selectedM = document.getElementById('taskMSelect').value;
+            const mKey = `M=${selectedM}`;
+            const container = document.getElementById('taskComparisonContainer');
+
+            if (!selectedTask) {
+                container.innerHTML = `
+                    <div class="info-box">
+                        <h4>Task对比</h4>
+                        <p>请选择一个Task查看各模型在该Task下的量化类型性能对比。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const taskGroups = groupDataByTask(glmData);
+            const taskData = taskGroups[selectedTask];
+
+            if (!taskData) {
+                container.innerHTML = '<p>No data available for this task.</p>';
+                return;
+            }
+
+            // Calculate averages
+            let q4_0_sum = 0, q4_1_sum = 0, q8_0_sum = 0;
+            let q4_0_count = 0, q4_1_count = 0, q8_0_count = 0;
+
+            const modelRows = [];
+
+            Object.entries(taskData.models).forEach(([modelKey, modelData]) => {
+                const q4_0_row = modelData.quants['Q4_0'];
+                const q4_1_row = modelData.quants['Q4_1'];
+                const q8_0_row = modelData.quants['Q8_0'];
+
+                const q4_0_pct = q4_0_row ? parseFloat(q4_0_row[`${mKey}_baseline_pct`]) : null;
+                const q4_1_pct = q4_1_row ? parseFloat(q4_1_row[`${mKey}_baseline_pct`]) : null;
+                const q8_0_pct = q8_0_row ? parseFloat(q8_0_row[`${mKey}_baseline_pct`]) : null;
+
+                if (q4_0_pct !== null) { q4_0_sum += q4_0_pct; q4_0_count++; }
+                if (q4_1_pct !== null) { q4_1_sum += q4_1_pct; q4_1_count++; }
+                if (q8_0_pct !== null) { q8_0_sum += q8_0_pct; q8_0_count++; }
+
+                // Find best
+                let best = '-';
+                if (q4_0_pct && q4_0_pct >= (q4_1_pct || 0) && q4_0_pct >= (q8_0_pct || 0)) best = 'Q4_0';
+                else if (q4_1_pct && q4_1_pct >= (q8_0_pct || 0)) best = 'Q4_1';
+                else if (q8_0_pct) best = 'Q8_0';
+
+                modelRows.push({
+                    name: modelData.name,
+                    q4_0: q4_0_pct,
+                    q4_1: q4_1_pct,
+                    q8_0: q8_0_pct,
+                    best: best
+                });
+            });
+
+            const q4_0_avg = q4_0_count > 0 ? q4_0_sum / q4_0_count : 0;
+            const q4_1_avg = q4_1_count > 0 ? q4_1_sum / q4_1_count : 0;
+            const q8_0_avg = q8_0_count > 0 ? q8_0_sum / q8_0_count : 0;
+
+            // Build HTML
+            let html = `
+                <h3 style="color: #333; margin-bottom: 20px;">${taskData.name} - 各模型量化类型对比</h3>
+
+                <div class="quant-comparison-chart">
+                    <h4 style="margin-bottom: 15px; color: #555;">M=${selectedM} (Batch Size=${selectedM}) Baseline % 平均性能</h4>
+                    <div class="quant-bar-group">
+                        <div class="quant-bar-label">
+                            <span>Q4_0 (平均)</span>
+                            <span>${q4_0_avg.toFixed(1)}%</span>
+                        </div>
+                        <div class="quant-bar-bg">
+                            <div class="quant-bar-fill quant-bar-q4_0" style="width: ${Math.min(q4_0_avg, 100)}%">${q4_0_avg.toFixed(1)}%</div>
+                        </div>
+                    </div>
+                    <div class="quant-bar-group">
+                        <div class="quant-bar-label">
+                            <span>Q4_1 (平均)</span>
+                            <span>${q4_1_avg.toFixed(1)}%</span>
+                        </div>
+                        <div class="quant-bar-bg">
+                            <div class="quant-bar-fill quant-bar-q4_1" style="width: ${Math.min(q4_1_avg, 100)}%">${q4_1_avg.toFixed(1)}%</div>
+                        </div>
+                    </div>
+                    <div class="quant-bar-group">
+                        <div class="quant-bar-label">
+                            <span>Q8_0 (平均)</span>
+                            <span>${q8_0_avg.toFixed(1)}%</span>
+                        </div>
+                        <div class="quant-bar-bg">
+                            <div class="quant-bar-fill quant-bar-q8_0" style="width: ${Math.min(q8_0_avg, 100)}%">${q8_0_avg.toFixed(1)}%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 10px; font-size: 0.85em; color: #666;">
+                    <strong>M=${selectedM} (Batch Size=${selectedM})</strong> Baseline 性能对比 (%)
+                </div>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">模型</th>
+                            <th>Q4_0</th>
+                            <th>Q4_1</th>
+                            <th>Q8_0</th>
+                            <th>Best</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            modelRows.forEach(row => {
+                html += `
+                    <tr>
+                        <td style="text-align: left; font-weight: 500;">${row.name}</td>
+                        <td>${row.q4_0 !== null ? row.q4_0.toFixed(1) + '%' : '-'}</td>
+                        <td>${row.q4_1 !== null ? row.q4_1.toFixed(1) + '%' : '-'}</td>
+                        <td>${row.q8_0 !== null ? row.q8_0.toFixed(1) + '%' : '-'}</td>
+                        <td><span class="best-badge">${row.best}</span></td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // ==================== Performance Chart View Functions ====================
+
+        // M values that may be available in the data
+        const M_VALUES = ['1', '2', '3', '4', '5', '8', '512'];
+
+        // Render performance chart view (initialization)
+        function renderPerformanceChartView() {
+            const taskSelect = document.getElementById('chartTaskSelect');
+            const modelSelect = document.getElementById('chartModelSelect');
+            const tasks = getAllTasks(glmData);
+            const modelGroups = groupDataByModel(glmData);
+
+            // Populate task selector
+            taskSelect.innerHTML = '<option value="">-- 选择 Task --</option>';
+            tasks.forEach(task => {
+                taskSelect.innerHTML += `<option value="${task}">${TASK_NAMES[task] || task}</option>`;
+            });
+
+            // Populate model selector
+            modelSelect.innerHTML = '<option value="all">所有模型</option>';
+            Object.keys(modelGroups).forEach(modelKey => {
+                modelSelect.innerHTML += `<option value="${modelKey}">${modelGroups[modelKey].name}</option>`;
+            });
+
+            // Clear chart container
+            document.getElementById('performanceChartContainer').innerHTML = `
+                <div class="info-box">
+                    <h4>性能曲线</h4>
+                    <p>请选择一个Task查看不同M（batch size）下的GFLOPS性能变化。</p>
+                </div>
+            `;
+        }
+
+        // Render performance chart
+        function renderPerformanceChart() {
+            const selectedTask = document.getElementById('chartTaskSelect').value;
+            const selectedModel = document.getElementById('chartModelSelect').value;
+            const container = document.getElementById('performanceChartContainer');
+
+            // Debug: Show function call
+            console.log('[renderPerformanceChart] called, task=' + selectedTask + ', model=' + selectedModel);
+
+            if (!selectedTask) {
+                container.innerHTML = `
+                    <div class="info-box">
+                        <h4>性能曲线</h4>
+                        <p>请选择一个Task查看不同M（batch size）下的GFLOPS性能变化。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Filter data by selected task and model
+            const filteredData = glmData.filter(row => {
+                const parsed = parseExperimentName(row, true);
+                const matchTask = parsed.task === selectedTask;
+                const matchModel = selectedModel === 'all' || parsed.model === selectedModel;
+                return matchTask && matchModel;
+            });
+
+            console.log('[renderPerformanceChart] filteredData.length=' + filteredData.length);
+
+            if (filteredData.length === 0) {
+                container.innerHTML = '<p>No data available for this selection.</p>';
+                return;
+            }
+
+            // Group by model and quantization
+            const chartData = {};
+            filteredData.forEach(row => {
+                const parsed = parseExperimentName(row, true);
+                // Use variant column directly for quantization type
+                const quant = row.variant || parsed.quant;
+                const key = `${parsed.model}_${quant}`;
+                if (!chartData[key]) {
+                    chartData[key] = {
+                        model: parsed.model,
+                        quant: quant,
+                        modelName: MODEL_NAMES[parsed.model] || parsed.model,
+                        dataPoints: {}
+                    };
+                }
+
+                // Add data points for each M value
+                const mVals = ['1', '2', '3', '4', '5', '8', '512'];
+                mVals.forEach(m => {
+                    const gflopsKey = `M=${m}_gflops`;
+                    if (row[gflopsKey] && row[gflopsKey] !== '') {
+                        chartData[key].dataPoints[m] = parseFloat(row[gflopsKey]);
+                    }
+                });
+            });
+
+            console.log('[renderPerformanceChart] chartData keys=' + Object.keys(chartData));
+
+            // Find maximum GFLOPS for chart scaling
+            let maxGFlops = 0;
+            Object.values(chartData).forEach(series => {
+                Object.values(series.dataPoints).forEach(val => {
+                    if (val > maxGFlops) maxGFlops = val;
+                });
+            });
+
+            console.log('[renderPerformanceChart] maxGFlops=' + maxGFlops);
+
+            // If maxGFlops is 0, set a default
+            if (maxGFlops === 0) maxGFlops = 1000;
+
+            // Build chart HTML
+            // Calculate Y-axis scale labels (5 steps from 0 to maxGFlops)
+            const yAxisSteps = 5;
+            let yAxisLabels = '';
+            for (let i = 0; i <= yAxisSteps; i++) {
+                const value = (maxGFlops * (yAxisSteps - i) / yAxisSteps);
+                const labelValue = value >= 1000 ? (value/1000).toFixed(1) + 'K' : value.toFixed(0);
+                let labelClass = '';
+                // Reverse the class mapping - max value (i=0) should be at top
+                if (i === 0) labelClass = 'top';
+                else if (i === 1) labelClass = 'upper-third';
+                else if (i === 2) labelClass = 'middle';
+                else if (i === 3) labelClass = 'lower-third';
+                else if (i === 4) labelClass = 'bottom';
+                yAxisLabels += `<div class="perf-chart-y-label ${labelClass}">${labelValue}</div>`;
+            }
+
+            let html = `
+                <div class="perf-chart-container">
+                    <div class="perf-chart-title">
+                        ${TASK_NAMES[selectedTask] || selectedTask} - GFLOPS vs Batch Size (M)
+                        ${selectedModel !== 'all' ? ` - ${MODEL_NAMES[selectedModel] || selectedModel}` : ' - 所有模型'}
+                    </div>
+                    <div style="margin: 10px 0; padding: 10px; background: #e8f4fd; border-radius: 5px;">
+                        <strong>调试信息:</strong> maxGFlops = ${maxGFlops.toFixed(1)}, chartData 条目数 = ${Object.keys(chartData).length}
+                    </div>
+
+                    <div class="perf-legend">
+                        <div class="perf-legend-item">
+                            <div class="perf-legend-color perf-bar-q4_0"></div>
+                            <span>Q4_0 (蓝色)</span>
+                        </div>
+                        <div class="perf-legend-item">
+                            <div class="perf-legend-color perf-bar-q4_1"></div>
+                            <span>Q4_1 (橙色)</span>
+                        </div>
+                        <div class="perf-legend-item">
+                            <div class="perf-legend-color perf-bar-q8_0"></div>
+                            <span>Q8_0 (绿色)</span>
+                        </div>
+                        ${selectedModel === 'all' ? '<div class="perf-legend-item" style="margin-left: 20px; color: #666;"><small>悬停查看模型名称</small></div>' : ''}
+                    </div>
+
+                    <div class="perf-chart">
+                        <div class="perf-chart-y-axis">
+                            ${yAxisLabels}
+                        </div>
+            `;
+
+            // Define M_VALUES
+            const mVals = ['1', '2', '3', '4', '5', '8', '512'];
+            const quants = ['Q4_0', 'Q4_1', 'Q8_0'];
+            const quantColors = {
+                'Q4_0': '#1976d2',
+                'Q4_1': '#f57c00',
+                'Q8_0': '#388e3c'
+            };
+
+            // Add bars for each M value
+            mVals.forEach((m, mIndex) => {
+                html += `
+                    <div class="perf-bar-group">
+                        <div class="perf-bar-container">
+                `;
+
+                console.log('[renderPerformanceChart] Processing M=' + m);
+
+                // When showing all models, group by model instead of by quantization type
+                if (selectedModel === 'all') {
+                    // Group by model: show all models for this M value
+                    Object.values(chartData).forEach(series => {
+                        const value = series.dataPoints[m];
+                        if (value !== undefined) {
+                            const heightPercent = (value / maxGFlops) * 100;
+                            const displayHeight = Math.max(heightPercent, 2);
+
+                            // Determine color based on quantization type
+                            let bgColor;
+                            if (series.quant === 'Q4_0') bgColor = '#1976d2';
+                            else if (series.quant === 'Q4_1') bgColor = '#f57c00';
+                            else if (series.quant === 'Q8_0') bgColor = '#388e3c';
+                            else bgColor = '#666';
+
+                            console.log('[renderPerformanceChart]   ' + series.modelName + ' ' + series.quant + ': value=' + value + ', height=' + displayHeight.toFixed(2) + '%');
+
+                            html += `
+                                <div class="perf-bar"
+                                     style="height: ${displayHeight}%; background-color: ${bgColor}; width: 20px;"
+                                     title="${series.modelName} ${series.quant}: ${value.toFixed(0)} GFLOPS (${displayHeight.toFixed(1)}%)">
+                                    <div class="perf-bar-tooltip">${series.modelName} ${series.quant}: ${value.toFixed(0)} GFLOPS</div>
+                                </div>
+                            `;
+                        }
+                    });
+                } else {
+                    // Single model selected: group by quantization type
+                    quants.forEach(quant => {
+                        const matchingSeries = Object.values(chartData).filter(s => s.quant === quant);
+                        const values = matchingSeries.map(s => s.dataPoints[m]).filter(v => v !== undefined);
+
+                        console.log('[renderPerformanceChart]   ' + quant + ': matching=' + matchingSeries.length + ', values=' + JSON.stringify(values));
+
+                        if (values.length > 0) {
+                            const avgValue = values.reduce((a, b) => a + b, 0) / values.length;
+                            const heightPercent = (avgValue / maxGFlops) * 100;
+                            const displayHeight = Math.max(heightPercent, 2);
+                            const bgColor = quantColors[quant] || quantColors['Q4_0'];
+
+                            console.log('[renderPerformanceChart]     -> bar: height=' + displayHeight.toFixed(2) + '%');
+
+                            html += `
+                                <div class="perf-bar"
+                                     style="height: ${displayHeight}%; background-color: ${bgColor}; width: 30px;"
+                                     title="${quant}: ${avgValue.toFixed(0)} GFLOPS (${displayHeight.toFixed(1)}%)">
+                                    <div class="perf-bar-tooltip">${quant}: ${avgValue.toFixed(0)} GFLOPS</div>
+                                </div>
+                            `;
+                        }
+                    });
+                }
+
+                html += `
+                        </div>
+                        <div class="perf-label">M=${m}</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+
+                <div class="perf-chart-container scaling-chart">
+                    <div class="perf-chart-title">性能扩展信息</div>
+                    <div class="scaling-info">
+            `;
+
+            // Calculate scaling info
+            const scalingInfo = calculateScalingInfo(filteredData);
+
+            html += `
+                        <div class="scaling-info-item">
+                            <div class="scaling-info-value">${scalingInfo.m1Avg?.toFixed(0) || '-'}</div>
+                            <div class="scaling-info-label">M=1 平均 GFLOPS</div>
+                        </div>
+                        <div class="scaling-info-item">
+                            <div class="scaling-info-value">${scalingInfo.m512Avg?.toFixed(0) || '-'}</div>
+                            <div class="scaling-info-label">M=512 平均 GFLOPS</div>
+                        </div>
+                        <div class="scaling-info-item">
+                            <div class="scaling-info-value">${scalingInfo.scalingRatio?.toFixed(2) || '-'}x</div>
+                            <div class="scaling-info-label">平均扩展比例</div>
+                        </div>
+                        <div class="scaling-info-item">
+                            <div class="scaling-info-value">${scalingInfo.bestScaling?.toFixed(1) || '-'}</div>
+                            <div class="scaling-info-label">最佳扩展比例</div>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">模型</th>
+                            <th>量化</th>
+                            <th>M=1</th>
+                            <th>M=2</th>
+                            <th>M=3</th>
+                            <th>M=4</th>
+                            <th>M=5</th>
+                            <th>M=8</th>
+                            <th>M=512</th>
+                            <th>扩展比例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            // Sort by model name, then quantization
+            const sortedSeries = Object.values(chartData).sort((a, b) => {
+                if (a.modelName !== b.modelName) return a.modelName.localeCompare(b.modelName);
+                return a.quant.localeCompare(b.quant);
+            });
+
+            sortedSeries.forEach(series => {
+                const m1 = series.dataPoints['1'] || 0;
+                const m512 = series.dataPoints['512'] || 0;
+                const scalingRatio = m1 > 0 ? (m512 / m1) : 0;
+
+                html += `
+                    <tr>
+                        <td style="text-align: left;">${series.modelName}</td>
+                        <td><span class="badge badge-${series.quant.toLowerCase()}">${series.quant}</span></td>
+                        <td>${series.dataPoints['1'] ? series.dataPoints['1'].toFixed(0) : '-'}</td>
+                        <td>${series.dataPoints['2'] ? series.dataPoints['2'].toFixed(0) : '-'}</td>
+                        <td>${series.dataPoints['3'] ? series.dataPoints['3'].toFixed(0) : '-'}</td>
+                        <td>${series.dataPoints['4'] ? series.dataPoints['4'].toFixed(0) : '-'}</td>
+                        <td>${series.dataPoints['5'] ? series.dataPoints['5'].toFixed(0) : '-'}</td>
+                        <td>${series.dataPoints['8'] ? series.dataPoints['8'].toFixed(0) : '-'}</td>
+                        <td>${series.dataPoints['512'] ? series.dataPoints['512'].toFixed(0) : '-'}</td>
+                        <td>${scalingRatio > 0 ? scalingRatio.toFixed(1) + 'x' : '-'}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Calculate scaling information from filtered data
+        function calculateScalingInfo(data) {
+            let m1Sum = 0, m1Count = 0;
+            let m512Sum = 0, m512Count = 0;
+            let bestScaling = 0;
+
+            data.forEach(row => {
+                const m1 = parseFloat(row['M=1_gflops'] || 0);
+                const m512 = parseFloat(row['M=512_gflops'] || 0);
+
+                if (m1 > 0) {
+                    m1Sum += m1;
+                    m1Count++;
+                }
+                if (m512 > 0) {
+                    m512Sum += m512;
+                    m512Count++;
+                }
+
+                if (m1 > 0 && m512 > 0) {
+                    const ratio = m512 / m1;
+                    if (ratio > bestScaling) bestScaling = ratio;
+                }
+            });
+
+            const m1Avg = m1Count > 0 ? m1Sum / m1Count : 0;
+            const m512Avg = m512Count > 0 ? m512Sum / m512Count : 0;
+            const scalingRatio = m1Avg > 0 ? m512Avg / m1Avg : 0;
+
+            return { m1Avg, m512Avg, scalingRatio, bestScaling };
+        }
+
+        // ==================== Baseline Data Functions ====================
+        let baselineRawData = null;
+
+        // Populate output dimension selector (llama.cpp M values)
+        function populateOutputDimSelect() {
+            if (!baselineRawData) {
+                return;
+            }
+
+            const quantSelect = document.getElementById('baselineQuantSelect');
+            const kSelect = document.getElementById('baselineKSelect');
+            const outputDimSelect = document.getElementById('baselineOutputDimSelect');
+
+            const selectedQuant = quantSelect.value;
+            const selectedK = parseInt(kSelect.value);
+
+            // Collect all unique M values and their hardware count
+            const mValuesWithHW = {};
+            for (const [key, entry] of Object.entries(baselineRawData)) {
+                if (entry.type_a === selectedQuant && entry.k === selectedK) {
+                    const m = entry.m || 0;
+                    if (m > 0) {
+                        if (!mValuesWithHW[m]) {
+                            mValuesWithHW[m] = new Set();
+                        }
+                        if (entry.hardware) {
+                            Object.keys(entry.hardware).forEach(hw => mValuesWithHW[m].add(hw));
+                        }
+                    }
+                }
+            }
+
+            // Sort M values numerically
+            const sortedMValues = Object.keys(mValuesWithHW).map(Number).sort((a, b) => a - b);
+
+            // Clear and populate selector
+            outputDimSelect.innerHTML = '';
+
+            // Find the first M value with >= 3 hardware for default selection
+            let defaultM = null;
+            for (const m of sortedMValues) {
+                const hwCount = mValuesWithHW[m].size;
+                const option = document.createElement('option');
+                option.value = m;
+                // Show hardware count in option label
+                if (hwCount >= 3) {
+                    option.textContent = `N=${m} (${hwCount} 硬件)`;
+                    if (defaultM === null) defaultM = m;
+                } else {
+                    option.textContent = `N=${m} (${hwCount} 硬件)`;
+                    option.style.color = '#999';
+                }
+                outputDimSelect.appendChild(option);
+            }
+
+            // Select default M value with most hardware
+            if (defaultM !== null) {
+                outputDimSelect.value = defaultM;
+            }
+
+            console.log('[populateOutputDimSelect] populated ' + sortedMValues.length + ' output dimensions for ' + selectedQuant + ', K=' + selectedK);
+        }
+
+        async function loadBaselineRawData() {
+            try {
+                const BASE = getBasePath();
+                const response = await fetch(BASE + 'data/baseline.json');
+                baselineRawData = await response.json();
+                console.log('[loadBaselineRawData] loaded ' + Object.keys(baselineRawData).length + ' baseline entries');
+                populateOutputDimSelect();
+                renderBaselineTable();
+            } catch (error) {
+                console.error('[loadBaselineRawData] error:', error);
+            }
+        }
+
+        function renderBaselineTable() {
+            if (!baselineRawData) {
+                loadBaselineRawData();
+                return;
+            }
+
+            const container = document.getElementById('baselineTableContainer');
+            const quantSelect = document.getElementById('baselineQuantSelect');
+            const outputDimSelect = document.getElementById('baselineOutputDimSelect');
+            const kSelect = document.getElementById('baselineKSelect');
+
+            const selectedQuant = quantSelect.value;
+            const selectedOutputDim = parseInt(outputDimSelect.value);  // llama.cpp M = our N
+            const selectedK = parseInt(kSelect.value);  // K = K
+
+            console.log('[renderBaselineTable] quant=' + selectedQuant + ', output_dim=' + selectedOutputDim + ', K=' + selectedK);
+
+            if (!selectedOutputDim) {
+                container.innerHTML = `
+                    <div class="info-box">
+                        <p>请选择输出维度。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Filter baseline data by quantization type, M (output dim), and K
+            // Note: baseline.json M = our N (output dimension), baseline.json N = our M (batch)
+            const filteredEntries = {};
+            for (const [key, entry] of Object.entries(baselineRawData)) {
+                const entryQuant = entry.type_a || '';
+                const entryM = entry.m || 0;  // This is our N (output dimension)
+                const entryK = entry.k || 0;
+                const entryN = entry.n || 0;  // This is our M (batch size)
+
+                if (entryQuant === selectedQuant && entryM === selectedOutputDim && entryK === selectedK) {
+                    filteredEntries[key] = entry;
+                }
+            }
+
+            console.log('[renderBaselineTable] found ' + Object.keys(filteredEntries).length + ' matching entries');
+
+            if (Object.keys(filteredEntries).length === 0) {
+                container.innerHTML = `
+                    <div class="info-box">
+                        <p>未找到量化类型 ${selectedQuant.toUpperCase()}、输出维度=${selectedOutputDim}、K=${selectedK} 的数据。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Collect all unique hardware
+            const hardwareSet = new Set();
+            for (const entry of Object.values(filteredEntries)) {
+                if (entry.hardware) {
+                    Object.keys(entry.hardware).forEach(hw => hardwareSet.add(hw));
+                }
+            }
+            const hardwareList = Array.from(hardwareSet).sort();
+
+            console.log('[renderBaselineTable] hardwareList=' + hardwareList.join(', '));
+
+            // Group entries by N value (llama.cpp N = our M = batch size)
+            const mergedByN = {};
+            for (const [key, entry] of Object.entries(filteredEntries)) {
+                const n = entry.n || 0;  // This is our M (batch size)
+
+                if (!mergedByN[n]) {
+                    mergedByN[n] = {
+                        n: n,
+                        hardware: {}
+                    };
+                }
+
+                // Merge hardware data
+                if (entry.hardware) {
+                    for (const [hw, hwData] of Object.entries(entry.hardware)) {
+                        mergedByN[n].hardware[hw] = hwData;
+                    }
+                }
+            }
+
+            console.log('[renderBaselineTable] merged into ' + Object.keys(mergedByN).length + ' unique N (batch) values');
+
+            // Generate HTML table
+            let html = `
+                <table class="baseline-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Batch Size (llama.cpp N)</th>
+                            <th colspan="${hardwareList.length}" class="hardware-header">硬件 GFLOPS</th>
+                        </tr>
+                        <tr>
+            `;
+
+            for (const hw of hardwareList) {
+                html += `<th>${hw}</th>`;
+            }
+            html += `</tr></thead><tbody>`;
+
+            // Sort by N value (show 1, 2, 3, 4, 5, 8, 512 in order)
+            const nOrder = [1, 2, 3, 4, 5, 8, 512];
+            const sortedEntries = Object.entries(mergedByN).sort((a, b) => {
+                const aN = parseInt(a[1].n) || 0;
+                const bN = parseInt(b[1].n) || 0;
+                // Sort by predefined order, then by value
+                const aIdx = nOrder.indexOf(aN);
+                const bIdx = nOrder.indexOf(bN);
+                if (aIdx >= 0 && bIdx >= 0) return aIdx - bIdx;
+                if (aIdx >= 0) return -1;
+                if (bIdx >= 0) return 1;
+                return aN - bN;
+            });
+
+            // Find best and worst values for each column
+            const columnBest = new Array(hardwareList.length).fill(-Infinity);
+            const columnWorst = new Array(hardwareList.length).fill(Infinity);
+
+            for (const [nKey, entry] of sortedEntries) {
+                for (let i = 0; i < hardwareList.length; i++) {
+                    const hw = hardwareList[i];
+                    if (entry.hardware && entry.hardware[hw]) {
+                        const gflops = entry.hardware[hw].gflops || 0;
+                        if (gflops > 0) {
+                            columnBest[i] = Math.max(columnBest[i], gflops);
+                            columnWorst[i] = Math.min(columnWorst[i], gflops);
+                        }
+                    }
+                }
+            }
+
+            // Generate table rows
+            for (const [nKey, entry] of sortedEntries) {
+                const n = entry.n || 0;  // This is our M (batch size)
+                const nLabel = n;
+
+                html += `<tr>`;
+                html += `<td class="config-cell">${nLabel}</td>`;
+
+                for (let i = 0; i < hardwareList.length; i++) {
+                    const hw = hardwareList[i];
+                    let cellHtml = '';
+
+                    if (entry.hardware && entry.hardware[hw]) {
+                        const hwData = entry.hardware[hw];
+                        const gflops = hwData.gflops || 0;
+
+                        if (gflops > 0) {
+                            const isBest = gflops >= columnBest[i];
+                            const isWorst = gflops <= columnWorst[i] && columnWorst[i] < columnBest[i];
+
+                            let className = '';
+                            if (isBest) className = 'baseline-best';
+                            else if (isWorst) className = 'baseline-worst';
+
+                            cellHtml = `<td class="${className}">${gflops.toFixed(0)}</td>`;
+                        } else {
+                            cellHtml = `<td>-</td>`;
+                        }
+                    } else {
+                        cellHtml = `<td>-</td>`;
+                    }
+                    html += cellHtml;
+                }
+                html += `</tr>`;
+            }
+
+            html += `</tbody></table>`;
+
+            // Add legend
+            html += `
+                <div style="margin-top: 15px; font-size: 0.85em; color: #666;">
+                    <span style="display: inline-block; width: 12px; height: 12px; background: #c8e6c9; margin-right: 5px;"></span>最佳值
+                    <span style="display: inline-block; width: 12px; height: 12px; background: #ffebee; margin-left: 15px; margin-right: 5px;"></span>最低值
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // ==================== New Operators Baseline Functions ====================
+        let flashAttnBaseline = null;
+        let rmsNormBaseline = null;
+        let topKBaseline = null;
+
+        function onBaselineOperatorChange() {
+            const operatorSelect = document.getElementById('baselineOperatorSelect');
+            const selectedOperator = operatorSelect.value;
+
+            // Hide all filter bars
+            document.getElementById('quantGemmFilters').style.display = 'none';
+            document.getElementById('flashAttnFilters').style.display = 'none';
+            document.getElementById('rmsNormFilters').style.display = 'none';
+            document.getElementById('topKFilters').style.display = 'none';
+
+            // Show selected filter bar and render table
+            const container = document.getElementById('baselineTableContainer');
+            container.innerHTML = '<div class="info-box"><p>加载数据中...</p></div>';
+
+            switch (selectedOperator) {
+                case 'quant_gemm':
+                    document.getElementById('quantGemmFilters').style.display = 'flex';
+                    loadBaselineRawData();
+                    break;
+                case 'flash_attention':
+                    document.getElementById('flashAttnFilters').style.display = 'flex';
+                    loadFlashAttnBaseline();
+                    break;
+                case 'rms_norm':
+                    document.getElementById('rmsNormFilters').style.display = 'flex';
+                    loadRmsNormBaseline();
+                    break;
+                case 'topk':
+                    document.getElementById('topKFilters').style.display = 'flex';
+                    loadTopKBaseline();
+                    break;
+            }
+        }
+
+        async function loadFlashAttnBaseline() {
+            if (!flashAttnBaseline) {
+                try {
+                    const BASE = getBasePath();
+                    const url = BASE + 'data/flash_attn_baseline.json';
+                    console.log('[loadFlashAttnBaseline] fetching:', url);
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    flashAttnBaseline = await response.json();
+                    console.log('[loadFlashAttnBaseline] loaded ' + Object.keys(flashAttnBaseline).length + ' entries');
+                } catch (error) {
+                    console.error('[loadFlashAttnBaseline] error:', error);
+                    document.getElementById('baselineTableContainer').innerHTML =
+                        '<div class="info-box"><p>加载 Flash Attention 数据失败: ' + error.message + '</p></div>';
+                    return;
+                }
+            }
+            renderFlashAttnBaseline();
+        }
+
+        async function loadRmsNormBaseline() {
+            if (!rmsNormBaseline) {
+                try {
+                    const BASE = getBasePath();
+                    const url = BASE + 'data/rms_norm_baseline.json';
+                    console.log('[loadRmsNormBaseline] fetching:', url);
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    rmsNormBaseline = await response.json();
+                    console.log('[loadRmsNormBaseline] loaded ' + Object.keys(rmsNormBaseline).length + ' entries');
+                } catch (error) {
+                    console.error('[loadRmsNormBaseline] error:', error);
+                    document.getElementById('baselineTableContainer').innerHTML =
+                        '<div class="info-box"><p>加载 RMS Norm 数据失败: ' + error.message + '</p></div>';
+                    return;
+                }
+            }
+            renderRmsNormBaseline();
+        }
+
+        async function loadTopKBaseline() {
+            if (!topKBaseline) {
+                try {
+                    const BASE = getBasePath();
+                    const url = BASE + 'data/topk_baseline.json';
+                    console.log('[loadTopKBaseline] fetching:', url);
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    topKBaseline = await response.json();
+                    console.log('[loadTopKBaseline] loaded ' + Object.keys(topKBaseline).length + ' entries');
+                } catch (error) {
+                    console.error('[loadTopKBaseline] error:', error);
+                    document.getElementById('baselineTableContainer').innerHTML =
+                        '<div class="info-box"><p>加载 TopK 数据失败: ' + error.message + '</p></div>';
+                    return;
+                }
+            }
+            renderTopKBaseline();
+        }
+
+        function renderFlashAttnBaseline() {
+            if (!flashAttnBaseline) {
+                loadFlashAttnBaseline();
+                return;
+            }
+
+            const container = document.getElementById('baselineTableContainer');
+            const modelFilter = document.getElementById('flashAttnModelSelect').value;
+            const kvTypeFilter = document.getElementById('flashAttnKVTypeSelect').value;
+            const cacheSizeFilter = document.getElementById('flashAttnCacheSizeSelect').value;
+
+            // Filter data
+            const filteredEntries = {};
+            for (const [key, entry] of Object.entries(flashAttnBaseline)) {
+                if (modelFilter && entry.model !== modelFilter) continue;
+                if (kvTypeFilter && entry.kv_type !== kvTypeFilter) continue;
+                if (cacheSizeFilter && entry.kv_cache_size !== parseInt(cacheSizeFilter)) continue;
+                filteredEntries[key] = entry;
+            }
+
+            if (Object.keys(filteredEntries).length === 0) {
+                container.innerHTML = '<div class="info-box"><p>未找到匹配的数据。</p></div>';
+                return;
+            }
+
+            // Collect all hardware
+            const hardwareSet = new Set();
+            for (const entry of Object.values(filteredEntries)) {
+                if (entry.hardware) {
+                    Object.keys(entry.hardware).forEach(hw => hardwareSet.add(hw));
+                }
+            }
+            const hardwareList = Array.from(hardwareSet).sort();
+
+            // Group by model, kv_type, kv_cache_size
+            const groupedData = {};
+            for (const [key, entry] of Object.entries(filteredEntries)) {
+                const groupKey = `${entry.model}_${entry.kv_type}_${entry.kv_cache_size}`;
+                if (!groupedData[groupKey]) {
+                    groupedData[groupKey] = {
+                        model: entry.model,
+                        kv_type: entry.kv_type,
+                        kv_cache_size: entry.kv_cache_size,
+                        nb_values: {}
+                    };
+                }
+                groupedData[groupKey].nb_values[entry.nb] = entry;
+            }
+
+            // Generate HTML
+            let html = `
+                <div class="info-box" style="margin-bottom: 15px;">
+                    <h4>Flash Attention Baseline</h4>
+                    <p>显示各硬件在不同配置下的 TFLOPS 性能。NB = Batch Size。</p>
+                </div>
+                <table class="baseline-table">
+                    <thead>
+                        <tr>
+                            <th>模型</th>
+                            <th>KV类型</th>
+                            <th>Cache</th>
+                            <th>NB</th>
+                            ${hardwareList.map(hw => `<th>${hw} TFLOPS</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            // Sort and render
+            const sortedGroups = Object.values(groupedData).sort((a, b) => {
+                if (a.model !== b.model) return a.model.localeCompare(b.model);
+                if (a.kv_type !== b.kv_type) return a.kv_type.localeCompare(b.kv_type);
+                return a.kv_cache_size - b.kv_cache_size;
+            });
+
+            const nbOrder = [1, 2, 3, 4, 5, 8, 512];
+
+            for (const group of sortedGroups) {
+                const sortedNBs = Object.keys(group.nb_values).map(Number).sort((a, b) => {
+                    const aIdx = nbOrder.indexOf(a);
+                    const bIdx = nbOrder.indexOf(b);
+                    if (aIdx >= 0 && bIdx >= 0) return aIdx - bIdx;
+                    if (aIdx >= 0) return -1;
+                    if (bIdx >= 0) return 1;
+                    return a - b;
+                });
+
+                for (const nb of sortedNBs) {
+                    const entry = group.nb_values[nb];
+                    html += `<tr>`;
+                    html += `<td>${entry.model}</td>`;
+                    html += `<td><span class="badge badge-${entry.kv_type.toLowerCase().replace('.', '_')}">${entry.kv_type}</span></td>`;
+                    html += `<td>${entry.kv_cache_size}</td>`;
+                    html += `<td>${entry.nb}</td>`;
+
+                    for (const hw of hardwareList) {
+                        if (entry.hardware && entry.hardware[hw]) {
+                            const tflops = entry.hardware[hw].tflops || 0;
+                            html += `<td>${tflops > 0 ? tflops.toFixed(2) : '-'}</td>`;
+                        } else {
+                            html += `<td>-</td>`;
+                        }
+                    }
+                    html += `</tr>`;
+                }
+            }
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        function renderRmsNormBaseline() {
+            if (!rmsNormBaseline) {
+                loadRmsNormBaseline();
+                return;
+            }
+
+            const container = document.getElementById('baselineTableContainer');
+            const hiddenSizeFilter = document.getElementById('rmsNormHiddenSizeSelect').value;
+
+            // Filter data
+            const filteredEntries = {};
+            for (const [key, entry] of Object.entries(rmsNormBaseline)) {
+                if (hiddenSizeFilter && entry.hidden_size !== parseInt(hiddenSizeFilter)) continue;
+                filteredEntries[key] = entry;
+            }
+
+            if (Object.keys(filteredEntries).length === 0) {
+                container.innerHTML = '<div class="info-box"><p>未找到匹配的数据。</p></div>';
+                return;
+            }
+
+            // Collect all hardware
+            const hardwareSet = new Set();
+            for (const entry of Object.values(filteredEntries)) {
+                if (entry.hardware) {
+                    Object.keys(entry.hardware).forEach(hw => hardwareSet.add(hw));
+                }
+            }
+            const hardwareList = Array.from(hardwareSet).sort();
+
+            // Generate HTML
+            let html = `
+                <div class="info-box" style="margin-bottom: 15px;">
+                    <h4>RMS Norm Baseline</h4>
+                    <p>显示各硬件在不同配置下的 GBPS 性能。NE = [ne0, ne1, ne2, ne3]。</p>
+                </div>
+                <table class="baseline-table">
+                    <thead>
+                        <tr>
+                            <th>Hidden Size</th>
+                            <th>NE</th>
+                            ${hardwareList.map(hw => `<th>${hw} GBPS</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            // Sort by hidden_size, then by ne
+            const sortedEntries = Object.entries(filteredEntries).sort((a, b) => {
+                if (a[1].hidden_size !== b[1].hidden_size) return a[1].hidden_size - b[1].hidden_size;
+                const neA = a[1].ne || [];
+                const neB = b[1].ne || [];
+                for (let i = 0; i < Math.min(neA.length, neB.length); i++) {
+                    if (neA[i] !== neB[i]) return neA[i] - neB[i];
+                }
+                return 0;
+            });
+
+            for (const [key, entry] of sortedEntries) {
+                html += `<tr>`;
+                html += `<td>${entry.hidden_size}</td>`;
+                html += `<td style="font-family: monospace; font-size: 0.85em;">[${(entry.ne || []).join(', ')}]</td>`;
+
+                for (const hw of hardwareList) {
+                    if (entry.hardware && entry.hardware[hw]) {
+                        const gbps = entry.hardware[hw].gbps || 0;
+                        html += `<td>${gbps > 0 ? gbps.toFixed(2) : '-'}</td>`;
+                    } else {
+                        html += `<td>-</td>`;
+                    }
+                }
+                html += `</tr>`;
+            }
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        function renderTopKBaseline() {
+            if (!topKBaseline) {
+                loadTopKBaseline();
+                return;
+            }
+
+            const container = document.getElementById('baselineTableContainer');
+            const kFilter = document.getElementById('topKValueSelect').value;
+            const ne0Filter = document.getElementById('topKNE0Select').value;
+
+            // Filter data
+            const filteredEntries = {};
+            for (const [key, entry] of Object.entries(topKBaseline)) {
+                if (kFilter && entry.k !== parseInt(kFilter)) continue;
+                if (ne0Filter && entry.ne0 !== parseInt(ne0Filter)) continue;
+                filteredEntries[key] = entry;
+            }
+
+            if (Object.keys(filteredEntries).length === 0) {
+                container.innerHTML = '<div class="info-box"><p>未找到匹配的数据。</p></div>';
+                return;
+            }
+
+            // Collect all hardware
+            const hardwareSet = new Set();
+            for (const entry of Object.values(filteredEntries)) {
+                if (entry.hardware) {
+                    Object.keys(entry.hardware).forEach(hw => hardwareSet.add(hw));
+                }
+            }
+            const hardwareList = Array.from(hardwareSet).sort();
+
+            // Generate HTML
+            let html = `
+                <div class="info-box" style="margin-bottom: 15px;">
+                    <h4>TopK Baseline</h4>
+                    <p>显示各硬件在不同配置下的 GBPS 性能。NE = [ne0, ne1, ne2, ne3]。</p>
+                </div>
+                <table class="baseline-table">
+                    <thead>
+                        <tr>
+                            <th>K</th>
+                            <th>NE0</th>
+                            <th>NE</th>
+                            ${hardwareList.map(hw => `<th>${hw} GBPS</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            // Sort by k, ne0, then by ne
+            const sortedEntries = Object.entries(filteredEntries).sort((a, b) => {
+                if (a[1].k !== b[1].k) return a[1].k - b[1].k;
+                if (a[1].ne0 !== b[1].ne0) return a[1].ne0 - b[1].ne0;
+                const neA = a[1].ne || [];
+                const neB = b[1].ne || [];
+                for (let i = 0; i < Math.min(neA.length, neB.length); i++) {
+                    if (neA[i] !== neB[i]) return neA[i] - neB[i];
+                }
+                return 0;
+            });
+
+            for (const [key, entry] of sortedEntries) {
+                html += `<tr>`;
+                html += `<td>${entry.k}</td>`;
+                html += `<td>${entry.ne0}</td>`;
+                html += `<td style="font-family: monospace; font-size: 0.85em;">[${(entry.ne || []).join(', ')}]</td>`;
+
+                for (const hw of hardwareList) {
+                    if (entry.hardware && entry.hardware[hw]) {
+                        const gbps = entry.hardware[hw].gbps || 0;
+                        html += `<td>${gbps > 0 ? gbps.toFixed(2) : '-'}</td>`;
+                    } else {
+                        html += `<td>-</td>`;
+                    }
+                }
+                html += `</tr>`;
+            }
+
+            html += `</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        // ==================== Kernels Data Functions ====================
+        let kernelsData = null;
+
+        async function loadKernelsData() {
+            try {
+                const BASE = getBasePath();
+                const response = await fetch(BASE + 'data/kernels_summary.json');
+                kernelsData = await response.json();
+                console.log('[loadKernelsData] loaded ' + kernelsData.total_kernels + ' kernels');
+                populateKernelsFilters();
+                renderOperatorKernels();
+                renderModelKernels();
+            } catch (error) {
+                console.error('[loadKernelsData] error:', error);
+                document.getElementById('operatorKernelsContainer').innerHTML =
+                    '<div class="info-box"><p>加载 kernels 数据失败。</p></div>';
+            }
+        }
+
+        function populateKernelsFilters() {
+            if (!kernelsData) return;
+
+            const operatorSelect = document.getElementById('operatorSelect');
+            const modelSelect = document.getElementById('kernelModelSelect');
+
+            // Populate operator selector
+            operatorSelect.innerHTML = '<option value="">全部算子类型</option>';
+            for (const [opType, opData] of Object.entries(kernelsData.operators)) {
+                const option = document.createElement('option');
+                option.value = opType;
+                option.textContent = `${opData.display_name} (${opData.total_count})`;
+                operatorSelect.appendChild(option);
+            }
+
+            // Populate model selector
+            modelSelect.innerHTML = '<option value="">全部模型</option>';
+            for (const [modelId, modelData] of Object.entries(kernelsData.models)) {
+                const option = document.createElement('option');
+                option.value = modelId;
+                option.textContent = `${modelData.display_name} (${modelData.total_kernels})`;
+                modelSelect.appendChild(option);
+            }
+        }
+
+        function switchKernelsView(view) {
+            document.querySelectorAll('#kernels .view-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('#kernels .view-content').forEach(content => content.classList.remove('active'));
+            document.querySelector(`#kernels .view-btn[data-view="${view}"]`).classList.add('active');
+            document.getElementById(`${view}View`).classList.add('active');
+        }
+
+        function renderOperatorKernels() {
+            if (!kernelsData) {
+                loadKernelsData();
+                return;
+            }
+
+            const container = document.getElementById('operatorKernelsContainer');
+            const operatorSelect = document.getElementById('operatorSelect');
+            const selectedOpType = operatorSelect.value;
+
+            let html = '';
+
+            for (const [opType, opData] of Object.entries(kernelsData.operators)) {
+                if (selectedOpType && opType !== selectedOpType) continue;
+
+                // Get gradient color for this operator type
+                const gradients = {
+                    'quant_gemm': '#667eea',
+                    'flash_attention': '#f5576c',
+                    'rms_norm': '#00f2fe',
+                    'topk': '#38f9d7'
+                };
+                const accentColor = gradients[opType] || '#667eea';
+
+                html += `
+                    <div class="kernel-type-card">
+                        <div class="kernel-type-header">
+                            <div class="kernel-type-title">${opData.display_name}</div>
+                            <div class="kernel-count" style="background: ${accentColor}20; color: ${accentColor};">${opData.total_count} kernels</div>
+                        </div>
+                        <div class="kernel-model-list">
+                `;
+
+                for (const model of opData.models) {
+                    const count = opData.kernels.filter(k => k.model === model).length;
+                    html += `<div class="kernel-model-tag">${formatModelName(model)} (${count})</div>`;
+                }
+
+                html += `
+                        </div>
+                        <div class="kernel-list">
+                `;
+
+                for (const kernel of opData.kernels.slice(0, 5)) {
+                    const shortName = kernel.name.replace('.json', '').replace(`fp32_${opType}_`, '').replace(/_/g, ' ');
+                    html += `
+                        <div class="kernel-item" style="border-left-color: ${accentColor};" onclick="showKernelDetails('${escapeForHtml(kernel.name)}', '${opType}')">
+                            <div class="kernel-item-name">${shortName}</div>
+                            <div class="kernel-item-variant">${kernel.variant} • ${formatModelName(kernel.model)}</div>
+                        </div>
+                    `;
+                }
+
+                if (opData.total_count > 5) {
+                    const moreCount = opData.total_count - 5;
+                    const expandId = `expand-${opType}`;
+                    html += `
+                        <div id="${expandId}-collapsed">
+                            <div style="text-align: center; padding: 8px;">
+                                <button onclick="toggleOperatorKernelsExpand('${opType}')"
+                                        style="background: ${accentColor}15; color: ${accentColor}; border: 1px solid ${accentColor}30; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85em;">
+                                    显示更多 (${moreCount} 个 kernels)
+                                </button>
+                            </div>
+                        </div>
+                        <div id="${expandId}-expanded" style="display: none;">
+                    `;
+
+                    // Add remaining kernels
+                    for (const kernel of opData.kernels.slice(5)) {
+                        const shortName = kernel.name.replace('.json', '').replace(`fp32_${opType}_`, '').replace(/_/g, ' ');
+                        html += `
+                            <div class="kernel-item" style="border-left-color: ${accentColor};" onclick="showKernelDetails('${escapeForHtml(kernel.name)}', '${opType}')">
+                                <div class="kernel-item-name">${shortName}</div>
+                                <div class="kernel-item-variant">${kernel.variant} • ${formatModelName(kernel.model)}</div>
+                            </div>
+                        `;
+                    }
+
+                    html += `
+                            <div style="text-align: center; padding: 8px;">
+                                <button onclick="toggleOperatorKernelsExpand('${opType}')"
+                                        style="background: ${accentColor}15; color: ${accentColor}; border: 1px solid ${accentColor}30; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85em;">
+                                    收起
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html || '<div class="info-box"><p>没有找到匹配的 kernels。</p></div>';
+        }
+
+        function renderModelKernels() {
+            if (!kernelsData) {
+                loadKernelsData();
+                return;
+            }
+
+            const container = document.getElementById('modelKernelsContainer');
+            const modelSelect = document.getElementById('kernelModelSelect');
+            const selectedModel = modelSelect.value;
+
+            let html = '';
+
+            for (const [modelId, modelData] of Object.entries(kernelsData.models)) {
+                if (selectedModel && modelId !== selectedModel) continue;
+
+                html += `
+                    <div class="kernel-type-card">
+                        <div class="kernel-type-header">
+                            <div class="kernel-type-title">${modelData.display_name}</div>
+                            <div class="kernel-count">${modelData.total_kernels} kernels</div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 16px;">
+                `;
+
+                for (const [opType, kernelNames] of Object.entries(modelData.operators)) {
+                    const opData = kernelsData.operators[opType];
+                    const opDisplayName = opData?.display_name || opType;
+                    const accentColors = {
+                        'quant_gemm': '#667eea',
+                        'flash_attention': '#f5576c',
+                        'rms_norm': '#00f2fe',
+                        'topk': '#38f9d7'
+                    };
+                    const accentColor = accentColors[opType] || '#666';
+                    const cardId = `model-op-${modelId}-${opType}`;
+                    const toggleId = `toggle-${modelId}-${opType}`;
+
+                    html += `
+                        <div class="model-operator-card" style="background: ${accentColor}08; border: 1px solid ${accentColor}30; border-radius: 10px; overflow: hidden;">
+                            <div class="model-operator-header" onclick="toggleModelOperatorCard('${cardId}', '${toggleId}')"
+                                 style="background: linear-gradient(135deg, ${accentColor}15 0%, ${accentColor}05 100%); padding: 14px 16px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
+                                <div>
+                                    <div style="font-weight: 600; color: ${accentColor}; margin-bottom: 2px;">${opDisplayName}</div>
+                                    <div style="font-size: 0.85em; color: #666;">${kernelNames.length} kernels</div>
+                                </div>
+                                <span class="model-card-toggle" id="${toggleId}" style="color: ${accentColor};">▼</span>
+                            </div>
+                            <div class="model-operator-content" id="${cardId}" style="display: none; padding: 12px;">
+                                <div class="kernel-list" style="max-height: 300px; overflow-y: auto;">
+                    `;
+
+                    // List kernels for this model+operator
+                    for (const kernelName of kernelNames.slice(0, 10)) {
+                        const kernel = opData?.kernels?.find(k => k.name === kernelName || k.name === kernelName + '.json');
+                        const shortName = kernelName.replace('.json', '').replace(`fp32_${opType}_`, '').replace(/_/g, ' ');
+                        const variant = kernel?.variant || '';
+                        html += `
+                            <div class="kernel-item" style="border-left-color: ${accentColor}; cursor: pointer;" onclick="showKernelDetails('${escapeForHtml(kernelName)}', '${opType}')">
+                                <div class="kernel-item-name">${shortName}</div>
+                                ${variant ? `<div class="kernel-item-variant">${variant}</div>` : ''}
+                            </div>
+                        `;
+                    }
+
+                    if (kernelNames.length > 10) {
+                        html += `<div style="text-align: center; color: #666; font-size: 0.85em; padding: 8px;">还有 ${kernelNames.length - 10} 个 kernels...</div>`;
+                    }
+
+                    html += `
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html || '<div class="info-box"><p>没有找到匹配的 kernels。</p></div>';
+        }
+
+        function toggleModelOperatorCard(cardId, toggleId) {
+            const card = document.getElementById(cardId);
+            const toggle = document.getElementById(toggleId);
+            if (card.style.display === 'none') {
+                card.style.display = 'block';
+                toggle.classList.remove('collapsed');
+                toggle.textContent = '▼';
+            } else {
+                card.style.display = 'none';
+                toggle.classList.add('collapsed');
+                toggle.textContent = '▶';
+            }
+        }
+
+        function toggleOperatorKernelsExpand(opType) {
+            const collapsedDiv = document.getElementById(`expand-${opType}-collapsed`);
+            const expandedDiv = document.getElementById(`expand-${opType}-expanded`);
+            if (collapsedDiv && expandedDiv) {
+                if (collapsedDiv.style.display !== 'none') {
+                    collapsedDiv.style.display = 'none';
+                    expandedDiv.style.display = 'block';
+                } else {
+                    collapsedDiv.style.display = 'block';
+                    expandedDiv.style.display = 'none';
+                }
+            }
+        }
+
+        function showKernelDetails(kernelName, opType) {
+            if (!kernelsData) return;
+
+            const opData = kernelsData.operators[opType];
+            const kernel = opData.kernels.find(k => k.name === kernelName || k.name === kernelName + '.json');
+
+            if (!kernel) return;
+
+            const container = document.getElementById('operatorKernelsContainer');
+
+            // Build axes HTML
+            let axesHtml = '';
+            for (const [axisName, axisData] of Object.entries(kernel.axes)) {
+                const typeClass = axisData.type === 'const' ? 'const' : 'var';
+                const typeLabel = axisData.type === 'const' ? '常量' : '变量';
+                const valueDisplay = axisData.value !== undefined ? axisData.value : '-';
+
+                axesHtml += `
+                    <div class="kernel-axis-item">
+                        <div class="kernel-axis-name">${axisName}</div>
+                        <div class="kernel-axis-type"><span class="${typeClass}">${typeLabel}</span></div>
+                        ${valueDisplay !== '-' ? `<div class="kernel-axis-value">${valueDisplay}</div>` : ''}
+                        <div class="kernel-axis-desc">${axisData.description}</div>
+                    </div>
+                `;
+            }
+
+            // Build test configs HTML
+            let testConfigsHtml = '';
+            if (kernel.test_configs && kernel.test_configs.length > 0) {
+                testConfigsHtml = '<div class="test-configs-list">';
+                for (const config of kernel.test_configs) {
+                    testConfigsHtml += `<div class="test-config-item">${config.name}</div>`;
+                }
+                testConfigsHtml += '</div>';
+            }
+
+            // Build baseline info HTML
+            let baselineHtml = '';
+            if (kernel.baseline_ref) {
+                baselineHtml += '<div class="baseline-info">';
+                for (const [key, value] of Object.entries(kernel.baseline_ref)) {
+                    baselineHtml += `
+                        <div class="baseline-info-row">
+                            <div class="baseline-info-label">${key}:</div>
+                            <div class="baseline-info-value">${JSON.stringify(value)}</div>
+                        </div>
+                    `;
+                }
+                baselineHtml += '</div>';
+            }
+
+            // Get gradient color based on operator type
+            const gradients = {
+                'quant_gemm': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                'flash_attention': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                'rms_norm': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                'topk': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+            };
+            const gradient = gradients[opType] || gradients['quant_gemm'];
+
+            let html = `
+                <button class="back-button" onclick="renderOperatorKernels()">← 返回</button>
+
+                <div class="kernel-detail-header" style="background: ${gradient}">
+                    <div class="kernel-detail-title">${kernel.name.replace('.json', '')}</div>
+                    <div class="kernel-detail-subtitle">${kernel.description}</div>
+                </div>
+
+                <div class="kernel-detail-section">
+                    <div class="kernel-detail-section-title">基本信息</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <div><strong>算子类型:</strong> ${opData.display_name}</div>
+                        <div><strong>变体:</strong> ${kernel.variant}</div>
+                        <div><strong>模型:</strong> ${formatModelName(kernel.model)}</div>
+                    </div>
+                </div>
+
+                <div class="kernel-detail-section">
+                    <div class="kernel-detail-section-title">维度参数 (Axes)</div>
+                    <div class="kernel-axes-grid">
+                        ${axesHtml}
+                    </div>
+                </div>
+
+                ${testConfigsHtml ? `
+                <div class="kernel-detail-section">
+                    <div class="kernel-detail-section-title">测试配置</div>
+                    ${testConfigsHtml}
+                </div>
+                ` : ''}
+
+                ${baselineHtml ? `
+                <div class="kernel-detail-section">
+                    <div class="kernel-detail-section-title">基准参考 (Baseline)</div>
+                    ${baselineHtml}
+                </div>
+                ` : ''}
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function formatModelName(modelId) {
+            const nameMap = {
+                'deepseek_v2': 'DeepSeek-V2',
+                'deepseek_v3': 'DeepSeek-V3',
+                'deepseek_v3_moe': 'DeepSeek-V3 MoE',
+                'llama3_8b': 'LLaMA-3-8B',
+                'llama': 'LLaMA',
+                'mixtral8x7b': 'Mixtral-8x7B',
+                'qwen2_5_7b': 'Qwen2.5-7B',
+                'qwen3_4b': 'Qwen3-4B',
+                'qwen': 'Qwen',
+            };
+            return nameMap[modelId] || modelId.replace('_', '-').replace(/(\d+)/, '-$1');
+        }
+
+        function escapeForHtml(str) {
+            return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

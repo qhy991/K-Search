@@ -1,0 +1,213 @@
+{
+  "attempt_id": "attempts/w4a32c8_q4_0_fp32_int8_mixtral8x7b_moe_up_n14336_k4096_v4",
+  "variant": "w4a32c8_q4_0_fp32_int8_mixtral8x7b_moe_up_n14336_k4096",
+  "tested_at": "2026-02-16T09:07:14.294457",
+  "compilation": {
+    "success": true,
+    "errors": [],
+    "warnings": [
+      "bindings.cpp not found, creating default",
+      "JIT compilation successful"
+    ]
+  },
+  "correctness": {
+    "passed": false,
+    "nmse": 1.0,
+    "test_cases": [
+      {
+        "shape": "batch_1",
+        "passed": false,
+        "nmse": 1.0
+      },
+      {
+        "shape": "batch_2",
+        "passed": false,
+        "error": "CUDA error: invalid argument\nSearch for `cudaErrorInvalidValue' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n"
+      },
+      {
+        "shape": "batch_3",
+        "passed": false,
+        "nmse": 1.0
+      },
+      {
+        "shape": "batch_4",
+        "passed": false,
+        "nmse": 1.0
+      },
+      {
+        "shape": "batch_5",
+        "passed": false,
+        "nmse": 1.0
+      },
+      {
+        "shape": "batch_8",
+        "passed": false,
+        "nmse": 1.0
+      },
+      {
+        "shape": "batch_512",
+        "passed": false,
+        "error": "CUDA error: invalid argument\nSearch for `cudaErrorInvalidValue' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n"
+      }
+    ]
+  },
+  "performance": {},
+  "spec": {
+    "name": "w4a32c8_q4_0_fp32_int8_mixtral8x7b_moe_up_n14336_k4096",
+    "op_type": "quant_gemm",
+    "variant": "W4A32C8",
+    "description": "Mixtral-8x7B MoE Up/Gate projection with W4A32C8. Generated from GGML baseline.",
+    "tags": [
+      "status:generated",
+      "framework:ggml",
+      "source:ggml-python",
+      "layer:moe-up",
+      "quantization:q4_0",
+      "quantization:q8_1",
+      "compute:int8",
+      "compute:dp4a",
+      "weight_bits:4",
+      "activation_storage:fp32"
+    ],
+    "model_architectures": [
+      "mixtral8x7b"
+    ],
+    "op_category": "quant_gemm",
+    "axes": {
+      "M": {
+        "type": "var",
+        "description": "Batch dimension"
+      },
+      "N": {
+        "type": "const",
+        "value": 14336,
+        "description": "Output features"
+      },
+      "K": {
+        "type": "const",
+        "value": 4096,
+        "description": "Input features"
+      },
+      "block_size": {
+        "type": "const",
+        "value": 32,
+        "description": "Quantization block size"
+      }
+    },
+    "inputs": {
+      "activation": {
+        "shape": [
+          "M",
+          "K"
+        ],
+        "dtype": "float32",
+        "description": "FP32 activation tensor, dynamically quantized to Q8_1 per-block during compute"
+      },
+      "weight": {
+        "shape": [
+          "N",
+          "K/32"
+        ],
+        "dtype": "block_q4_0",
+        "description": "Q4_0 quantized weight tensor"
+      }
+    },
+    "outputs": {
+      "output": {
+        "shape": [
+          "M",
+          "N"
+        ],
+        "dtype": "float32",
+        "description": "FP32 output tensor"
+      }
+    },
+    "constraints": [
+      "K % 32 == 0"
+    ],
+    "formula": {
+      "computation": "C = A @ W^T where A(M,K) is FP32, W(N,K/32) is Q4_0 quantized",
+      "llama_cpp_formula": "result = d4_0 * (d8_1 * sumi - 8 * s8_1)",
+      "explanation": "Q4_0 uses offset-8 encoding. The -8*s8_1 term compensates for this offset."
+    },
+    "test_configs": [
+      {
+        "name": "batch_1",
+        "M": 1,
+        "N": 14336,
+        "K": 4096
+      },
+      {
+        "name": "batch_2",
+        "M": 2,
+        "N": 14336,
+        "K": 4096
+      },
+      {
+        "name": "batch_3",
+        "M": 3,
+        "N": 14336,
+        "K": 4096
+      },
+      {
+        "name": "batch_4",
+        "M": 4,
+        "N": 14336,
+        "K": 4096
+      },
+      {
+        "name": "batch_5",
+        "M": 5,
+        "N": 14336,
+        "K": 4096
+      },
+      {
+        "name": "batch_8",
+        "M": 8,
+        "N": 14336,
+        "K": 4096
+      },
+      {
+        "name": "batch_512",
+        "M": 512,
+        "N": 14336,
+        "K": 4096
+      }
+    ],
+    "baseline_ref": {
+      "case_id": "w4a32c8_q4_0_f32_m14336_n512_k4096",
+      "source": "ggml-python",
+      "note": "GGML baseline: M=14336 (output), N=512 (batch), K=4096 (input). Maps to our framework: M=512 (batch), N=14336 (output), K=4096 (input)"
+    },
+    "params": {
+      "M": {
+        "type": "int",
+        "description": "Batch dimension",
+        "constraint": "M >= 1"
+      },
+      "N": {
+        "type": "int",
+        "description": "Output features",
+        "default": 14336
+      },
+      "K": {
+        "type": "int",
+        "description": "Input features",
+        "default": 4096
+      },
+      "block_size": {
+        "type": "int",
+        "description": "Quantization block size",
+        "default": 32
+      }
+    },
+    "kernel": {
+      "file": "kernel.cu",
+      "entry_point": "forward"
+    },
+    "accuracy": {
+      "metric": "nmse",
+      "threshold": 0.1
+    }
+  }
+}

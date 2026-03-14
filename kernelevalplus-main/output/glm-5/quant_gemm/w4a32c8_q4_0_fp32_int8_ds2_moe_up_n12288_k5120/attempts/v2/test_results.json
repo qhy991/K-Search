@@ -1,0 +1,240 @@
+{
+  "attempt_id": "test",
+  "variant": "default",
+  "op_type": "quant_gemm",
+  "tested_at": "2026-03-14T12:44:43.128714",
+  "spec": {
+    "name": "w4a32c8_q4_0_fp32_int8_ds2_moe_up_n12288_k5120",
+    "op_type": "quant_gemm",
+    "variant": "W4A32C8",
+    "description": "Deepseek-V2 MoE shared expert up/gate projection with W4A32C8. Using llama.cpp BLOCK_Q4_0\u00d7Q8_1 pattern.",
+    "tags": [
+      "status:verified",
+      "framework:ds2",
+      "source:llama.cpp",
+      "layer:moe-up",
+      "architecture:moe",
+      "quantization:q4_0",
+      "quantization:q8_1",
+      "weight_bits:4",
+      "activation_storage:fp32",
+      "llama_cpp_pattern:q4_0_q8_1"
+    ],
+    "model_architectures": [
+      "deepseek-v2"
+    ],
+    "op_category": "quant_gemm",
+    "axes": {
+      "M": {
+        "type": "var",
+        "description": "Batch dimension (batch_size * seq_len)"
+      },
+      "N": {
+        "type": "const",
+        "value": 12288,
+        "description": "Output features (projection)"
+      },
+      "K": {
+        "type": "const",
+        "value": 5120,
+        "description": "Input features (hidden_size, must be multiple of 32)"
+      },
+      "block_size": {
+        "type": "const",
+        "value": 32,
+        "description": "Quantization block size for BLOCK_Q4_0 and Q8_1"
+      }
+    },
+    "inputs": {
+      "activation": {
+        "shape": [
+          "M",
+          "K"
+        ],
+        "dtype": "float32",
+        "description": "FP32 activation tensor, dynamically quantized to Q8_1 style per-block (32 values) for compute"
+      },
+      "weight": {
+        "shape": [
+          "N",
+          "K/32"
+        ],
+        "dtype": "q4_0",
+        "description": "BLOCK_Q4_0 quantized weight tensor. Each block of 32 values shares a scale (fp16). Storage: (K/32) * 34 bytes per row"
+      }
+    },
+    "outputs": {
+      "output": {
+        "shape": [
+          "M",
+          "N"
+        ],
+        "dtype": "float32",
+        "description": "FP32 output tensor"
+      }
+    },
+    "types": {
+      "q4_0": {
+        "size": 34,
+        "description": "BLOCK_Q4_0 block quantization format for weights (32 values per block)",
+        "fields": [
+          {
+            "name": "scale",
+            "dtype": "float16",
+            "description": "Scale factor for the block (fp16, 2 bytes)"
+          },
+          {
+            "name": "qs",
+            "dtype": "int8[32]",
+            "description": "Quantized values (32 int8 values, 32 bytes)"
+          }
+        ],
+        "quantization": "w = qs * scale",
+        "formula": "For each block j: output[i] = qs[i] * scale_j",
+        "block_size": 32,
+        "bytes_per_block": 34
+      },
+      "block_q8_1_activation": {
+        "size": 36,
+        "description": "Q8_1-style block quantization format for activations (32 values per block, dynamically computed)",
+        "fields": [
+          {
+            "name": "scale",
+            "dtype": "float32",
+            "description": "Per-block scale factor (computed dynamically)"
+          },
+          {
+            "name": "qs",
+            "dtype": "int8[32]",
+            "description": "Quantized values (32 int8 values)"
+          }
+        ],
+        "quantization": "a = qs * scale",
+        "note": "Sum field is NOT used for Q8_0 weights (only needed for Q4_0 with -8 offset)"
+      }
+    },
+    "constraints": [
+      "K % 32 == 0",
+      "N >= 1",
+      "M >= 1"
+    ],
+    "formula": {
+      "computation": "C = A @ W^T where A(M,5120) is FP32, W(12288,5120) is BLOCK_Q4_0 quantized, computed following llama.cpp BLOCK_Q4_0\u00d7Q8_1 pattern",
+      "dequantization": "Weight: w = qs * scale_w, Activation: a = qs * scale_a",
+      "llama_cpp_formula": "result = d8_0 * d8_1 * sumi where sumi is dot product accumulation",
+      "compute_flow": "1. Per-block quantize A to Q8_1 style (scale_a), 2. GEMM with BLOCK_Q4_0 weights, 3. Apply scales: output = d8_0 * d8_1 * sumi"
+    },
+    "test_configs": [
+      {
+        "name": "batch_1",
+        "M": 1,
+        "N": 12288,
+        "K": 5120
+      },
+      {
+        "name": "batch_2",
+        "M": 2,
+        "N": 12288,
+        "K": 5120
+      },
+      {
+        "name": "batch_3",
+        "M": 3,
+        "N": 12288,
+        "K": 5120
+      },
+      {
+        "name": "batch_4",
+        "M": 4,
+        "N": 12288,
+        "K": 5120
+      },
+      {
+        "name": "batch_5",
+        "M": 5,
+        "N": 12288,
+        "K": 5120
+      },
+      {
+        "name": "batch_8",
+        "M": 8,
+        "N": 12288,
+        "K": 5120
+      },
+      {
+        "name": "batch_512",
+        "M": 512,
+        "N": 12288,
+        "K": 5120
+      }
+    ],
+    "performance_notes": {
+      "llama_cpp_compatibility": "Matches llama.cpp vec_dot_q4_0_q8_1 pattern for maximum compatibility",
+      "per_block_quantization": "Per-block (32 values) activation quantization provides better accuracy than per-row"
+    },
+    "params": {
+      "M": {
+        "default": 1
+      },
+      "N": {
+        "value": 12288
+      },
+      "K": {
+        "value": 5120
+      },
+      "block_size": {
+        "value": 32
+      }
+    }
+  },
+  "compilation": {
+    "success": true,
+    "errors": [],
+    "warnings": [],
+    "diagnostics": []
+  },
+  "correctness": {
+    "passed": true,
+    "test_cases": [
+      {
+        "config": "single_token",
+        "passed": true,
+        "nmse": 0.0
+      },
+      {
+        "config": "small_batch",
+        "passed": true,
+        "nmse": 0.0
+      },
+      {
+        "config": "large_batch",
+        "passed": true,
+        "nmse": 0.0
+      }
+    ],
+    "nmse": 0.0
+  },
+  "performance": {
+    "benchmarks": [
+      {
+        "config": "single_token",
+        "latency_ms": 0.135,
+        "tflops": 0.934,
+        "gflops": 933.7
+      },
+      {
+        "config": "small_batch",
+        "latency_ms": 0.578,
+        "tflops": 1.742,
+        "gflops": 1741.9
+      },
+      {
+        "config": "large_batch",
+        "latency_ms": 33.185,
+        "tflops": 1.941,
+        "gflops": 1941.4
+      }
+    ],
+    "baseline_comparison": null
+  }
+}

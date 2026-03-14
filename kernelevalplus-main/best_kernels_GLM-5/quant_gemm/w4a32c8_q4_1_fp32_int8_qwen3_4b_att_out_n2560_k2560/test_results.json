@@ -1,0 +1,319 @@
+{
+  "attempt_id": "attempts/w4a32c8_q4_1_fp32_int8_qwen3_4b_att_out_n2560_k2560_v17",
+  "variant": "W4A32C8",
+  "tested_at": "2026-03-02T21:08:53.253682",
+  "compilation": {
+    "success": true,
+    "errors": [],
+    "warnings": [
+      "bindings.cpp not found, creating default",
+      "JIT compilation successful"
+    ]
+  },
+  "correctness": {
+    "passed": true,
+    "nmse": 0.000207,
+    "test_cases": [
+      {
+        "shape": "batch_1",
+        "passed": true,
+        "nmse": 0.000637
+      },
+      {
+        "shape": "batch_2",
+        "passed": true,
+        "nmse": 7.2e-05
+      },
+      {
+        "shape": "batch_3",
+        "passed": true,
+        "nmse": 0.000198
+      },
+      {
+        "shape": "batch_4",
+        "passed": true,
+        "nmse": 0.000148
+      },
+      {
+        "shape": "batch_5",
+        "passed": true,
+        "nmse": 0.000102
+      },
+      {
+        "shape": "batch_8",
+        "passed": true,
+        "nmse": 0.000133
+      },
+      {
+        "shape": "batch_512",
+        "passed": true,
+        "nmse": 0.000157
+      }
+    ]
+  },
+  "performance": {
+    "benchmarks": [
+      {
+        "shape": "batch_1",
+        "M": 1,
+        "N": 2560,
+        "K": 2560,
+        "latency_ms": 0.006,
+        "gflops": 2101.8,
+        "tflops": 2.102
+      },
+      {
+        "shape": "batch_2",
+        "M": 2,
+        "N": 2560,
+        "K": 2560,
+        "latency_ms": 0.008,
+        "gflops": 3252.9,
+        "tflops": 3.253
+      },
+      {
+        "shape": "batch_3",
+        "M": 3,
+        "N": 2560,
+        "K": 2560,
+        "latency_ms": 0.008,
+        "gflops": 4705.9,
+        "tflops": 4.706
+      },
+      {
+        "shape": "batch_4",
+        "M": 4,
+        "N": 2560,
+        "K": 2560,
+        "latency_ms": 0.009,
+        "gflops": 5529.2,
+        "tflops": 5.529
+      },
+      {
+        "shape": "batch_5",
+        "M": 5,
+        "N": 2560,
+        "K": 2560,
+        "latency_ms": 0.011,
+        "gflops": 6213.6,
+        "tflops": 6.214
+      },
+      {
+        "shape": "batch_8",
+        "M": 8,
+        "N": 2560,
+        "K": 2560,
+        "latency_ms": 0.013,
+        "gflops": 7781.2,
+        "tflops": 7.781
+      },
+      {
+        "shape": "batch_512",
+        "M": 512,
+        "N": 2560,
+        "K": 2560,
+        "latency_ms": 1.061,
+        "gflops": 6327.2,
+        "tflops": 6.327
+      }
+    ],
+    "baseline_comparison": {
+      "status": "ok",
+      "match_type": "exact",
+      "current_hardware": "NVIDIA GeForce RTX 4090",
+      "baseline_hardware": "RTX4090",
+      "baseline_label": "RTX4090",
+      "current_gflops": 2101.8,
+      "baseline_gflops": 2060.0,
+      "baseline_tflops": 2.06,
+      "performance_ratio": 102.0,
+      "dimensions": {
+        "our_dims": {
+          "M": 1,
+          "N": 2560,
+          "K": 2560
+        },
+        "baseline_dims": {
+          "M": 2560,
+          "N": 1,
+          "K": 2560
+        },
+        "note": "GGML dimension mapping: our M=1,N=2560,K=2560 \u2192 GGML M=2560,N=1,K=2560"
+      },
+      "type_a": "q4_1",
+      "type_b": "f32",
+      "better": true
+    }
+  },
+  "spec": {
+    "name": "w4a32c8_q4_1_fp32_int8_qwen3_4b_att_out_n2560_k2560",
+    "op_type": "quant_gemm",
+    "variant": "W4A32C8",
+    "description": "Qwen3-4B Attention Output projection with W4A32C8. Generated from GGML baseline.",
+    "tags": [
+      "status:generated",
+      "framework:ggml",
+      "source:ggml-python",
+      "layer:att-out",
+      "quantization:q4_1",
+      "quantization:q8_1",
+      "weight_bits:4",
+      "activation_storage:fp32"
+    ],
+    "model_architectures": [
+      "qwen3-4b"
+    ],
+    "op_category": "quant_gemm",
+    "axes": {
+      "M": {
+        "type": "var",
+        "description": "Batch dimension"
+      },
+      "N": {
+        "type": "const",
+        "value": 2560,
+        "description": "Output features"
+      },
+      "K": {
+        "type": "const",
+        "value": 2560,
+        "description": "Input features"
+      },
+      "block_size": {
+        "type": "const",
+        "value": 32,
+        "description": "Quantization block size"
+      }
+    },
+    "inputs": {
+      "activation": {
+        "shape": [
+          "M",
+          "K"
+        ],
+        "dtype": "float32",
+        "description": "FP32 activation tensor, dynamically quantized to Q8_1 per-block during compute"
+      },
+      "weight": {
+        "shape": [
+          "N",
+          "K/32"
+        ],
+        "dtype": "block_q4_1",
+        "description": "Q4_1 quantized weight tensor"
+      }
+    },
+    "outputs": {
+      "output": {
+        "shape": [
+          "M",
+          "N"
+        ],
+        "dtype": "float32",
+        "description": "FP32 output tensor"
+      }
+    },
+    "constraints": [
+      "K % 32 == 0"
+    ],
+    "formula": {
+      "computation": "C = A @ W^T where A(M,K) is FP32, W(N,K/32) is Q4_1 quantized",
+      "llama_cpp_formula": "result = d4_1 * d8_1 * sumi + m4_1 * s8_1 / 4",
+      "explanation": "Q4_1 uses asymmetric quantization with min value."
+    },
+    "test_configs": [
+      {
+        "name": "batch_1",
+        "M": 1,
+        "N": 2560,
+        "K": 2560
+      },
+      {
+        "name": "batch_2",
+        "M": 2,
+        "N": 2560,
+        "K": 2560
+      },
+      {
+        "name": "batch_3",
+        "M": 3,
+        "N": 2560,
+        "K": 2560
+      },
+      {
+        "name": "batch_4",
+        "M": 4,
+        "N": 2560,
+        "K": 2560
+      },
+      {
+        "name": "batch_5",
+        "M": 5,
+        "N": 2560,
+        "K": 2560
+      },
+      {
+        "name": "batch_8",
+        "M": 8,
+        "N": 2560,
+        "K": 2560
+      },
+      {
+        "name": "batch_512",
+        "M": 512,
+        "N": 2560,
+        "K": 2560
+      }
+    ],
+    "baseline_ref": {
+      "case_id": "w4a32c8_q4_1_f32_m2560_n512_k2560",
+      "source": "ggml-python",
+      "note": "GGML baseline: M=2560 (output), N=512 (batch), K=2560 (input). Maps to our framework: M=512 (batch), N=2560 (output), K=2560 (input)"
+    },
+    "params": {
+      "M": {
+        "type": "int",
+        "description": "Batch dimension",
+        "constraint": "M >= 1"
+      },
+      "N": {
+        "type": "int",
+        "description": "Output features",
+        "default": 2560
+      },
+      "K": {
+        "type": "int",
+        "description": "Input features",
+        "default": 2560
+      },
+      "block_size": {
+        "type": "int",
+        "description": "Quantization block size",
+        "default": 32
+      }
+    },
+    "kernel": {
+      "file": "kernel.cu",
+      "entry_point": "forward"
+    },
+    "accuracy": {
+      "metric": "nmse",
+      "threshold": 0.1
+    }
+  },
+  "baseline_comparison": {
+    "current_hardware": "NVIDIA GeForce RTX 4090",
+    "baseline_hardware": "RTX4090",
+    "baseline_label": "RTX 4090",
+    "current_gflops": 2101.8,
+    "baseline_gflops": 2060.0,
+    "performance_ratio": 102.02912621359224,
+    "dimensions": {
+      "N": 2560,
+      "K": 2560
+    },
+    "baseline_case_id": "",
+    "baseline_m": 0,
+    "note": "GGML dimension mapping: our M=1,N=2560,K=2560 \u2192 GGML M=2560,N=1,K=2560"
+  }
+}

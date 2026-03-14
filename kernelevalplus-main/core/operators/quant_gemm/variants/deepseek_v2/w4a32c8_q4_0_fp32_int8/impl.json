@@ -1,0 +1,11 @@
+{
+  "name": "w4a32c8_q4_0_fp32_int8",
+  "type": "quant_gemm",
+  "description": "DeepSeek-V2 W4A32C8 implementation: Q4_0 weights, FP32 activations (dynamic Q8_1), INT8 compute",
+  "family": "quant_gemm",
+  "variant": "W4A32C8",
+  "weight_format": "Q4_0",
+  "activation_format": "FP32 (dynamically quantized to Q8_1 style)",
+  "compute_precision": "INT8",
+  "block_size": 32
+}

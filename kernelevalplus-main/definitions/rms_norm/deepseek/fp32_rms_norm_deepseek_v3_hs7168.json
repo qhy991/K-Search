@@ -1,0 +1,84 @@
+{
+  "name": "fp32_rms_norm_deepseek_v3_hs7168",
+  "op_type": "rms_norm",
+  "op_category": "normalization",
+  "variant": "FP32",
+  "description": "RMS Norm for deepseek_v3 with hidden_size=7168",
+  "tags": [
+    "status:generated",
+    "framework:ggml",
+    "source:ggml-python",
+    "layer:norm",
+    "normalization:rms",
+    "activation:fp32",
+    "model:deepseek_v3"
+  ],
+  "model_architectures": [
+    "deepseek_v3"
+  ],
+  "axes": {
+    "batch_size": {
+      "type": "var",
+      "description": "Batch/sequence dimension"
+    },
+    "hidden_size": {
+      "type": "const",
+      "value": 7168,
+      "description": "Feature dimension"
+    },
+    "epsilon": {
+      "type": "const",
+      "value": 1e-06,
+      "description": "Numerical stability constant"
+    }
+  },
+  "inputs": {
+    "hidden_states": {
+      "shape": [
+        "batch_size",
+        "hidden_size"
+      ],
+      "dtype": "float32",
+      "description": "Input tensor"
+    },
+    "weight": {
+      "shape": [
+        "hidden_size"
+      ],
+      "dtype": "float32",
+      "description": "Learned scale parameter"
+    }
+  },
+  "outputs": {
+    "output": {
+      "shape": [
+        "batch_size",
+        "hidden_size"
+      ],
+      "dtype": "float32",
+      "description": "Normalized output"
+    }
+  },
+  "formula": {
+    "computation": "output = input / sqrt(mean(input^2, axis=-1) + epsilon) * weight"
+  },
+  "test_configs": [
+    {
+      "name": "batch_1",
+      "batch_size": 1
+    },
+    {
+      "name": "batch_8",
+      "batch_size": 8
+    },
+    {
+      "name": "batch_512",
+      "batch_size": 512
+    }
+  ],
+  "baseline_ref": {
+    "case_id": "rms_norm_hs7168_7168x512x1x1",
+    "source": "ggml-python",
+    "metric": "gbps"
+  }
+}

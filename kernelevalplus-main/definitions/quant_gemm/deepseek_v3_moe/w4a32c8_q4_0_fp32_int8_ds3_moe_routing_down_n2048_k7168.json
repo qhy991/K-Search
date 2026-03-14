@@ -1,0 +1,118 @@
+{
+  "name": "w4a32c8_q4_0_fp32_int8_ds3_moe_routing_down_n2048_k7168.json",
+  "op_type": "quant_gemm",
+  "variant": "W4A32C8",
+  "description": "DeepSeek-V3 MoE Routing Expert Down projection with W4A32C8. Projects from hidden size (7168) to routing expert dimension (2048). Used in MoE routing.",
+  "tags": [
+    "status:verified",
+    "framework:deepseek",
+    "layer:moe-routing-down",
+    "quantization:q4_0",
+    "quantization:q8_1",
+    "weight_bits:4",
+    "activation_storage:fp32",
+    "moe:routing"
+  ],
+  "model_architectures": [
+    "deepseek-v3"
+  ],
+  "op_category": "quant_gemm",
+  "axes": {
+    "M": {
+      "type": "var",
+      "description": "Batch dimension"
+    },
+    "N": {
+      "type": "const",
+      "value": 2048,
+      "description": "Routing expert dimension"
+    },
+    "K": {
+      "type": "const",
+      "value": 7168,
+      "description": "Hidden size"
+    },
+    "block_size": {
+      "type": "const",
+      "value": 32
+    }
+  },
+  "inputs": {
+    "activation": {
+      "shape": [
+        "M",
+        "K"
+      ],
+      "dtype": "float32",
+      "description": "FP32 activation, dynamically quantized to Q8_1"
+    },
+    "weight": {
+      "shape": [
+        "N",
+        "K/32"
+      ],
+      "dtype": "block_q4_0",
+      "description": "Q4_0 quantized routing weight"
+    }
+  },
+  "outputs": {
+    "output": {
+      "shape": [
+        "M",
+        "N"
+      ],
+      "dtype": "float32"
+    }
+  },
+  "constraints": [
+    "K % 32 == 0"
+  ],
+  "formula": {
+    "computation": "C = A @ W^T",
+    "llama_cpp_formula": "result = d4_0 * (d8_1 * sumi - 8 * s8_1)"
+  },
+  "test_configs": [
+    {
+      "name": "batch_1",
+      "M": 1,
+      "N": 2048,
+      "K": 7168
+    },
+    {
+      "name": "batch_2",
+      "M": 2,
+      "N": 2048,
+      "K": 7168
+    },
+    {
+      "name": "batch_3",
+      "M": 3,
+      "N": 2048,
+      "K": 7168
+    },
+    {
+      "name": "batch_4",
+      "M": 4,
+      "N": 2048,
+      "K": 7168
+    },
+    {
+      "name": "batch_5",
+      "M": 5,
+      "N": 2048,
+      "K": 7168
+    },
+    {
+      "name": "batch_8",
+      "M": 8,
+      "N": 2048,
+      "K": 7168
+    },
+    {
+      "name": "batch_512",
+      "M": 512,
+      "N": 2048,
+      "K": 7168
+    }
+  ]
+}

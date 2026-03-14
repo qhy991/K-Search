@@ -1,0 +1,117 @@
+# GitLab CI/CD configuration for deploying KernelEvalPlus benchmark to GitLab Pages
+
+stages:
+  - build
+  - deploy
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+# Cache Python dependencies to speed up builds
+cache:
+  paths:
+    - .cache/pip
+
+# Build static benchmark site
+build:benchmark:
+  stage: build
+  image: python:3.10
+  tags:
+    - docker
+    - linux
+  script:
+    - echo "Building KernelEvalPlus benchmark site..."
+    - python -m pip install --upgrade pip
+    - pip install pandas 2>/dev/null || echo "pandas already available"
+    - echo "Generating static data files..."
+    - python3 bench_web/static_site/generate_static.py
+    - echo "Preparing build artifacts..."
+    - mkdir -p build
+    - cp bench_web/static_site/index.html build/
+    - cp -r bench_web/static_site/data build/
+    - touch build/.nojekyll
+    - echo "# KernelEvalPlus Benchmark" > build/README.md
+    - echo "" >> build/README.md
+    - echo "Interactive benchmark dashboard for LLM-generated CUDA kernels." >> build/README.md
+    - echo "" >> build/README.md
+    - echo "Visit https://\$CI_PROJECT_NAMESPACE.gitlab.io/\$CI_PROJECT_NAME/" >> build/README.md
+    - echo "Build completed successfully"
+    - ls -la build/
+  artifacts:
+    paths:
+      - build
+    expire_in: 1 week
+    when: always
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_TAG
+
+# Deploy to GitLab Pages
+pages:
+  stage: deploy
+  image: alpine:latest
+  tags:
+    - docker
+    - linux
+  dependencies:
+    - build:benchmark
+  script:
+    - echo "Deploying KernelEvalPlus benchmark to GitLab Pages..."
+    - mkdir -p public
+    - cp -r build/* public/
+    - echo "Deployment completed"
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_TAG
+
+# Preview deployment for merge requests
+preview:benchmark:
+  stage: deploy
+  image: python:3.10
+  tags:
+    - docker
+    - linux
+  script:
+    - echo "Building preview for merge request..."
+    - python -m pip install --upgrade pip
+    - pip install pandas 2>/dev/null || echo "pandas already available"
+    - python3 bench_web/static_site/generate_static.py
+    - mkdir -p public
+    - cp bench_web/static_site/index.html public/
+    - cp -r bench_web/static_site/data public/
+    - touch public/.nojekyll
+    - echo "Preview build completed"
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week
+
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    on_stop: stop_preview
+    auto_stop_in: 1 week
+
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# Cleanup preview environment
+stop_preview:
+  stage: deploy
+  image: alpine:latest
+  tags:
+    - docker
+    - linux
+  script:
+    - echo "Cleaning up preview environment"
+  when: manual
+
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"

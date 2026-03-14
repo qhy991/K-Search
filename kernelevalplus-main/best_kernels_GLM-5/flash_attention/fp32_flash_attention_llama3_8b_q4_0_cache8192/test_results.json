@@ -1,0 +1,176 @@
+{
+  "attempt_id": "test",
+  "variant": "FP32_Q4_0",
+  "op_type": "flash_attention",
+  "tested_at": "2026-02-27T09:49:55.714868",
+  "spec": {
+    "name": "fp32_flash_attention_llama3-8b_q4_0_cache8192",
+    "op_type": "flash_attention",
+    "op_category": "attention",
+    "variant": "FP32_Q4_0",
+    "description": "Flash Attention for Llama3-8B with KV cache size 8192 and Q4_0 KV storage",
+    "tags": [
+      "status:generated",
+      "framework:ggml",
+      "source:ggml-python",
+      "layer:attention",
+      "attention:flash",
+      "kv_cache:q4_0",
+      "activation:fp32",
+      "model:llama3-8b"
+    ],
+    "model_architectures": [
+      "llama3-8b"
+    ],
+    "axes": {
+      "batch_size": {
+        "type": "var",
+        "description": "Number of attention blocks (nb)"
+      },
+      "seq_len": {
+        "type": "const",
+        "value": 8192,
+        "description": "KV cache sequence length"
+      },
+      "num_heads": {
+        "type": "const",
+        "value": 32,
+        "description": "Number of attention heads"
+      },
+      "head_dim": {
+        "type": "const",
+        "value": 128,
+        "description": "Dimension per head"
+      }
+    },
+    "inputs": {
+      "query": {
+        "shape": [
+          "batch_size",
+          "num_heads",
+          "head_dim"
+        ],
+        "dtype": "float32",
+        "description": "Query projection"
+      },
+      "key_cache": {
+        "shape": [
+          "seq_len",
+          "num_heads",
+          "head_dim"
+        ],
+        "dtype": "int8",
+        "description": "Cached key projections"
+      },
+      "value_cache": {
+        "shape": [
+          "seq_len",
+          "num_heads",
+          "head_dim"
+        ],
+        "dtype": "int8",
+        "description": "Cached value projections"
+      }
+    },
+    "outputs": {
+      "output": {
+        "shape": [
+          "batch_size",
+          "num_heads",
+          "head_dim"
+        ],
+        "dtype": "float32",
+        "description": "Attention output"
+      }
+    },
+    "formula": {
+      "computation": "attn = softmax(Q @ K^T / sqrt(d)) @ V"
+    },
+    "test_configs": [
+      {
+        "name": "batch_1",
+        "batch_size": 1
+      },
+      {
+        "name": "batch_8",
+        "batch_size": 8
+      },
+      {
+        "name": "batch_512",
+        "batch_size": 512
+      }
+    ],
+    "baseline_ref": {
+      "case_id": "flash_attn_Llama3-8B_Q4_0_cache8192_nb512",
+      "source": "ggml-python",
+      "metric": "tflops"
+    },
+    "params": {
+      "batch_size": {
+        "default": 1
+      },
+      "seq_len": {
+        "value": 8192
+      },
+      "num_heads": {
+        "value": 32
+      },
+      "head_dim": {
+        "value": 128
+      }
+    }
+  },
+  "compilation": {
+    "success": true,
+    "errors": [],
+    "warnings": []
+  },
+  "correctness": {
+    "passed": true,
+    "test_cases": [
+      {
+        "config": "batch_1",
+        "passed": true,
+        "nmse": 0.019102
+      },
+      {
+        "config": "batch_8",
+        "passed": true,
+        "nmse": 0.019375
+      },
+      {
+        "config": "batch_512",
+        "passed": true,
+        "nmse": 0.019383
+      }
+    ],
+    "nmse": 0.019287
+  },
+  "performance": {
+    "benchmarks": [
+      {
+        "config": "batch_1",
+        "latency_ms": 0.62,
+        "tflops": 0.217
+      },
+      {
+        "config": "batch_8",
+        "latency_ms": 0.862,
+        "tflops": 1.245
+      },
+      {
+        "config": "batch_512",
+        "latency_ms": 46.698,
+        "tflops": 1.472
+      }
+    ],
+    "baseline_comparison": {
+      "current_hardware": "NVIDIA GeForce RTX 4090",
+      "baseline_hardware": "RTX4090",
+      "current_tflops": 0.217,
+      "baseline_tflops": 4.42,
+      "performance_ratio": 4.9,
+      "better": false
+    }
+  }
+}

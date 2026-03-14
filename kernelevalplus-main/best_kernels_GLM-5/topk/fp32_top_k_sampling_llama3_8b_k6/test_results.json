@@ -1,0 +1,147 @@
+{
+  "attempt_id": "test",
+  "variant": "default",
+  "op_type": "topk",
+  "tested_at": "2026-03-09T13:56:01.051149",
+  "spec": {
+    "name": "fp32_top_k_sampling_llama3_8b_k6",
+    "op_type": "topk",
+    "op_category": "sampling",
+    "variant": "FP32",
+    "description": "Top-6 sampling from probabilities for LLaMA-3-8B.",
+    "tags": [
+      "status:generated",
+      "framework:ggml",
+      "source:ggml-python",
+      "layer:sampling",
+      "sampling:top_k",
+      "activation:fp32",
+      "model:llama3-8b"
+    ],
+    "model_architectures": [
+      "llama3-8b"
+    ],
+    "axes": {
+      "batch_size": {
+        "type": "var",
+        "description": "Batch dimension"
+      },
+      "vocab_size": {
+        "type": "const",
+        "value": 128256,
+        "description": "Vocabulary size"
+      },
+      "k": {
+        "type": "const",
+        "value": 6,
+        "description": "Top-K value"
+      }
+    },
+    "inputs": {
+      "probs": {
+        "shape": [
+          "batch_size",
+          "vocab_size"
+        ],
+        "dtype": "float32",
+        "description": "Probability distribution"
+      }
+    },
+    "outputs": {
+      "samples": {
+        "shape": [
+          "batch_size"
+        ],
+        "dtype": "int64",
+        "description": "Sampled token indices"
+      }
+    },
+    "formula": {
+      "computation": "top_indices = argsort(probs, descending=True)[:k]; samples = categorical(probs[top_indices])"
+    },
+    "test_configs": [
+      {
+        "name": "batch_1",
+        "batch_size": 1
+      },
+      {
+        "name": "batch_8",
+        "batch_size": 8
+      },
+      {
+        "name": "batch_512",
+        "batch_size": 512
+      }
+    ],
+    "baseline_ref": {
+      "case_id": "topk_k6_ne0256_256x512x1x1",
+      "source": "ggml-python",
+      "metric": "gbps"
+    },
+    "params": {
+      "batch_size": {
+        "default": 1
+      },
+      "vocab_size": {
+        "value": 128256
+      },
+      "k": {
+        "value": 6
+      }
+    }
+  },
+  "compilation": {
+    "success": true,
+    "errors": [],
+    "warnings": [],
+    "diagnostics": []
+  },
+  "correctness": {
+    "passed": true,
+    "test_cases": [
+      {
+        "config": "batch_1",
+        "passed": true,
+        "nmse": 0.0
+      },
+      {
+        "config": "batch_8",
+        "passed": true,
+        "nmse": 0.0
+      },
+      {
+        "config": "batch_512",
+        "passed": true,
+        "nmse": 0.004023
+      }
+    ],
+    "nmse": 0.001341
+  },
+  "performance": {
+    "benchmarks": [
+      {
+        "config": "batch_1",
+        "latency_ms": 0.013,
+        "gbps": 41.03
+      },
+      {
+        "config": "batch_8",
+        "latency_ms": 0.083,
+        "gbps": 49.31
+      },
+      {
+        "config": "batch_512",
+        "latency_ms": 0.277,
+        "gbps": 947.45
+      }
+    ],
+    "baseline_comparison": {
+      "current_hardware": "NVIDIA GeForce RTX 4090",
+      "baseline_hardware": "RTX4090",
+      "current_gbps": 41.03,
+      "baseline_gbps": 0.11,
+      "performance_ratio": 37300.0,
+      "better": true
+    }
+  }
+}

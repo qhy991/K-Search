@@ -1,0 +1,157 @@
+{
+  "name": "w8a32c8_q8_0_fp32_int8_qwen3_1_5b_att_qkv_n7168_k2048.json",
+  "op_type": "quant_gemm",
+  "variant": "W8A32C8",
+  "description": "Qwen3-1.5B Attention QKV projection with W8A32C8. Projects input hidden states to Query, Key, Value matrices (3 * 2560 = 7680) using INT8 compute with llama.cpp Q8_0×Q8_1 pattern.",
+  "tags": [
+    "status:verified",
+    "framework:qwen",
+    "source:llama.cpp",
+    "layer:attention-qkv",
+    "architecture:transformer",
+    "quantization:q8_0",
+    "quantization:q8_1",
+    "weight_bits:8",
+    "activation_storage:fp32",
+    "llama_cpp_pattern:q8_0_q8_1",
+    "scenario:Qwen3-1.5B-ATT-QKV"
+  ],
+  "model_architectures": [
+    "qwen3-1.5b"
+  ],
+  "op_category": "quant_gemm",
+  "axes": {
+    "M": {
+      "type": "var",
+      "description": "Batch dimension (batch_size * seq_len)"
+    },
+    "N": {
+      "type": "const",
+      "value": 7168,
+      "description": "Output features (3 * hidden_size = 3 * 2560 for Q, K, V)"
+    },
+    "K": {
+      "type": "const",
+      "value": 2048,
+      "description": "Input features (hidden_size, must be multiple of 32)"
+    },
+    "block_size": {
+      "type": "const",
+      "value": 32,
+      "description": "Quantization block size for Q8_0 and Q8_1"
+    }
+  },
+  "inputs": {
+    "activation": {
+      "shape": [
+        "M",
+        "K"
+      ],
+      "dtype": "float32",
+      "description": "FP32 activation tensor (input hidden states), dynamically quantized to Q8_1 style per-block (32 values) for compute"
+    },
+    "weight": {
+      "shape": [
+        "N",
+        "K/32"
+      ],
+      "dtype": "block_q8_0",
+      "description": "Q8_0 quantized weight tensor for QKV projection. Storage: (K/32) * 34 bytes per row"
+    }
+  },
+  "outputs": {
+    "output": {
+      "shape": [
+        "M",
+        "N"
+      ],
+      "dtype": "float32",
+      "description": "FP32 output tensor (Q, K, V concatenated)"
+    }
+  },
+  "types": {
+    "block_q8_0": {
+      "size": 34,
+      "description": "Q8_0 block quantization format for weights (32 values per block)",
+      "fields": [
+        {
+          "name": "scale",
+          "dtype": "float16",
+          "description": "Scale factor for the block (fp16, 2 bytes)"
+        },
+        {
+          "name": "qs",
+          "dtype": "int8[32]",
+          "description": "Quantized values (32 int8 values, 32 bytes)"
+        }
+      ],
+      "quantization": "w = qs * scale",
+      "block_size": 32,
+      "bytes_per_block": 34
+    }
+  },
+  "constraints": [
+    "K % 32 == 0",
+    "N % 3 == 0",
+    "N >= 1",
+    "M >= 1"
+  ],
+  "formula": {
+    "computation": "C = A @ W^T where A(M,2048) is FP32, W(7168,2048) is Q8_0 quantized, computed following llama.cpp Q8_0×Q8_1 pattern",
+    "dequantization": "Weight: w = qs * scale_w, Activation: a = qs * scale_a",
+    "llama_cpp_formula": "result = d8_0 * d8_1 * sumi where sumi is dot product accumulation",
+    "compute_flow": "1. Per-block quantize A to Q8_1 style (scale_a), 2. GEMM with Q8_0 weights, 3. Apply scales: output = d8_0 * d8_1 * sumi"
+  },
+  "test_configs": [
+    {
+      "name": "batch_1",
+      "M": 1,
+      "N": 7168,
+      "K": 2048
+    },
+    {
+      "name": "batch_2",
+      "M": 2,
+      "N": 7168,
+      "K": 2048
+    },
+    {
+      "name": "batch_3",
+      "M": 3,
+      "N": 7168,
+      "K": 2048
+    },
+    {
+      "name": "batch_4",
+      "M": 4,
+      "N": 7168,
+      "K": 2048
+    },
+    {
+      "name": "batch_5",
+      "M": 5,
+      "N": 7168,
+      "K": 2048
+    },
+    {
+      "name": "batch_8",
+      "M": 8,
+      "N": 7168,
+      "K": 2048
+    },
+    {
+      "name": "batch_512",
+      "M": 512,
+      "N": 7168,
+      "K": 2048
+    }
+  ],
+  "performance_notes": {
+    "llama_cpp_compatibility": "Matches llama.cpp vec_dot_q8_0_q8_1 pattern for maximum compatibility",
+    "per_block_quantization": "Per-block (32 values) activation quantization provides better accuracy than per-row",
+    "qkv_projection": "This is a fused QKV projection (3x2560 = 7680 output features)",
+    "compact_model": "Qwen3-1.5B uses efficient architecture with 2560 hidden size",
+    "gqa_optimization": "Uses GQA with 8 KV heads (4:1 ratio) for memory efficiency",
+    "long_context": "Qwen3 supports up to 40960 context length"
+  }
+}

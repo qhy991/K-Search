@@ -1,0 +1,18 @@
+{
+  "completed": [
+    "/home/qinhaiyan/kernelevalplus/definitions/quant_gemm/deepseek_v2/w4a32c8_q4_0_fp32_int8_deepseek_v2_att_out_n5120_k5120.json",
+    "/home/qinhaiyan/kernelevalplus/definitions/quant_gemm/deepseek_v2/w4a32c8_q4_0_fp32_int8_deepseek_v2_lm_head_n102400_k5120.json",
+    "/home/qinhaiyan/kernelevalplus/definitions/quant_gemm/deepseek_v2/w4a32c8_q4_0_fp32_int8_ds2_moe_down_n5120_k12288.json",
+    "/home/qinhaiyan/kernelevalplus/definitions/quant_gemm/deepseek_v2/w4a32c8_q4_0_fp32_int8_ds2_moe_routing_down_n1536_k5120.json",
+    "/home/qinhaiyan/kernelevalplus/definitions/quant_gemm/deepseek_v2/w4a32c8_q4_0_fp32_int8_ds2_moe_routing_up_n5120_k1536.json",
+    "/home/qinhaiyan/kernelevalplus/definitions/quant_gemm/deepseek_v2/w4a32c8_q4_0_fp32_int8_ds2_moe_up_n12288_k5120.json",
+    "/home/qinhaiyan/kernelevalplus/definitions/quant_gemm/deepseek_v2/w4a32c8_q4_1_fp32_int8_deepseek_v2_att_out_n5120_k5120.json",
+    "/home/qinhaiyan/kernelevalplus/definitions/quant_gemm/deepseek_v2/w4a32c8_q4_1_fp32_int8_deepseek_v2_lm_head_n102400_k5120.json"
+  ],
+  "failed": [],
+  "running": [
+    "/home/qinhaiyan/kernelevalplus/definitions/quant_gemm/deepseek_v2/w4a32c8_q4_1_fp32_int8_ds2_moe_down_n5120_k12288.json"
+  ],
+  "current_task": "/home/qinhaiyan/kernelevalplus/definitions/quant_gemm/deepseek_v2/w4a32c8_q4_1_fp32_int8_ds2_moe_down_n5120_k12288.json",
+  "started_at": "2026-03-09T16:20:08.230603"
+}

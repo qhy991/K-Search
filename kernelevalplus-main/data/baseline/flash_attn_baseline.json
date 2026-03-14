@@ -1,0 +1,2522 @@
+{
+  "flash_attn_Llama3-8B_F16_cache512_nb1": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 0.42,
+        "us_per_run": 20.04
+      },
+      "RTX4070": {
+        "tflops": 0.36,
+        "us_per_run": 23.61
+      },
+      "RTX4090": {
+        "tflops": 1.09,
+        "us_per_run": 7.71
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache512_nb2": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 0.77,
+        "us_per_run": 21.79
+      },
+      "RTX4070": {
+        "tflops": 0.76,
+        "us_per_run": 22.1
+      },
+      "RTX4090": {
+        "tflops": 1.95,
+        "us_per_run": 8.59
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache512_nb3": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 0.91,
+        "us_per_run": 27.67
+      },
+      "RTX4070": {
+        "tflops": 1.03,
+        "us_per_run": 24.39
+      },
+      "RTX4090": {
+        "tflops": 1.83,
+        "us_per_run": 13.73
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache512_nb4": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 1.16,
+        "us_per_run": 28.96
+      },
+      "RTX4070": {
+        "tflops": 1.4,
+        "us_per_run": 24.02
+      },
+      "RTX4090": {
+        "tflops": 2.36,
+        "us_per_run": 14.23
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache512_nb5": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 1.15,
+        "us_per_run": 36.57
+      },
+      "RTX4070": {
+        "tflops": 1.58,
+        "us_per_run": 26.53
+      },
+      "RTX4090": {
+        "tflops": 2.47,
+        "us_per_run": 16.99
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache512_nb8": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 1.7,
+        "us_per_run": 39.55
+      },
+      "RTX4070": {
+        "tflops": 2.47,
+        "us_per_run": 27.13
+      },
+      "RTX4090": {
+        "tflops": 3.68,
+        "us_per_run": 18.22
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache512_nb512": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 38.08,
+        "us_per_run": 112.79
+      },
+      "RTX4070": {
+        "tflops": 23.59,
+        "us_per_run": 182.07
+      },
+      "RTX4090": {
+        "tflops": 130.41,
+        "us_per_run": 32.93
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache4096_nb1": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 2.08,
+        "us_per_run": 32.26
+      },
+      "RTX4070": {
+        "tflops": 1.15,
+        "us_per_run": 58.15
+      },
+      "RTX4090": {
+        "tflops": 3.67,
+        "us_per_run": 18.29
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache4096_nb2": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 3.61,
+        "us_per_run": 37.2
+      },
+      "RTX4070": {
+        "tflops": 4.58,
+        "us_per_run": 29.3
+      },
+      "RTX4090": {
+        "tflops": 8.65,
+        "us_per_run": 15.52
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache4096_nb3": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 4.53,
+        "us_per_run": 44.45
+      },
+      "RTX4070": {
+        "tflops": 5.75,
+        "us_per_run": 35.04
+      },
+      "RTX4090": {
+        "tflops": 8.97,
+        "us_per_run": 22.44
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache4096_nb4": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 5.83,
+        "us_per_run": 46.02
+      },
+      "RTX4070": {
+        "tflops": 7.41,
+        "us_per_run": 36.23
+      },
+      "RTX4090": {
+        "tflops": 11.39,
+        "us_per_run": 23.57
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache4096_nb5": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 6.13,
+        "us_per_run": 54.71
+      },
+      "RTX4070": {
+        "tflops": 7.94,
+        "us_per_run": 42.26
+      },
+      "RTX4090": {
+        "tflops": 13.04,
+        "us_per_run": 25.73
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache4096_nb8": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 8.99,
+        "us_per_run": 59.71
+      },
+      "RTX4070": {
+        "tflops": 11.84,
+        "us_per_run": 45.35
+      },
+      "RTX4090": {
+        "tflops": 19.42,
+        "us_per_run": 27.65
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache4096_nb512": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 106.02,
+        "us_per_run": 324.08
+      },
+      "RTX4070": {
+        "tflops": 31.54,
+        "us_per_run": 1089.44
+      },
+      "RTX4090": {
+        "tflops": 163.09,
+        "us_per_run": 210.68
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache8192_nb1": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 3.24,
+        "us_per_run": 41.39
+      },
+      "RTX4070": {
+        "tflops": 1.2,
+        "us_per_run": 112.3
+      },
+      "RTX4090": {
+        "tflops": 4.26,
+        "us_per_run": 31.52
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache8192_nb2": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 5.86,
+        "us_per_run": 45.8
+      },
+      "RTX4070": {
+        "tflops": 4.55,
+        "us_per_run": 58.94
+      },
+      "RTX4090": {
+        "tflops": 12.67,
+        "us_per_run": 21.18
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache8192_nb3": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 6.6,
+        "us_per_run": 60.98
+      },
+      "RTX4070": {
+        "tflops": 4.95,
+        "us_per_run": 81.4
+      },
+      "RTX4090": {
+        "tflops": 14.54,
+        "us_per_run": 27.69
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache8192_nb4": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 8.48,
+        "us_per_run": 63.32
+      },
+      "RTX4070": {
+        "tflops": 6.3,
+        "us_per_run": 85.16
+      },
+      "RTX4090": {
+        "tflops": 18.68,
+        "us_per_run": 28.74
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache8192_nb5": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 9.08,
+        "us_per_run": 73.89
+      },
+      "RTX4070": {
+        "tflops": 6.2,
+        "us_per_run": 108.24
+      },
+      "RTX4090": {
+        "tflops": 21.65,
+        "us_per_run": 31.0
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache8192_nb8": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 13.27,
+        "us_per_run": 80.92
+      },
+      "RTX4070": {
+        "tflops": 9.54,
+        "us_per_run": 112.54
+      },
+      "RTX4090": {
+        "tflops": 32.64,
+        "us_per_run": 32.89
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_F16_cache8192_nb512": {
+    "model": "Llama3-8B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 113.29,
+        "us_per_run": 606.59
+      },
+      "RTX4070": {
+        "tflops": 31.98,
+        "us_per_run": 2148.99
+      },
+      "RTX4090": {
+        "tflops": 166.66,
+        "us_per_run": 412.33
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache512_nb1": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 0.66,
+        "us_per_run": 12.79
+      },
+      "RTX4070": {
+        "tflops": 0.38,
+        "us_per_run": 22.25
+      },
+      "RTX4090": {
+        "tflops": 1.1,
+        "us_per_run": 7.64
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache512_nb2": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 0.49,
+        "us_per_run": 33.9
+      },
+      "RTX4070": {
+        "tflops": 0.7,
+        "us_per_run": 23.83
+      },
+      "RTX4090": {
+        "tflops": 2.18,
+        "us_per_run": 7.69
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache512_nb3": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 0.63,
+        "us_per_run": 39.9
+      },
+      "RTX4070": {
+        "tflops": 0.55,
+        "us_per_run": 45.67
+      },
+      "RTX4090": {
+        "tflops": 1.18,
+        "us_per_run": 21.36
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache512_nb4": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 0.82,
+        "us_per_run": 41.13
+      },
+      "RTX4070": {
+        "tflops": 0.71,
+        "us_per_run": 47.55
+      },
+      "RTX4090": {
+        "tflops": 1.54,
+        "us_per_run": 21.82
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache512_nb5": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 0.86,
+        "us_per_run": 48.68
+      },
+      "RTX4070": {
+        "tflops": 0.86,
+        "us_per_run": 48.94
+      },
+      "RTX4090": {
+        "tflops": 1.7,
+        "us_per_run": 24.66
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache512_nb8": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 1.3,
+        "us_per_run": 51.68
+      },
+      "RTX4070": {
+        "tflops": 1.33,
+        "us_per_run": 50.56
+      },
+      "RTX4090": {
+        "tflops": 2.59,
+        "us_per_run": 25.9
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache512_nb512": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 33.42,
+        "us_per_run": 128.5
+      },
+      "RTX4070": {
+        "tflops": 20.69,
+        "us_per_run": 207.62
+      },
+      "RTX4090": {
+        "tflops": 106.36,
+        "us_per_run": 40.38
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache4096_nb1": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 1.83,
+        "us_per_run": 36.76
+      },
+      "RTX4070": {
+        "tflops": 0.94,
+        "us_per_run": 71.07
+      },
+      "RTX4090": {
+        "tflops": 4.15,
+        "us_per_run": 16.17
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache4096_nb2": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 1.42,
+        "us_per_run": 94.65
+      },
+      "RTX4070": {
+        "tflops": 1.34,
+        "us_per_run": 100.29
+      },
+      "RTX4090": {
+        "tflops": 6.02,
+        "us_per_run": 22.28
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache4096_nb3": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 1.96,
+        "us_per_run": 102.53
+      },
+      "RTX4070": {
+        "tflops": 1.41,
+        "us_per_run": 142.46
+      },
+      "RTX4090": {
+        "tflops": 3.52,
+        "us_per_run": 57.27
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache4096_nb4": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 2.57,
+        "us_per_run": 104.52
+      },
+      "RTX4070": {
+        "tflops": 1.88,
+        "us_per_run": 142.72
+      },
+      "RTX4090": {
+        "tflops": 4.59,
+        "us_per_run": 58.44
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache4096_nb5": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 2.96,
+        "us_per_run": 113.36
+      },
+      "RTX4070": {
+        "tflops": 2.17,
+        "us_per_run": 154.4
+      },
+      "RTX4090": {
+        "tflops": 5.52,
+        "us_per_run": 60.79
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache4096_nb8": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 4.52,
+        "us_per_run": 118.73
+      },
+      "RTX4070": {
+        "tflops": 3.4,
+        "us_per_run": 157.74
+      },
+      "RTX4090": {
+        "tflops": 8.57,
+        "us_per_run": 62.64
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache4096_nb512": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 91.64,
+        "us_per_run": 374.95
+      },
+      "RTX4070": {
+        "tflops": 27.66,
+        "us_per_run": 1242.23
+      },
+      "RTX4090": {
+        "tflops": 139.15,
+        "us_per_run": 246.92
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache8192_nb1": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 2.33,
+        "us_per_run": 57.66
+      },
+      "RTX4070": {
+        "tflops": 1.02,
+        "us_per_run": 131.03
+      },
+      "RTX4090": {
+        "tflops": 4.67,
+        "us_per_run": 28.74
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache8192_nb2": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 1.68,
+        "us_per_run": 159.82
+      },
+      "RTX4070": {
+        "tflops": 1.42,
+        "us_per_run": 189.39
+      },
+      "RTX4090": {
+        "tflops": 6.81,
+        "us_per_run": 39.4
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache8192_nb3": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 2.38,
+        "us_per_run": 169.41
+      },
+      "RTX4070": {
+        "tflops": 1.02,
+        "us_per_run": 394.75
+      },
+      "RTX4090": {
+        "tflops": 4.28,
+        "us_per_run": 94.1
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache8192_nb4": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 3.13,
+        "us_per_run": 171.53
+      },
+      "RTX4070": {
+        "tflops": 1.37,
+        "us_per_run": 391.46
+      },
+      "RTX4090": {
+        "tflops": 5.65,
+        "us_per_run": 95.05
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache8192_nb5": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 3.72,
+        "us_per_run": 180.36
+      },
+      "RTX4070": {
+        "tflops": 1.69,
+        "us_per_run": 396.39
+      },
+      "RTX4090": {
+        "tflops": 6.85,
+        "us_per_run": 98.01
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache8192_nb8": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 5.7,
+        "us_per_run": 188.39
+      },
+      "RTX4070": {
+        "tflops": 2.72,
+        "us_per_run": 394.43
+      },
+      "RTX4090": {
+        "tflops": 10.81,
+        "us_per_run": 99.37
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q8_0_cache8192_nb512": {
+    "model": "Llama3-8B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 97.72,
+        "us_per_run": 703.26
+      },
+      "RTX4070": {
+        "tflops": 28.09,
+        "us_per_run": 2446.15
+      },
+      "RTX4090": {
+        "tflops": 139.73,
+        "us_per_run": 491.79
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache512_nb1": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 0.62,
+        "us_per_run": 13.59
+      },
+      "RTX4070": {
+        "tflops": 0.4,
+        "us_per_run": 21.03
+      },
+      "RTX4090": {
+        "tflops": 1.1,
+        "us_per_run": 7.63
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache512_nb2": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 0.5,
+        "us_per_run": 33.89
+      },
+      "RTX4070": {
+        "tflops": 0.74,
+        "us_per_run": 22.64
+      },
+      "RTX4090": {
+        "tflops": 2.16,
+        "us_per_run": 7.76
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache512_nb3": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 0.63,
+        "us_per_run": 39.77
+      },
+      "RTX4070": {
+        "tflops": 0.52,
+        "us_per_run": 48.02
+      },
+      "RTX4090": {
+        "tflops": 1.18,
+        "us_per_run": 21.34
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache512_nb4": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 0.82,
+        "us_per_run": 41.14
+      },
+      "RTX4070": {
+        "tflops": 0.73,
+        "us_per_run": 46.04
+      },
+      "RTX4090": {
+        "tflops": 1.54,
+        "us_per_run": 21.81
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache512_nb5": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 0.86,
+        "us_per_run": 48.62
+      },
+      "RTX4070": {
+        "tflops": 0.85,
+        "us_per_run": 49.45
+      },
+      "RTX4090": {
+        "tflops": 1.71,
+        "us_per_run": 24.56
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache512_nb8": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 1.3,
+        "us_per_run": 51.67
+      },
+      "RTX4070": {
+        "tflops": 1.26,
+        "us_per_run": 53.37
+      },
+      "RTX4090": {
+        "tflops": 2.6,
+        "us_per_run": 25.85
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache512_nb512": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 33.78,
+        "us_per_run": 127.15
+      },
+      "RTX4070": {
+        "tflops": 21.75,
+        "us_per_run": 197.5
+      },
+      "RTX4090": {
+        "tflops": 107.11,
+        "us_per_run": 40.1
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache4096_nb1": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 1.67,
+        "us_per_run": 40.28
+      },
+      "RTX4070": {
+        "tflops": 0.9,
+        "us_per_run": 74.69
+      },
+      "RTX4090": {
+        "tflops": 3.97,
+        "us_per_run": 16.91
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache4096_nb2": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 1.44,
+        "us_per_run": 93.38
+      },
+      "RTX4070": {
+        "tflops": 1.28,
+        "us_per_run": 105.04
+      },
+      "RTX4090": {
+        "tflops": 5.65,
+        "us_per_run": 23.77
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache4096_nb3": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 1.98,
+        "us_per_run": 101.65
+      },
+      "RTX4070": {
+        "tflops": 1.44,
+        "us_per_run": 139.42
+      },
+      "RTX4090": {
+        "tflops": 3.51,
+        "us_per_run": 57.34
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache4096_nb4": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 2.58,
+        "us_per_run": 104.07
+      },
+      "RTX4070": {
+        "tflops": 1.9,
+        "us_per_run": 141.58
+      },
+      "RTX4090": {
+        "tflops": 4.6,
+        "us_per_run": 58.33
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache4096_nb5": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 2.96,
+        "us_per_run": 113.37
+      },
+      "RTX4070": {
+        "tflops": 2.23,
+        "us_per_run": 150.7
+      },
+      "RTX4090": {
+        "tflops": 5.54,
+        "us_per_run": 60.54
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache4096_nb8": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 4.51,
+        "us_per_run": 118.97
+      },
+      "RTX4070": {
+        "tflops": 3.51,
+        "us_per_run": 152.83
+      },
+      "RTX4090": {
+        "tflops": 8.58,
+        "us_per_run": 62.58
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache4096_nb512": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 91.5,
+        "us_per_run": 375.5
+      },
+      "RTX4070": {
+        "tflops": 27.92,
+        "us_per_run": 1230.43
+      },
+      "RTX4090": {
+        "tflops": 140.59,
+        "us_per_run": 244.4
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache8192_nb1": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 2.22,
+        "us_per_run": 60.53
+      },
+      "RTX4070": {
+        "tflops": 0.97,
+        "us_per_run": 138.9
+      },
+      "RTX4090": {
+        "tflops": 4.42,
+        "us_per_run": 30.35
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache8192_nb2": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 1.68,
+        "us_per_run": 159.49
+      },
+      "RTX4070": {
+        "tflops": 1.32,
+        "us_per_run": 203.14
+      },
+      "RTX4090": {
+        "tflops": 6.2,
+        "us_per_run": 43.26
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache8192_nb3": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 2.37,
+        "us_per_run": 169.61
+      },
+      "RTX4070": {
+        "tflops": 1.14,
+        "us_per_run": 352.95
+      },
+      "RTX4090": {
+        "tflops": 4.3,
+        "us_per_run": 93.67
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache8192_nb4": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 3.13,
+        "us_per_run": 171.67
+      },
+      "RTX4070": {
+        "tflops": 1.5,
+        "us_per_run": 356.79
+      },
+      "RTX4090": {
+        "tflops": 5.67,
+        "us_per_run": 94.75
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache8192_nb5": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 3.7,
+        "us_per_run": 181.23
+      },
+      "RTX4070": {
+        "tflops": 1.82,
+        "us_per_run": 368.98
+      },
+      "RTX4090": {
+        "tflops": 6.89,
+        "us_per_run": 97.35
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache8192_nb8": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 5.7,
+        "us_per_run": 188.23
+      },
+      "RTX4070": {
+        "tflops": 2.92,
+        "us_per_run": 368.06
+      },
+      "RTX4090": {
+        "tflops": 10.82,
+        "us_per_run": 99.23
+      }
+    }
+  },
+  "flash_attn_Llama3-8B_Q4_0_cache8192_nb512": {
+    "model": "Llama3-8B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 98.4,
+        "us_per_run": 698.39
+      },
+      "RTX4070": {
+        "tflops": 27.83,
+        "us_per_run": 2469.58
+      },
+      "RTX4090": {
+        "tflops": 143.94,
+        "us_per_run": 477.42
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache512_nb1": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 0.33,
+        "us_per_run": 22.24
+      },
+      "RTX4070": {
+        "tflops": 0.35,
+        "us_per_run": 20.95
+      },
+      "RTX4090": {
+        "tflops": 0.96,
+        "us_per_run": 7.64
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache512_nb2": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 0.46,
+        "us_per_run": 31.98
+      },
+      "RTX4070": {
+        "tflops": 0.65,
+        "us_per_run": 22.69
+      },
+      "RTX4090": {
+        "tflops": 0.91,
+        "us_per_run": 16.1
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache512_nb3": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 0.56,
+        "us_per_run": 39.64
+      },
+      "RTX4070": {
+        "tflops": 0.85,
+        "us_per_run": 25.99
+      },
+      "RTX4090": {
+        "tflops": 1.16,
+        "us_per_run": 18.91
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache512_nb4": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 0.71,
+        "us_per_run": 41.24
+      },
+      "RTX4070": {
+        "tflops": 1.11,
+        "us_per_run": 26.48
+      },
+      "RTX4090": {
+        "tflops": 1.49,
+        "us_per_run": 19.73
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache512_nb5": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 0.83,
+        "us_per_run": 44.24
+      },
+      "RTX4070": {
+        "tflops": 1.26,
+        "us_per_run": 29.24
+      },
+      "RTX4090": {
+        "tflops": 1.41,
+        "us_per_run": 26.04
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache512_nb8": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 1.23,
+        "us_per_run": 47.73
+      },
+      "RTX4070": {
+        "tflops": 1.87,
+        "us_per_run": 31.39
+      },
+      "RTX4090": {
+        "tflops": 2.11,
+        "us_per_run": 27.82
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache512_nb512": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 512,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 36.38,
+        "us_per_run": 103.3
+      },
+      "RTX4070": {
+        "tflops": 20.77,
+        "us_per_run": 180.96
+      },
+      "RTX4090": {
+        "tflops": 111.69,
+        "us_per_run": 33.65
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache4096_nb1": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 1.7,
+        "us_per_run": 34.5
+      },
+      "RTX4070": {
+        "tflops": 1.12,
+        "us_per_run": 52.33
+      },
+      "RTX4090": {
+        "tflops": 3.2,
+        "us_per_run": 18.33
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache4096_nb2": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 2.21,
+        "us_per_run": 53.16
+      },
+      "RTX4070": {
+        "tflops": 3.91,
+        "us_per_run": 30.03
+      },
+      "RTX4090": {
+        "tflops": 4.14,
+        "us_per_run": 28.34
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache4096_nb3": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 2.84,
+        "us_per_run": 62.09
+      },
+      "RTX4070": {
+        "tflops": 5.4,
+        "us_per_run": 32.61
+      },
+      "RTX4090": {
+        "tflops": 5.8,
+        "us_per_run": 30.4
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache4096_nb4": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 3.63,
+        "us_per_run": 64.68
+      },
+      "RTX4070": {
+        "tflops": 6.85,
+        "us_per_run": 34.28
+      },
+      "RTX4090": {
+        "tflops": 7.27,
+        "us_per_run": 32.33
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache4096_nb5": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 4.51,
+        "us_per_run": 65.1
+      },
+      "RTX4070": {
+        "tflops": 6.03,
+        "us_per_run": 48.7
+      },
+      "RTX4090": {
+        "tflops": 7.64,
+        "us_per_run": 38.42
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache4096_nb8": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 6.61,
+        "us_per_run": 71.05
+      },
+      "RTX4070": {
+        "tflops": 9.07,
+        "us_per_run": 51.76
+      },
+      "RTX4090": {
+        "tflops": 11.29,
+        "us_per_run": 41.62
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache4096_nb512": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 4096,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 96.66,
+        "us_per_run": 311.03
+      },
+      "RTX4070": {
+        "tflops": 28.13,
+        "us_per_run": 1068.64
+      },
+      "RTX4090": {
+        "tflops": 144.02,
+        "us_per_run": 208.75
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache8192_nb1": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 2.51,
+        "us_per_run": 46.77
+      },
+      "RTX4070": {
+        "tflops": 3.82,
+        "us_per_run": 30.71
+      },
+      "RTX4090": {
+        "tflops": 5.92,
+        "us_per_run": 19.84
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache8192_nb2": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 3.82,
+        "us_per_run": 61.42
+      },
+      "RTX4070": {
+        "tflops": 6.16,
+        "us_per_run": 38.13
+      },
+      "RTX4090": {
+        "tflops": 7.58,
+        "us_per_run": 30.97
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache8192_nb3": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 4.94,
+        "us_per_run": 71.3
+      },
+      "RTX4070": {
+        "tflops": 7.94,
+        "us_per_run": 44.37
+      },
+      "RTX4090": {
+        "tflops": 10.62,
+        "us_per_run": 33.17
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache8192_nb4": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 6.35,
+        "us_per_run": 73.99
+      },
+      "RTX4070": {
+        "tflops": 10.34,
+        "us_per_run": 45.43
+      },
+      "RTX4090": {
+        "tflops": 13.35,
+        "us_per_run": 35.2
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache8192_nb5": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 8.52,
+        "us_per_run": 68.95
+      },
+      "RTX4070": {
+        "tflops": 9.54,
+        "us_per_run": 61.56
+      },
+      "RTX4090": {
+        "tflops": 14.28,
+        "us_per_run": 41.11
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache8192_nb8": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 12.5,
+        "us_per_run": 75.16
+      },
+      "RTX4070": {
+        "tflops": 14.17,
+        "us_per_run": 66.3
+      },
+      "RTX4090": {
+        "tflops": 21.17,
+        "us_per_run": 44.39
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_F16_cache8192_nb512": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "F16",
+    "kv_cache_size": 8192,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 109.77,
+        "us_per_run": 547.79
+      },
+      "RTX4070": {
+        "tflops": 29.23,
+        "us_per_run": 2057.35
+      },
+      "RTX4090": {
+        "tflops": 146.5,
+        "us_per_run": 410.45
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache512_nb1": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 0.58,
+        "us_per_run": 12.56
+      },
+      "RTX4070": {
+        "tflops": 0.36,
+        "us_per_run": 20.66
+      },
+      "RTX4090": {
+        "tflops": 0.92,
+        "us_per_run": 8.02
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache512_nb2": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 0.36,
+        "us_per_run": 41.11
+      },
+      "RTX4070": {
+        "tflops": 0.62,
+        "us_per_run": 23.56
+      },
+      "RTX4090": {
+        "tflops": 1.83,
+        "us_per_run": 8.02
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache512_nb3": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 0.45,
+        "us_per_run": 48.78
+      },
+      "RTX4070": {
+        "tflops": 0.49,
+        "us_per_run": 45.29
+      },
+      "RTX4090": {
+        "tflops": 0.89,
+        "us_per_run": 24.62
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache512_nb4": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 0.58,
+        "us_per_run": 50.4
+      },
+      "RTX4070": {
+        "tflops": 0.64,
+        "us_per_run": 45.77
+      },
+      "RTX4090": {
+        "tflops": 1.16,
+        "us_per_run": 25.35
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache512_nb5": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 0.69,
+        "us_per_run": 53.21
+      },
+      "RTX4070": {
+        "tflops": 0.77,
+        "us_per_run": 47.65
+      },
+      "RTX4090": {
+        "tflops": 1.16,
+        "us_per_run": 31.7
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache512_nb8": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 1.03,
+        "us_per_run": 56.83
+      },
+      "RTX4070": {
+        "tflops": 1.12,
+        "us_per_run": 52.34
+      },
+      "RTX4090": {
+        "tflops": 1.75,
+        "us_per_run": 33.47
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache512_nb512": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 512,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 33.51,
+        "us_per_run": 112.13
+      },
+      "RTX4070": {
+        "tflops": 19.81,
+        "us_per_run": 189.68
+      },
+      "RTX4090": {
+        "tflops": 96.46,
+        "us_per_run": 38.96
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache4096_nb1": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 1.74,
+        "us_per_run": 33.65
+      },
+      "RTX4070": {
+        "tflops": 0.97,
+        "us_per_run": 60.4
+      },
+      "RTX4090": {
+        "tflops": 3.7,
+        "us_per_run": 15.85
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache4096_nb2": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 1.41,
+        "us_per_run": 83.22
+      },
+      "RTX4070": {
+        "tflops": 1.39,
+        "us_per_run": 84.65
+      },
+      "RTX4090": {
+        "tflops": 5.36,
+        "us_per_run": 21.92
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache4096_nb3": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 1.9,
+        "us_per_run": 92.5
+      },
+      "RTX4070": {
+        "tflops": 2.1,
+        "us_per_run": 83.72
+      },
+      "RTX4090": {
+        "tflops": 3.54,
+        "us_per_run": 49.74
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache4096_nb4": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 2.48,
+        "us_per_run": 94.84
+      },
+      "RTX4070": {
+        "tflops": 2.78,
+        "us_per_run": 84.56
+      },
+      "RTX4090": {
+        "tflops": 4.54,
+        "us_per_run": 51.71
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache4096_nb5": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 3.06,
+        "us_per_run": 96.02
+      },
+      "RTX4070": {
+        "tflops": 2.97,
+        "us_per_run": 98.71
+      },
+      "RTX4090": {
+        "tflops": 5.08,
+        "us_per_run": 57.78
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache4096_nb8": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 4.59,
+        "us_per_run": 102.38
+      },
+      "RTX4070": {
+        "tflops": 4.58,
+        "us_per_run": 102.56
+      },
+      "RTX4090": {
+        "tflops": 7.7,
+        "us_per_run": 61.02
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache4096_nb512": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 4096,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 87.77,
+        "us_per_run": 342.54
+      },
+      "RTX4070": {
+        "tflops": 27.11,
+        "us_per_run": 1109.15
+      },
+      "RTX4090": {
+        "tflops": 126.42,
+        "us_per_run": 237.81
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache8192_nb1": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 2.21,
+        "us_per_run": 53.06
+      },
+      "RTX4070": {
+        "tflops": 1.05,
+        "us_per_run": 111.77
+      },
+      "RTX4090": {
+        "tflops": 4.37,
+        "us_per_run": 26.85
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache8192_nb2": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 1.97,
+        "us_per_run": 119.39
+      },
+      "RTX4070": {
+        "tflops": 1.46,
+        "us_per_run": 160.49
+      },
+      "RTX4090": {
+        "tflops": 6.35,
+        "us_per_run": 36.98
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache8192_nb3": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 2.71,
+        "us_per_run": 129.9
+      },
+      "RTX4070": {
+        "tflops": 2.38,
+        "us_per_run": 148.11
+      },
+      "RTX4090": {
+        "tflops": 5.17,
+        "us_per_run": 68.1
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache8192_nb4": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 3.53,
+        "us_per_run": 133.18
+      },
+      "RTX4070": {
+        "tflops": 3.11,
+        "us_per_run": 151.26
+      },
+      "RTX4090": {
+        "tflops": 6.71,
+        "us_per_run": 70.02
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache8192_nb5": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 4.58,
+        "us_per_run": 128.32
+      },
+      "RTX4070": {
+        "tflops": 3.46,
+        "us_per_run": 169.57
+      },
+      "RTX4090": {
+        "tflops": 7.72,
+        "us_per_run": 76.06
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache8192_nb8": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 6.96,
+        "us_per_run": 134.97
+      },
+      "RTX4070": {
+        "tflops": 5.36,
+        "us_per_run": 175.3
+      },
+      "RTX4090": {
+        "tflops": 11.84,
+        "us_per_run": 79.34
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q8_0_cache8192_nb512": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q8_0",
+    "kv_cache_size": 8192,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 100.96,
+        "us_per_run": 595.58
+      },
+      "RTX4070": {
+        "tflops": 27.84,
+        "us_per_run": 2159.52
+      },
+      "RTX4090": {
+        "tflops": 135.49,
+        "us_per_run": 443.78
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache512_nb1": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 0.56,
+        "us_per_run": 13.19
+      },
+      "RTX4070": {
+        "tflops": 0.34,
+        "us_per_run": 21.84
+      },
+      "RTX4090": {
+        "tflops": 0.96,
+        "us_per_run": 7.65
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache512_nb2": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 0.36,
+        "us_per_run": 41.11
+      },
+      "RTX4070": {
+        "tflops": 0.62,
+        "us_per_run": 23.7
+      },
+      "RTX4090": {
+        "tflops": 1.9,
+        "us_per_run": 7.74
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache512_nb3": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 0.45,
+        "us_per_run": 48.76
+      },
+      "RTX4070": {
+        "tflops": 0.49,
+        "us_per_run": 45.35
+      },
+      "RTX4090": {
+        "tflops": 0.9,
+        "us_per_run": 24.38
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache512_nb4": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 0.58,
+        "us_per_run": 50.35
+      },
+      "RTX4070": {
+        "tflops": 0.65,
+        "us_per_run": 44.94
+      },
+      "RTX4090": {
+        "tflops": 1.17,
+        "us_per_run": 25.17
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache512_nb5": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 0.69,
+        "us_per_run": 53.22
+      },
+      "RTX4070": {
+        "tflops": 0.77,
+        "us_per_run": 47.86
+      },
+      "RTX4090": {
+        "tflops": 1.16,
+        "us_per_run": 31.55
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache512_nb8": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 1.03,
+        "us_per_run": 56.8
+      },
+      "RTX4070": {
+        "tflops": 1.14,
+        "us_per_run": 51.63
+      },
+      "RTX4090": {
+        "tflops": 1.76,
+        "us_per_run": 33.37
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache512_nb512": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 512,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 33.71,
+        "us_per_run": 111.5
+      },
+      "RTX4070": {
+        "tflops": 19.91,
+        "us_per_run": 188.76
+      },
+      "RTX4090": {
+        "tflops": 96.97,
+        "us_per_run": 38.75
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache4096_nb1": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 1.52,
+        "us_per_run": 38.57
+      },
+      "RTX4070": {
+        "tflops": 0.9,
+        "us_per_run": 65.14
+      },
+      "RTX4090": {
+        "tflops": 3.54,
+        "us_per_run": 16.6
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache4096_nb2": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 1.41,
+        "us_per_run": 83.41
+      },
+      "RTX4070": {
+        "tflops": 1.28,
+        "us_per_run": 91.61
+      },
+      "RTX4090": {
+        "tflops": 4.99,
+        "us_per_run": 23.56
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache4096_nb3": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 1.9,
+        "us_per_run": 92.73
+      },
+      "RTX4070": {
+        "tflops": 2.11,
+        "us_per_run": 83.5
+      },
+      "RTX4090": {
+        "tflops": 3.55,
+        "us_per_run": 49.65
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache4096_nb4": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 2.47,
+        "us_per_run": 95.05
+      },
+      "RTX4070": {
+        "tflops": 2.76,
+        "us_per_run": 85.22
+      },
+      "RTX4090": {
+        "tflops": 4.55,
+        "us_per_run": 51.59
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache4096_nb5": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 3.06,
+        "us_per_run": 96.1
+      },
+      "RTX4070": {
+        "tflops": 2.98,
+        "us_per_run": 98.6
+      },
+      "RTX4090": {
+        "tflops": 5.12,
+        "us_per_run": 57.35
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache4096_nb8": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 4.61,
+        "us_per_run": 101.97
+      },
+      "RTX4070": {
+        "tflops": 4.58,
+        "us_per_run": 102.48
+      },
+      "RTX4090": {
+        "tflops": 7.71,
+        "us_per_run": 60.95
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache4096_nb512": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 4096,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 87.72,
+        "us_per_run": 342.75
+      },
+      "RTX4070": {
+        "tflops": 27.39,
+        "us_per_run": 1097.59
+      },
+      "RTX4090": {
+        "tflops": 127.05,
+        "us_per_run": 236.65
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache8192_nb1": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 1,
+    "hardware": {
+      "A100": {
+        "tflops": 1.98,
+        "us_per_run": 59.29
+      },
+      "RTX4070": {
+        "tflops": 0.99,
+        "us_per_run": 118.53
+      },
+      "RTX4090": {
+        "tflops": 4.13,
+        "us_per_run": 28.46
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache8192_nb2": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 2,
+    "hardware": {
+      "A100": {
+        "tflops": 1.98,
+        "us_per_run": 118.55
+      },
+      "RTX4070": {
+        "tflops": 1.36,
+        "us_per_run": 172.92
+      },
+      "RTX4090": {
+        "tflops": 5.68,
+        "us_per_run": 41.34
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache8192_nb3": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 3,
+    "hardware": {
+      "A100": {
+        "tflops": 2.73,
+        "us_per_run": 129.27
+      },
+      "RTX4070": {
+        "tflops": 2.4,
+        "us_per_run": 146.63
+      },
+      "RTX4090": {
+        "tflops": 5.18,
+        "us_per_run": 68.07
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache8192_nb4": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 4,
+    "hardware": {
+      "A100": {
+        "tflops": 3.54,
+        "us_per_run": 132.77
+      },
+      "RTX4070": {
+        "tflops": 3.15,
+        "us_per_run": 149.15
+      },
+      "RTX4090": {
+        "tflops": 6.71,
+        "us_per_run": 70.05
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache8192_nb5": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 5,
+    "hardware": {
+      "A100": {
+        "tflops": 4.61,
+        "us_per_run": 127.42
+      },
+      "RTX4070": {
+        "tflops": 3.49,
+        "us_per_run": 168.27
+      },
+      "RTX4090": {
+        "tflops": 7.71,
+        "us_per_run": 76.21
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache8192_nb8": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 8,
+    "hardware": {
+      "A100": {
+        "tflops": 6.98,
+        "us_per_run": 134.63
+      },
+      "RTX4070": {
+        "tflops": 5.39,
+        "us_per_run": 174.39
+      },
+      "RTX4090": {
+        "tflops": 11.84,
+        "us_per_run": 79.36
+      }
+    }
+  },
+  "flash_attn_Qwen2.5-7B_Q4_0_cache8192_nb512": {
+    "model": "Qwen2.5-7B",
+    "kv_type": "Q4_0",
+    "kv_cache_size": 8192,
+    "nb": 512,
+    "hardware": {
+      "A100": {
+        "tflops": 101.32,
+        "us_per_run": 593.44
+      },
+      "RTX4070": {
+        "tflops": 27.98,
+        "us_per_run": 2148.76
+      },
+      "RTX4090": {
+        "tflops": 135.94,
+        "us_per_run": 442.33
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "name": "fp32_top_k_sampling_qwen2.5-7b_k8_ne0256",
+  "op_type": "topk",
+  "op_category": "sampling",
+  "variant": "FP32",
+  "description": "Top-8 sampling for qwen2.5-7b with vocab_subset=256",
+  "tags": [
+    "status:generated",
+    "framework:ggml",
+    "source:ggml-python",
+    "layer:sampling",
+    "sampling:top_k",
+    "activation:fp32",
+    "model:qwen2.5-7b"
+  ],
+  "model_architectures": [
+    "qwen2.5-7b"
+  ],
+  "axes": {
+    "batch_size": {
+      "type": "var",
+      "description": "Batch dimension"
+    },
+    "vocab_subset": {
+      "type": "const",
+      "value": 256,
+      "description": "Vocabulary subset size for testing"
+    },
+    "k": {
+      "type": "const",
+      "value": 8,
+      "description": "Top-K value"
+    }
+  },
+  "inputs": {
+    "probs": {
+      "shape": [
+        "batch_size",
+        "vocab_subset"
+      ],
+      "dtype": "float32",
+      "description": "Probability distribution"
+    }
+  },
+  "outputs": {
+    "samples": {
+      "shape": [
+        "batch_size"
+      ],
+      "dtype": "int64",
+      "description": "Sampled token indices"
+    }
+  },
+  "formula": {
+    "computation": "top_indices = argsort(probs, descending=True)[:8]; samples = categorical(probs[top_indices])"
+  },
+  "test_configs": [
+    {
+      "name": "batch_1",
+      "batch_size": 1
+    },
+    {
+      "name": "batch_8",
+      "batch_size": 8
+    },
+    {
+      "name": "batch_512",
+      "batch_size": 512
+    }
+  ],
+  "baseline_ref": {
+    "case_id": "topk_k8_ne0256_256x512x1x1",
+    "source": "ggml-python",
+    "metric": "gbps"
+  }
+}

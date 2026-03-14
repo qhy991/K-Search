@@ -1,0 +1,311 @@
+{
+  "attempt_id": "attempts/w4a32c8_q4_0_fp32_int8_ds3_moe_routing_up_n7168_k2048_v20",
+  "variant": "W4A32C8",
+  "tested_at": "2026-03-01T08:06:22.626001",
+  "compilation": {
+    "success": true,
+    "errors": [],
+    "warnings": [
+      "bindings.cpp not found, creating default",
+      "JIT compilation successful"
+    ]
+  },
+  "correctness": {
+    "passed": true,
+    "nmse": 0.000234,
+    "test_cases": [
+      {
+        "shape": "batch_1",
+        "passed": true,
+        "nmse": 0.000221
+      },
+      {
+        "shape": "batch_2",
+        "passed": true,
+        "nmse": 0.000176
+      },
+      {
+        "shape": "batch_3",
+        "passed": true,
+        "nmse": 0.00051
+      },
+      {
+        "shape": "batch_4",
+        "passed": true,
+        "nmse": 0.00023
+      },
+      {
+        "shape": "batch_5",
+        "passed": true,
+        "nmse": 0.000142
+      },
+      {
+        "shape": "batch_8",
+        "passed": true,
+        "nmse": 0.000124
+      },
+      {
+        "shape": "batch_512",
+        "passed": true,
+        "nmse": 0.000237
+      }
+    ]
+  },
+  "performance": {
+    "benchmarks": [
+      {
+        "shape": "batch_1",
+        "M": 1,
+        "N": 7168,
+        "K": 2048,
+        "latency_ms": 0.021,
+        "gflops": 1419.4,
+        "tflops": 1.419
+      },
+      {
+        "shape": "batch_2",
+        "M": 2,
+        "N": 7168,
+        "K": 2048,
+        "latency_ms": 0.036,
+        "gflops": 1619.9,
+        "tflops": 1.62
+      },
+      {
+        "shape": "batch_3",
+        "M": 3,
+        "N": 7168,
+        "K": 2048,
+        "latency_ms": 0.052,
+        "gflops": 1680.7,
+        "tflops": 1.681
+      },
+      {
+        "shape": "batch_4",
+        "M": 4,
+        "N": 7168,
+        "K": 2048,
+        "latency_ms": 0.068,
+        "gflops": 1723.1,
+        "tflops": 1.723
+      },
+      {
+        "shape": "batch_5",
+        "M": 5,
+        "N": 7168,
+        "K": 2048,
+        "latency_ms": 0.084,
+        "gflops": 1741.1,
+        "tflops": 1.741
+      },
+      {
+        "shape": "batch_8",
+        "M": 8,
+        "N": 7168,
+        "K": 2048,
+        "latency_ms": 0.132,
+        "gflops": 1774.3,
+        "tflops": 1.774
+      },
+      {
+        "shape": "batch_512",
+        "M": 512,
+        "N": 7168,
+        "K": 2048,
+        "latency_ms": 12.141,
+        "gflops": 1238.2,
+        "tflops": 1.238
+      }
+    ],
+    "baseline_comparison": {
+      "status": "ok",
+      "match_type": "exact",
+      "current_hardware": "NVIDIA GeForce RTX 4090",
+      "baseline_hardware": "RTX4090",
+      "baseline_label": "RTX4090",
+      "current_gflops": 1419.4,
+      "baseline_gflops": 3880.0,
+      "baseline_tflops": 3.88,
+      "performance_ratio": 36.6,
+      "dimensions": {
+        "our_dims": {
+          "M": 1,
+          "N": 7168,
+          "K": 2048
+        },
+        "baseline_dims": {
+          "M": 7168,
+          "N": 1,
+          "K": 2048
+        },
+        "note": "GGML dimension mapping: our M=1,N=7168,K=2048 \u2192 GGML M=7168,N=1,K=2048"
+      },
+      "type_a": "q4_0",
+      "type_b": "f32",
+      "better": false
+    }
+  },
+  "spec": {
+    "name": "w4a32c8_q4_0_fp32_int8_ds3_moe_routing_up_n7168_k2048",
+    "op_type": "quant_gemm",
+    "variant": "W4A32C8",
+    "description": "DeepSeek-V3 MoE Routing Expert Up projection with W4A32C8. Projects from routing expert dimension (2048) back to hidden size (7168).",
+    "tags": [
+      "status:verified",
+      "framework:deepseek",
+      "layer:moe-routing-up",
+      "quantization:q4_0",
+      "quantization:q8_1",
+      "weight_bits:4",
+      "activation_storage:fp32",
+      "moe:routing"
+    ],
+    "model_architectures": [
+      "deepseek-v3"
+    ],
+    "op_category": "quant_gemm",
+    "axes": {
+      "M": {
+        "type": "var",
+        "description": "Batch dimension"
+      },
+      "N": {
+        "type": "const",
+        "value": 7168,
+        "description": "Hidden size"
+      },
+      "K": {
+        "type": "const",
+        "value": 2048,
+        "description": "Routing expert dimension"
+      },
+      "block_size": {
+        "type": "const",
+        "value": 32
+      }
+    },
+    "inputs": {
+      "activation": {
+        "shape": [
+          "M",
+          "K"
+        ],
+        "dtype": "float32",
+        "description": "FP32 activation, dynamically quantized to Q8_1"
+      },
+      "weight": {
+        "shape": [
+          "N",
+          "K/32"
+        ],
+        "dtype": "block_q4_0",
+        "description": "Q4_0 quantized routing weight"
+      }
+    },
+    "outputs": {
+      "output": {
+        "shape": [
+          "M",
+          "N"
+        ],
+        "dtype": "float32"
+      }
+    },
+    "constraints": [
+      "K % 32 == 0"
+    ],
+    "formula": {
+      "computation": "C = A @ W^T",
+      "llama_cpp_formula": "result = d4_0 * (d8_1 * sumi - 8 * s8_1)"
+    },
+    "test_configs": [
+      {
+        "name": "batch_1",
+        "M": 1,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_2",
+        "M": 2,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_3",
+        "M": 3,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_4",
+        "M": 4,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_5",
+        "M": 5,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_8",
+        "M": 8,
+        "N": 7168,
+        "K": 2048
+      },
+      {
+        "name": "batch_512",
+        "M": 512,
+        "N": 7168,
+        "K": 2048
+      }
+    ],
+    "params": {
+      "M": {
+        "type": "int",
+        "description": "Batch dimension",
+        "constraint": "M >= 1"
+      },
+      "N": {
+        "type": "int",
+        "description": "Hidden size",
+        "default": 7168
+      },
+      "K": {
+        "type": "int",
+        "description": "Routing expert dimension",
+        "default": 2048
+      },
+      "block_size": {
+        "type": "int",
+        "description": "",
+        "default": 32
+      }
+    },
+    "kernel": {
+      "file": "kernel.cu",
+      "entry_point": "forward"
+    },
+    "accuracy": {
+      "metric": "nmse",
+      "threshold": 0.1
+    }
+  },
+  "baseline_comparison": {
+    "current_hardware": "NVIDIA GeForce RTX 4090",
+    "baseline_hardware": "RTX4090",
+    "baseline_label": "RTX 4090",
+    "current_gflops": 1419.4,
+    "baseline_gflops": 4190.0,
+    "performance_ratio": 33.87589498806683,
+    "dimensions": {
+      "N": 7168,
+      "K": 2048
+    },
+    "baseline_case_id": "",
+    "baseline_m": 0,
+    "note": "GGML dimension mapping: our M=1,N=7168,K=2048 \u2192 GGML M=7168,N=1,K=2048"
+  }
+}

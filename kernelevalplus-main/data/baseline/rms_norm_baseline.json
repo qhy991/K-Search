@@ -1,0 +1,1451 @@
+{
+  "rms_norm_hs128_128x8x1x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      8,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 2.64,
+        "us_per_run": 2.89
+      },
+      "RTX4070": {
+        "gbps": 0.89,
+        "us_per_run": 8.53
+      },
+      "RTX4090": {
+        "gbps": 2.17,
+        "us_per_run": 3.51
+      }
+    }
+  },
+  "rms_norm_hs128_128x8x2x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      8,
+      2,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 5.05,
+        "us_per_run": 3.02
+      },
+      "RTX4070": {
+        "gbps": 1.74,
+        "us_per_run": 8.79
+      },
+      "RTX4090": {
+        "gbps": 4.34,
+        "us_per_run": 3.51
+      }
+    }
+  },
+  "rms_norm_hs128_128x8x3x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      8,
+      3,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 7.35,
+        "us_per_run": 3.11
+      },
+      "RTX4070": {
+        "gbps": 2.73,
+        "us_per_run": 8.39
+      },
+      "RTX4090": {
+        "gbps": 6.52,
+        "us_per_run": 3.51
+      }
+    }
+  },
+  "rms_norm_hs128_128x8x4x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      8,
+      4,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 9.79,
+        "us_per_run": 3.12
+      },
+      "RTX4070": {
+        "gbps": 3.52,
+        "us_per_run": 8.67
+      },
+      "RTX4090": {
+        "gbps": 8.69,
+        "us_per_run": 3.51
+      }
+    }
+  },
+  "rms_norm_hs128_128x8x5x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      8,
+      5,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 12.13,
+        "us_per_run": 3.15
+      },
+      "RTX4070": {
+        "gbps": 4.53,
+        "us_per_run": 8.43
+      },
+      "RTX4090": {
+        "gbps": 10.91,
+        "us_per_run": 3.5
+      }
+    }
+  },
+  "rms_norm_hs128_128x8x8x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      8,
+      8,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 19.4,
+        "us_per_run": 3.15
+      },
+      "RTX4070": {
+        "gbps": 6.85,
+        "us_per_run": 8.92
+      },
+      "RTX4090": {
+        "gbps": 17.36,
+        "us_per_run": 3.52
+      }
+    }
+  },
+  "rms_norm_hs128_128x8x512x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      8,
+      512,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 439.94,
+        "us_per_run": 8.88
+      },
+      "RTX4070": {
+        "gbps": 213.7,
+        "us_per_run": 18.28
+      },
+      "RTX4090": {
+        "gbps": 750.84,
+        "us_per_run": 5.2
+      }
+    }
+  },
+  "rms_norm_hs128_128x32x1x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      32,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 9.81,
+        "us_per_run": 3.11
+      },
+      "RTX4070": {
+        "gbps": 3.67,
+        "us_per_run": 8.32
+      },
+      "RTX4090": {
+        "gbps": 8.67,
+        "us_per_run": 3.52
+      }
+    }
+  },
+  "rms_norm_hs128_128x32x2x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      32,
+      2,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 19.39,
+        "us_per_run": 3.15
+      },
+      "RTX4070": {
+        "gbps": 6.82,
+        "us_per_run": 8.95
+      },
+      "RTX4090": {
+        "gbps": 17.36,
+        "us_per_run": 3.52
+      }
+    }
+  },
+  "rms_norm_hs128_128x32x3x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      32,
+      3,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 29.04,
+        "us_per_run": 3.15
+      },
+      "RTX4070": {
+        "gbps": 9.84,
+        "us_per_run": 9.31
+      },
+      "RTX4090": {
+        "gbps": 26.02,
+        "us_per_run": 3.52
+      }
+    }
+  },
+  "rms_norm_hs128_128x32x4x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      32,
+      4,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 37.43,
+        "us_per_run": 3.26
+      },
+      "RTX4070": {
+        "gbps": 14.67,
+        "us_per_run": 8.32
+      },
+      "RTX4090": {
+        "gbps": 35.12,
+        "us_per_run": 3.48
+      }
+    }
+  },
+  "rms_norm_hs128_128x32x5x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      32,
+      5,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 47.24,
+        "us_per_run": 3.23
+      },
+      "RTX4070": {
+        "gbps": 18.43,
+        "us_per_run": 8.28
+      },
+      "RTX4090": {
+        "gbps": 43.7,
+        "us_per_run": 3.49
+      }
+    }
+  },
+  "rms_norm_hs128_128x32x8x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      32,
+      8,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 71.53,
+        "us_per_run": 3.41
+      },
+      "RTX4070": {
+        "gbps": 27.77,
+        "us_per_run": 8.79
+      },
+      "RTX4090": {
+        "gbps": 69.59,
+        "us_per_run": 3.51
+      }
+    }
+  },
+  "rms_norm_hs128_128x32x512x1": {
+    "hidden_size": 128,
+    "ne": [
+      128,
+      32,
+      512,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 596.59,
+        "us_per_run": 26.2
+      },
+      "RTX4070": {
+        "gbps": 243.78,
+        "us_per_run": 64.11
+      },
+      "RTX4090": {
+        "gbps": 991.07,
+        "us_per_run": 15.77
+      }
+    }
+  },
+  "rms_norm_hs512_512x1x1x1": {
+    "hidden_size": 512,
+    "ne": [
+      512,
+      1,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 1.21,
+        "us_per_run": 3.15
+      },
+      "RTX4070": {
+        "gbps": 0.44,
+        "us_per_run": 8.68
+      },
+      "RTX4090": {
+        "gbps": 1.08,
+        "us_per_run": 3.52
+      }
+    }
+  },
+  "rms_norm_hs512_512x2x1x1": {
+    "hidden_size": 512,
+    "ne": [
+      512,
+      2,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 2.42,
+        "us_per_run": 3.15
+      },
+      "RTX4070": {
+        "gbps": 0.91,
+        "us_per_run": 8.4
+      },
+      "RTX4090": {
+        "gbps": 2.16,
+        "us_per_run": 3.53
+      }
+    }
+  },
+  "rms_norm_hs512_512x3x1x1": {
+    "hidden_size": 512,
+    "ne": [
+      512,
+      3,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 3.62,
+        "us_per_run": 3.16
+      },
+      "RTX4070": {
+        "gbps": 1.31,
+        "us_per_run": 8.74
+      },
+      "RTX4090": {
+        "gbps": 3.26,
+        "us_per_run": 3.51
+      }
+    }
+  },
+  "rms_norm_hs512_512x4x1x1": {
+    "hidden_size": 512,
+    "ne": [
+      512,
+      4,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 4.73,
+        "us_per_run": 3.22
+      },
+      "RTX4070": {
+        "gbps": 1.81,
+        "us_per_run": 8.42
+      },
+      "RTX4090": {
+        "gbps": 4.38,
+        "us_per_run": 3.48
+      }
+    }
+  },
+  "rms_norm_hs512_512x5x1x1": {
+    "hidden_size": 512,
+    "ne": [
+      512,
+      5,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 6.05,
+        "us_per_run": 3.15
+      },
+      "RTX4070": {
+        "gbps": 2.26,
+        "us_per_run": 8.46
+      },
+      "RTX4090": {
+        "gbps": 5.43,
+        "us_per_run": 3.51
+      }
+    }
+  },
+  "rms_norm_hs512_512x8x1x1": {
+    "hidden_size": 512,
+    "ne": [
+      512,
+      8,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 9.53,
+        "us_per_run": 3.2
+      },
+      "RTX4070": {
+        "gbps": 3.57,
+        "us_per_run": 8.55
+      },
+      "RTX4090": {
+        "gbps": 8.71,
+        "us_per_run": 3.5
+      }
+    }
+  },
+  "rms_norm_hs512_512x512x1x1": {
+    "hidden_size": 512,
+    "ne": [
+      512,
+      512,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 456.98,
+        "us_per_run": 4.27
+      },
+      "RTX4070": {
+        "gbps": 195.69,
+        "us_per_run": 9.98
+      },
+      "RTX4090": {
+        "gbps": 554.92,
+        "us_per_run": 3.52
+      }
+    }
+  },
+  "rms_norm_hs1536_1536x1x1x1": {
+    "hidden_size": 1536,
+    "ne": [
+      1536,
+      1,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 2.92,
+        "us_per_run": 3.92
+      },
+      "RTX4070": {
+        "gbps": 1.34,
+        "us_per_run": 8.54
+      },
+      "RTX4090": {
+        "gbps": 3.3,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs1536_1536x2x1x1": {
+    "hidden_size": 1536,
+    "ne": [
+      1536,
+      2,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 5.84,
+        "us_per_run": 3.92
+      },
+      "RTX4070": {
+        "gbps": 2.61,
+        "us_per_run": 8.77
+      },
+      "RTX4090": {
+        "gbps": 6.62,
+        "us_per_run": 3.46
+      }
+    }
+  },
+  "rms_norm_hs1536_1536x3x1x1": {
+    "hidden_size": 1536,
+    "ne": [
+      1536,
+      3,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 8.76,
+        "us_per_run": 3.92
+      },
+      "RTX4070": {
+        "gbps": 3.69,
+        "us_per_run": 9.3
+      },
+      "RTX4090": {
+        "gbps": 9.9,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs1536_1536x4x1x1": {
+    "hidden_size": 1536,
+    "ne": [
+      1536,
+      4,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 11.68,
+        "us_per_run": 3.92
+      },
+      "RTX4070": {
+        "gbps": 5.31,
+        "us_per_run": 8.61
+      },
+      "RTX4090": {
+        "gbps": 13.27,
+        "us_per_run": 3.45
+      }
+    }
+  },
+  "rms_norm_hs1536_1536x5x1x1": {
+    "hidden_size": 1536,
+    "ne": [
+      1536,
+      5,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 14.59,
+        "us_per_run": 3.92
+      },
+      "RTX4070": {
+        "gbps": 6.12,
+        "us_per_run": 9.36
+      },
+      "RTX4090": {
+        "gbps": 16.68,
+        "us_per_run": 3.43
+      }
+    }
+  },
+  "rms_norm_hs1536_1536x8x1x1": {
+    "hidden_size": 1536,
+    "ne": [
+      1536,
+      8,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 23.35,
+        "us_per_run": 3.92
+      },
+      "RTX4070": {
+        "gbps": 10.23,
+        "us_per_run": 8.95
+      },
+      "RTX4090": {
+        "gbps": 26.71,
+        "us_per_run": 3.43
+      }
+    }
+  },
+  "rms_norm_hs1536_1536x512x1x1": {
+    "hidden_size": 1536,
+    "ne": [
+      1536,
+      512,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 660.35,
+        "us_per_run": 8.87
+      },
+      "RTX4070": {
+        "gbps": 287.97,
+        "us_per_run": 20.35
+      },
+      "RTX4090": {
+        "gbps": 1064.63,
+        "us_per_run": 5.5
+      }
+    }
+  },
+  "rms_norm_hs2560_2560x1x1x1": {
+    "hidden_size": 2560,
+    "ne": [
+      2560,
+      1,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 4.57,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 2.19,
+        "us_per_run": 8.7
+      },
+      "RTX4090": {
+        "gbps": 5.51,
+        "us_per_run": 3.46
+      }
+    }
+  },
+  "rms_norm_hs2560_2560x2x1x1": {
+    "hidden_size": 2560,
+    "ne": [
+      2560,
+      2,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 9.13,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 4.22,
+        "us_per_run": 9.03
+      },
+      "RTX4090": {
+        "gbps": 11.03,
+        "us_per_run": 3.46
+      }
+    }
+  },
+  "rms_norm_hs2560_2560x3x1x1": {
+    "hidden_size": 2560,
+    "ne": [
+      2560,
+      3,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 13.69,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 6.25,
+        "us_per_run": 9.16
+      },
+      "RTX4090": {
+        "gbps": 16.48,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs2560_2560x4x1x1": {
+    "hidden_size": 2560,
+    "ne": [
+      2560,
+      4,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 18.26,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 9.48,
+        "us_per_run": 8.05
+      },
+      "RTX4090": {
+        "gbps": 22.29,
+        "us_per_run": 3.42
+      }
+    }
+  },
+  "rms_norm_hs2560_2560x5x1x1": {
+    "hidden_size": 2560,
+    "ne": [
+      2560,
+      5,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 22.82,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 10.9,
+        "us_per_run": 8.75
+      },
+      "RTX4090": {
+        "gbps": 27.59,
+        "us_per_run": 3.46
+      }
+    }
+  },
+  "rms_norm_hs2560_2560x8x1x1": {
+    "hidden_size": 2560,
+    "ne": [
+      2560,
+      8,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 36.51,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 18.2,
+        "us_per_run": 8.39
+      },
+      "RTX4090": {
+        "gbps": 44.09,
+        "us_per_run": 3.46
+      }
+    }
+  },
+  "rms_norm_hs2560_2560x512x1x1": {
+    "hidden_size": 2560,
+    "ne": [
+      2560,
+      512,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 984.17,
+        "us_per_run": 9.92
+      },
+      "RTX4070": {
+        "gbps": 401.66,
+        "us_per_run": 24.32
+      },
+      "RTX4090": {
+        "gbps": 1533.18,
+        "us_per_run": 6.37
+      }
+    }
+  },
+  "rms_norm_hs3584_3584x1x1x1": {
+    "hidden_size": 3584,
+    "ne": [
+      3584,
+      1,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 6.39,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 2.78,
+        "us_per_run": 9.62
+      },
+      "RTX4090": {
+        "gbps": 7.76,
+        "us_per_run": 3.44
+      }
+    }
+  },
+  "rms_norm_hs3584_3584x2x1x1": {
+    "hidden_size": 3584,
+    "ne": [
+      3584,
+      2,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 12.78,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 5.99,
+        "us_per_run": 8.92
+      },
+      "RTX4090": {
+        "gbps": 15.38,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs3584_3584x3x1x1": {
+    "hidden_size": 3584,
+    "ne": [
+      3584,
+      3,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 19.17,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 8.65,
+        "us_per_run": 9.26
+      },
+      "RTX4090": {
+        "gbps": 23.26,
+        "us_per_run": 3.44
+      }
+    }
+  },
+  "rms_norm_hs3584_3584x4x1x1": {
+    "hidden_size": 3584,
+    "ne": [
+      3584,
+      4,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 25.56,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 11.41,
+        "us_per_run": 9.36
+      },
+      "RTX4090": {
+        "gbps": 30.97,
+        "us_per_run": 3.45
+      }
+    }
+  },
+  "rms_norm_hs3584_3584x5x1x1": {
+    "hidden_size": 3584,
+    "ne": [
+      3584,
+      5,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 31.95,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 15.29,
+        "us_per_run": 8.73
+      },
+      "RTX4090": {
+        "gbps": 38.52,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs3584_3584x8x1x1": {
+    "hidden_size": 3584,
+    "ne": [
+      3584,
+      8,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 51.11,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 25.75,
+        "us_per_run": 8.3
+      },
+      "RTX4090": {
+        "gbps": 61.59,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs3584_3584x512x1x1": {
+    "hidden_size": 3584,
+    "ne": [
+      3584,
+      512,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 1339.97,
+        "us_per_run": 10.21
+      },
+      "RTX4070": {
+        "gbps": 520.12,
+        "us_per_run": 26.29
+      },
+      "RTX4090": {
+        "gbps": 1796.93,
+        "us_per_run": 7.61
+      }
+    }
+  },
+  "rms_norm_hs4096_4096x1x1x1": {
+    "hidden_size": 4096,
+    "ne": [
+      4096,
+      1,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 7.57,
+        "us_per_run": 4.03
+      },
+      "RTX4070": {
+        "gbps": 3.07,
+        "us_per_run": 9.94
+      },
+      "RTX4090": {
+        "gbps": 8.79,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs4096_4096x2x1x1": {
+    "hidden_size": 4096,
+    "ne": [
+      4096,
+      2,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 14.63,
+        "us_per_run": 4.17
+      },
+      "RTX4070": {
+        "gbps": 6.59,
+        "us_per_run": 9.26
+      },
+      "RTX4090": {
+        "gbps": 17.6,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs4096_4096x3x1x1": {
+    "hidden_size": 4096,
+    "ne": [
+      4096,
+      3,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 22.58,
+        "us_per_run": 4.05
+      },
+      "RTX4070": {
+        "gbps": 9.93,
+        "us_per_run": 9.22
+      },
+      "RTX4090": {
+        "gbps": 26.42,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs4096_4096x4x1x1": {
+    "hidden_size": 4096,
+    "ne": [
+      4096,
+      4,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 29.24,
+        "us_per_run": 4.17
+      },
+      "RTX4070": {
+        "gbps": 13.17,
+        "us_per_run": 9.27
+      },
+      "RTX4090": {
+        "gbps": 35.23,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs4096_4096x5x1x1": {
+    "hidden_size": 4096,
+    "ne": [
+      4096,
+      5,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 37.39,
+        "us_per_run": 4.08
+      },
+      "RTX4070": {
+        "gbps": 17.07,
+        "us_per_run": 8.94
+      },
+      "RTX4090": {
+        "gbps": 44.04,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs4096_4096x8x1x1": {
+    "hidden_size": 4096,
+    "ne": [
+      4096,
+      8,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 58.44,
+        "us_per_run": 4.18
+      },
+      "RTX4070": {
+        "gbps": 26.87,
+        "us_per_run": 9.09
+      },
+      "RTX4090": {
+        "gbps": 70.53,
+        "us_per_run": 3.46
+      }
+    }
+  },
+  "rms_norm_hs4096_4096x512x1x1": {
+    "hidden_size": 4096,
+    "ne": [
+      4096,
+      512,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 1566.07,
+        "us_per_run": 9.98
+      },
+      "RTX4070": {
+        "gbps": 610.25,
+        "us_per_run": 25.61
+      },
+      "RTX4090": {
+        "gbps": 2110.72,
+        "us_per_run": 7.4
+      }
+    }
+  },
+  "rms_norm_hs5120_5120x1x1x1": {
+    "hidden_size": 5120,
+    "ne": [
+      5120,
+      1,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 8.13,
+        "us_per_run": 4.69
+      },
+      "RTX4070": {
+        "gbps": 4.12,
+        "us_per_run": 9.25
+      },
+      "RTX4090": {
+        "gbps": 10.85,
+        "us_per_run": 3.51
+      }
+    }
+  },
+  "rms_norm_hs5120_5120x2x1x1": {
+    "hidden_size": 5120,
+    "ne": [
+      5120,
+      2,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 16.25,
+        "us_per_run": 4.69
+      },
+      "RTX4070": {
+        "gbps": 8.17,
+        "us_per_run": 9.34
+      },
+      "RTX4090": {
+        "gbps": 21.77,
+        "us_per_run": 3.5
+      }
+    }
+  },
+  "rms_norm_hs5120_5120x3x1x1": {
+    "hidden_size": 5120,
+    "ne": [
+      5120,
+      3,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 24.38,
+        "us_per_run": 4.69
+      },
+      "RTX4070": {
+        "gbps": 12.48,
+        "us_per_run": 9.17
+      },
+      "RTX4090": {
+        "gbps": 32.78,
+        "us_per_run": 3.49
+      }
+    }
+  },
+  "rms_norm_hs5120_5120x4x1x1": {
+    "hidden_size": 5120,
+    "ne": [
+      5120,
+      4,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 32.5,
+        "us_per_run": 4.69
+      },
+      "RTX4070": {
+        "gbps": 16.5,
+        "us_per_run": 9.25
+      },
+      "RTX4090": {
+        "gbps": 44.1,
+        "us_per_run": 3.46
+      }
+    }
+  },
+  "rms_norm_hs5120_5120x5x1x1": {
+    "hidden_size": 5120,
+    "ne": [
+      5120,
+      5,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 40.63,
+        "us_per_run": 4.7
+      },
+      "RTX4070": {
+        "gbps": 19.96,
+        "us_per_run": 9.56
+      },
+      "RTX4090": {
+        "gbps": 54.67,
+        "us_per_run": 3.49
+      }
+    }
+  },
+  "rms_norm_hs5120_5120x8x1x1": {
+    "hidden_size": 5120,
+    "ne": [
+      5120,
+      8,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 64.43,
+        "us_per_run": 4.74
+      },
+      "RTX4070": {
+        "gbps": 32.58,
+        "us_per_run": 9.37
+      },
+      "RTX4090": {
+        "gbps": 87.92,
+        "us_per_run": 3.47
+      }
+    }
+  },
+  "rms_norm_hs5120_5120x512x1x1": {
+    "hidden_size": 5120,
+    "ne": [
+      5120,
+      512,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 1512.52,
+        "us_per_run": 12.92
+      },
+      "RTX4070": {
+        "gbps": 595.92,
+        "us_per_run": 32.78
+      },
+      "RTX4090": {
+        "gbps": 2185.59,
+        "us_per_run": 8.94
+      }
+    }
+  },
+  "rms_norm_hs7168_7168x1x1x1": {
+    "hidden_size": 7168,
+    "ne": [
+      7168,
+      1,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 10.25,
+        "us_per_run": 5.21
+      },
+      "RTX4070": {
+        "gbps": 5.73,
+        "us_per_run": 9.32
+      },
+      "RTX4090": {
+        "gbps": 15.08,
+        "us_per_run": 3.54
+      }
+    }
+  },
+  "rms_norm_hs7168_7168x2x1x1": {
+    "hidden_size": 7168,
+    "ne": [
+      7168,
+      2,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 20.43,
+        "us_per_run": 5.23
+      },
+      "RTX4070": {
+        "gbps": 11.15,
+        "us_per_run": 9.58
+      },
+      "RTX4090": {
+        "gbps": 29.98,
+        "us_per_run": 3.56
+      }
+    }
+  },
+  "rms_norm_hs7168_7168x3x1x1": {
+    "hidden_size": 7168,
+    "ne": [
+      7168,
+      3,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 30.74,
+        "us_per_run": 5.21
+      },
+      "RTX4070": {
+        "gbps": 16.98,
+        "us_per_run": 9.43
+      },
+      "RTX4090": {
+        "gbps": 45.02,
+        "us_per_run": 3.56
+      }
+    }
+  },
+  "rms_norm_hs7168_7168x4x1x1": {
+    "hidden_size": 7168,
+    "ne": [
+      7168,
+      4,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 40.18,
+        "us_per_run": 5.32
+      },
+      "RTX4070": {
+        "gbps": 22.54,
+        "us_per_run": 9.48
+      },
+      "RTX4090": {
+        "gbps": 60.36,
+        "us_per_run": 3.54
+      }
+    }
+  },
+  "rms_norm_hs7168_7168x5x1x1": {
+    "hidden_size": 7168,
+    "ne": [
+      7168,
+      5,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 50.52,
+        "us_per_run": 5.29
+      },
+      "RTX4070": {
+        "gbps": 28.25,
+        "us_per_run": 9.45
+      },
+      "RTX4090": {
+        "gbps": 74.94,
+        "us_per_run": 3.56
+      }
+    }
+  },
+  "rms_norm_hs7168_7168x8x1x1": {
+    "hidden_size": 7168,
+    "ne": [
+      7168,
+      8,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 79.82,
+        "us_per_run": 5.35
+      },
+      "RTX4070": {
+        "gbps": 44.05,
+        "us_per_run": 9.7
+      },
+      "RTX4090": {
+        "gbps": 120.28,
+        "us_per_run": 3.55
+      }
+    }
+  },
+  "rms_norm_hs7168_7168x512x1x1": {
+    "hidden_size": 7168,
+    "ne": [
+      7168,
+      512,
+      1,
+      1
+    ],
+    "hardware": {
+      "A100": {
+        "gbps": 1453.63,
+        "us_per_run": 18.82
+      },
+      "RTX4070": {
+        "gbps": 653.12,
+        "us_per_run": 41.88
+      },
+      "RTX4090": {
+        "gbps": 2354.7,
+        "us_per_run": 11.62
+      }
+    }
+  }
+}
