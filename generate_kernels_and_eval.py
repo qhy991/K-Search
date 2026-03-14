@@ -243,7 +243,7 @@ def main():
     parser.add_argument("--local", required=False, default=None, help="Path to flashinfer-trace dataset root (flashinfer only)")
     parser.add_argument(
         "--task-source",
-        choices=["flashinfer", "gpumode"],
+        choices=["flashinfer", "gpumode", "kernelevalplus"],
         default="flashinfer",
         help="Task backend to use.",
     )
@@ -252,7 +252,11 @@ def main():
         default=None,
         help="Task source path/identifier. For --task-source=flashinfer, this is the dataset root path (defaults to --local).",
     )
-    parser.add_argument("--definition", default=None, help="Single definition name to target (required)")
+    parser.add_argument(
+        "--definition",
+        default=None,
+        help="Definition target. For flashinfer: definition name; for kernelevalplus: path to definition JSON.",
+    )
     parser.add_argument("--model-name", required=True, help="LLM model name (e.g., gpt-4.1, gpt-5, gemini-2.5-pro via compatible endpoint)")
     parser.add_argument("--base-url", default=None, help="OpenAI-compatible base URL for non-OpenAI providers (e.g. Gemini proxy)")
     parser.add_argument("--api-key", default=None, help="API key; if omitted, uses LLM_API_KEY env var")
@@ -330,6 +334,12 @@ def main():
     parser.add_argument("--gpumode-mode", default="benchmark", help="GPUMode eval mode (e.g., benchmark/test/leaderboard/profile)")
     parser.add_argument("--gpumode-keep-tmp", action="store_true", help="Keep GPUMode temp working dir for debugging")
     parser.add_argument("--gpumode-task-dir", default=None, help="Override GPUMode task dir (defaults to vendored trimul task)")
+    # KernelEvalPlus options
+    parser.add_argument(
+        "--kernelevalplus-root",
+        default=None,
+        help="Path to kernelevalplus-main root (defaults to ./kernelevalplus-main relative to this script).",
+    )
 
     args = parser.parse_args()
 
@@ -374,6 +384,19 @@ def main():
             task_dir=(str(args.gpumode_task_dir) if args.gpumode_task_dir else None),
             artifacts_dir=args.artifacts_dir,
         )
+    elif task_source == "kernelevalplus":
+        from k_search.tasks.kernelevalplus_task import KernelEvalPlusTask
+
+        if not args.definition:
+            raise ValueError("--definition is required for --task-source=kernelevalplus (path to definition JSON)")
+        kroot = args.kernelevalplus_root
+        if not kroot:
+            kroot = str(Path(__file__).resolve().parent / "kernelevalplus-main")
+        task = KernelEvalPlusTask.from_cli_args(
+            definition_path=str(args.definition),
+            kernelevalplus_root=str(kroot),
+            artifacts_dir=args.artifacts_dir,
+        )
     else:
         raise ValueError(f"Unsupported task_source: {task_source}")
     generate_and_evaluate(
@@ -401,5 +424,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

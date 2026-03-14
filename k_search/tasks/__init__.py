@@ -32,4 +32,10 @@ try:  # pragma: no cover
 except Exception:
     GpuModeTriMulTask = None  # type: ignore
 
+try:  # pragma: no cover
+    from k_search.tasks.kernelevalplus_task import KernelEvalPlusTask
+
+    __all__.append("KernelEvalPlusTask")
+except Exception:
+    KernelEvalPlusTask = None  # type: ignore
 
